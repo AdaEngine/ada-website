@@ -41,6 +41,6 @@ try Blog().publish(using: [
     .generateHTML(withTheme: .main),
     .generateRSSFeed(including: [.posts]),
     .generateSiteMap(),
-    .installPlugin(.generateCNAME(with: ["litecode.dev"])),
+    .installPlugin(.generateCNAME(with: ["www.litecode.dev"])),
     .deploy(using: .gitHub("SpectralDragon/spectraldragon.github.io", useSSH: false))
 ])
