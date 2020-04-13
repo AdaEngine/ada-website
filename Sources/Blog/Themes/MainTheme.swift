@@ -29,7 +29,34 @@ extension Theme where Site == Blog {
         }
         
         func makeTagDetailsHTML(for page: TagDetailsPage, context: PublishingContext<Blog>) throws -> HTML? {
-            return nil
+            HTML(
+                .lang(context.site.language),
+                .head(for: page, on: context.site),
+                .body(
+                    .header(for: context.site),
+                    .div(
+                        .class("container content-restriction safe-area-insets"),
+                        
+                        .h1(
+                            .text("Search by tag "),
+                            .a(
+                                .class(".tags \(page.tag.cssClass)"),
+                                .href(context.site.path(for: page.tag)),
+                                .text(page.tag.string)
+                            )
+                        ),
+                        
+                        .div(
+                            .class("collection"),
+                            .itemList(
+                                for: context.items(taggedWith: page.tag, sortedBy: \.date, order: .descending),
+                                context: context
+                            )
+                        )
+                    ),
+                    .footer(for: context.site)
+                )
+            )
         }
         
         func makeItemHTML(for item: Item<Blog>, context: PublishingContext<Blog>) throws -> HTML {
