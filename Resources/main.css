@@ -1,3 +1,7 @@
+/* Imports */
+
+@import "tags.css";
+@import "codesyntax.css";
 
 /* Fonts */
 /*
@@ -21,6 +25,7 @@
 
 a {
     text-decoration: none!important;
+    color: inherit;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -310,6 +315,51 @@ article .tags {
     font-weight: bold;
 }
 
+/* Code */
+
+code {
+    font-family: "Code", monospace;
+}
+
+article p code,
+article li code {
+    background-color: #efefef;
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin: 1px;
+}
+
+article p code.inline,
+article li code.inline {
+    display: inline;
+    background-color: inherit;
+    padding: 0;
+}
+
+pre {
+    margin-top: 20px;
+}
+
+pre code {
+    display: block;
+    background-color: #efefef;
+    padding: 15px 20px;
+    border-radius: 12px;
+    color: #111111;
+    line-height: 1.4em;
+    font-size: 0.95em;
+    overflow-x: auto;
+    white-space: pre;
+    -webkit-overflow-scrolling: touch;
+}
+
+pre code .highlight {
+    border: 1px solid #ffe000;
+    border-radius: 5px;
+    padding: 1px 2px 3px 2px;
+}
+
 /* Adaptation */
 
 @media(prefers-color-scheme: light) {
@@ -354,6 +404,16 @@ article .tags {
 
     p {
         color: #dddddd;
+    }
+    
+    article p code,
+    article li code {
+        background-color: #111111;
+    }
+    
+    pre code {
+        background-color: #111111;
+        color: #a9bcbc;
     }
 }
 

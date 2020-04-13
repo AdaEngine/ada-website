@@ -35,11 +35,14 @@ extension Theme where Site == Blog {
         func makeItemHTML(for item: Item<Blog>, context: PublishingContext<Blog>) throws -> HTML {
             HTML(
                 .lang(context.site.language),
-                .head(for: item, site: context.site),
+                .head(for: item, on: context.site),
                 .body(
                     .header(for: context.site),
                     .div(
-                        .p("Wait")
+                        .class("container content-restriction safe-area-insets"),
+                        .article(
+                            .contentBody(item.body)
+                        )
                     ),
                     .footer(for: context.site)
                 )
@@ -49,16 +52,7 @@ extension Theme where Site == Blog {
         func makeIndexHTML(for index: Index, context: PublishingContext<Blog>) throws -> HTML {
             HTML(
                 .lang(context.site.language),
-                .group([
-                    .head(
-                        .meta(
-                            .name("keywords"),
-                            .content("swift ios development apple watch iphone ipad swiftui uikit dev wwdc tutorial guide catalyst playground spectraldragon")
-                        )
-                    ),
-                    .head(for: index, site: context.site)
-                ]),
-                
+                .head(for: index, on: context.site, keywords: "swift ios development apple watch iphone ipad swiftui uikit dev wwdc tutorial guide catalyst playground spectraldragon"),
                 .body(
                     .header(for: context.site),
                     .div(
@@ -159,7 +153,7 @@ private extension Node where Context == HTML.BodyContext {
             .class("tags"),
             .forEach(item.tags, { tag in
                 .li(
-                    .class(""),
+                    .class(tag.cssClass),
                     .a(
                         .href(site.path(for: tag)),
                         .text(tag.string)
@@ -209,9 +203,9 @@ private extension Node where Context == HTML.BodyContext {
     }
 }
 
-extension Node where Context == HTML.DocumentContext {
+extension Node where Context == HTML.HeadContext {
     static func addAnalytics(for location: Location, on site: Blog) -> Node {
-        .head(
+        .group(
             .script(
                 .async(),
                 .src("https://www.googletagmanager.com/gtag/js?id=UA-73980658-4")
@@ -230,11 +224,58 @@ extension Node where Context == HTML.DocumentContext {
         )
     }
     
-    static func head(for location: Location, site: Blog) -> Node {
-        .group([
-            .head(for: location, on: site, titleSeparator: " | ", stylesheetPaths: ["/main.css"], rssFeedPath: .defaultForRSSFeed, rssFeedTitle: nil),
-            .addAnalytics(for: location, on: site),
-        ])
+}
+
+extension Node where Context == HTML.DocumentContext {
+    static func head(
+        for location: Location,
+        on site: Blog,
+        titleSeparator: String = " | ",
+        stylesheetPaths: [Path] = ["/main.css"],
+        rssFeedPath: Path? = .defaultForRSSFeed,
+        rssFeedTitle: String? = nil,
+        keywords: String? = nil
+    ) -> Node {
+        var title = location.title
+        
+        if title.isEmpty {
+            title = site.name
+        } else {
+            title.append(titleSeparator + site.name)
+        }
+        
+        var description = location.description
+        
+        if description.isEmpty {
+            description = site.description
+        }
+        
+        return .head(
+            .encoding(.utf8),
+            .siteName(site.name),
+            .url(site.url(for: location)),
+            .title(title),
+            .description(description),
+            .twitterCardType(location.imagePath == nil ? .summary : .summaryLargeImage),
+            .forEach(stylesheetPaths, { .stylesheet($0) }),
+            .viewport(.accordingToDevice),
+            .unwrap(site.favicon, { .favicon($0) }),
+            .unwrap(rssFeedPath, { path in
+                let title = rssFeedTitle ?? "Subscribe to \(site.name)"
+                return .rssFeedLink(path.absoluteString, title: title)
+            }),
+            .unwrap(location.imagePath ?? site.imagePath, { path in
+                let url = site.url(for: path)
+                return .socialImageLink(url)
+            }),
+            .unwrap(keywords, {
+                .meta(
+                    .name("keywords"),
+                    .content($0)
+                )
+            }),
+            .addAnalytics(for: location, on: site)
+        )
     }
 }
 

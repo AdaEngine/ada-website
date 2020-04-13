@@ -9,10 +9,11 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/johnsundell/publish.git", from: "0.3.0"),
-        .package(url: "https://github.com/SwiftyGuerrero/CNAMEPublishPlugin.git", from: "0.2.0"),
         .package(url: "https://github.com/alexito4/ReadingTimePublishPlugin.git", from: "0.1.0"),
         .package(url: "https://github.com/labradon/MinifyCSSPublishPlugin.git", from: "0.1.0"),
-        .package(url: "https://github.com/JohnSundell/SplashPublishPlugin.git", from: "0.1.0")
+        .package(url: "https://github.com/JohnSundell/SplashPublishPlugin.git", from: "0.1.0"),
+        .package(url: "https://github.com/SpectralDragon/TagColorCSSGeneratorPlugin.git", from: "0.1.0"),
+        .package(url: "https://github.com/SpectralDragon/CodeSyntaxCSSGeneratorPlugin.git", from: "0.1.0")
     ],
     targets: [
         .target(
@@ -21,8 +22,9 @@ let package = Package(
                 "Publish",
                 "MinifyCSSPublishPlugin",
                 "ReadingTimePublishPlugin",
-                "CNAMEPublishPlugin",
-                "SplashPublishPlugin"
+                "SplashPublishPlugin",
+                "TagColorCSSGeneratorPlugin",
+                "CodeSyntaxCSSGeneratorPlugin"
             ]
         )
     ]

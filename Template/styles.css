@@ -1,6 +1,10 @@
+/* Imports */
+
+@import "tags.css";
+@import "code.css";
 
 /* Fonts */
-/* 
+/*
 @font-face {
     font-family: "Main";
     src: url(/fonts/SourceSansPro-Regular.ttf);
@@ -18,6 +22,11 @@
 }
 
 /* Global */
+
+a {
+    text-decoration: none!important;
+    color: inherit;
+}
 
 h1, h2, h3, h4, h5, h6 {
     color: #342E37;
@@ -42,19 +51,7 @@ html {
 * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    box-sizing:border-box
-}
-
-a {
-    text-decoration:none
-}
-
-a:hover, a:focus {
-    text-decoration:none
-}
-
-a strong {
-    color:inherit
+    box-sizing: border-box
 }
 
 /* Styles */
@@ -141,8 +138,8 @@ a strong {
 
 .article-item-new {
     position: relative;
-    grid-column-start: 1; 
-    grid-column-end: 4; 
+    grid-column-start: 1;
+    grid-column-end: 4;
 }
 
 .article-item-new-header {
@@ -155,7 +152,7 @@ a strong {
     padding: 3px 6px;
     font-size: 0.65em;
     border-radius: 8px;
-    margin: 8px 8px auto 8px; 
+    margin: 8px 8px auto 8px;
     background-color: #FFE066;
 }
 
@@ -262,60 +259,105 @@ a strong {
     font-size: 0.9em;
 }
 
-ul { 
+ul {
     list-style: none;
     margin-block-start: 0;
-    margin-block-end: 0; 
+    margin-block-end: 0;
     padding: 0;
 }
 
-.tags li { 
+.tags li {
     display: block;
     float: left;
     padding: 3px 6px;
     margin-right: 10px;
     font-size: 0.85em;
     border-radius: 8px;
-    margin-bottom: 7px; 
+    margin-bottom: 7px;
 }
 
-.tags .variant-a { 
-    background-color: rgba(45, 117, 192, 0.3); 
+.tags .variant-a {
+    background-color: rgba(45, 117, 192, 0.3);
     color: #2D75C0;
     font-weight: bold;
 }
 
-.tags .variant-с { 
-    background-color: rgba(161, 79, 239, 0.3); 
+.tags .variant-с {
+    background-color: rgba(161, 79, 239, 0.3);
     color: #A14FEF;
     font-weight: bold;
 }
 
 .tags .variant-с:hover {
-    background-color: rgba(161, 79, 239, 0.5); 
+    background-color: rgba(161, 79, 239, 0.5);
 }
 
 .tags .variant-a:hover {
-    background-color: rgba(45, 117, 192, 0.5); 
+    background-color: rgba(45, 117, 192, 0.5);
 }
 
 .tags .variant-d:hover {
-    background-color: rgba(244, 63, 50, 0.5); 
+    background-color: rgba(244, 63, 50, 0.5);
 }
 
-article .tags { 
-    display: flex; 
-    margin-bottom: 5px; 
+article .tags {
+    display: flex;
+    margin-bottom: 5px;
 }
 
 .tags a {
     cursor: pointer;
 }
 
-.tags .variant-d { 
-    background-color: rgba(244, 63, 50, 0.3); 
+.tags .variant-d {
+    background-color: rgba(244, 63, 50, 0.3);
     color: #F25F5C;
     font-weight: bold;
+}
+
+/* Code */
+
+code {
+    font-family: "Code", monospace;
+}
+
+article p code,
+article li code {
+    background-color: #efefef;
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin: 1px;
+}
+
+article p code.inline,
+article li code.inline {
+    display: inline;
+    background-color: inherit;
+    padding: 0;
+}
+
+pre {
+    margin-top: 20px;
+}
+
+pre code {
+    display: block;
+    background-color: #efefef;
+    padding: 15px 20px;
+    border-radius: 12px;
+    color: #111111;
+    line-height: 1.4em;
+    font-size: 0.95em;
+    overflow-x: auto;
+    white-space: pre;
+    -webkit-overflow-scrolling: touch;
+}
+
+pre code .highlight {
+    border: 1px solid #ffe000;
+    border-radius: 5px;
+    padding: 1px 2px 3px 2px;
 }
 
 /* Adaptation */
@@ -330,7 +372,7 @@ article .tags {
     }
 }
 
-@media(prefers-color-scheme: dark) { 
+@media(prefers-color-scheme: dark) {
     h1, h2, h3, h4, h5, h6 {
         color: #ffffff;
     }
@@ -343,7 +385,7 @@ article .tags {
         background-color: #1d1d1d;
     }
 
-    .article-item h3 { 
+    .article-item h3 {
         color: #ffffff;
     }
 
@@ -352,21 +394,31 @@ article .tags {
         border-radius: 8px;
     }
 
-    .article-item-new h3 { 
+    .article-item-new h3 {
         color: #dddddd;
     }
 
-    .article-item-new h1 { 
+    .article-item-new h1 {
         color: #ffffff;
     }
 
     p {
         color: #dddddd;
     }
+    
+    article p code,
+    article li code {
+        background-color: #111111;
+    }
+    
+    pre code {
+        background-color: #111111;
+        color: #a9bcbc;
+    }
 }
 
 @supports ((-webkit-backdrop-filter: saturate(180%) blur(20px)) or (backdrop-filter: saturate(180%) blur(20px))) {
-    @media(prefers-color-scheme: light) { 
+    @media(prefers-color-scheme: light) {
         .header {
             background: rgba(255, 255, 255, 0.6);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
@@ -376,7 +428,7 @@ article .tags {
 
     }
 
-    @media(prefers-color-scheme: dark) { 
+    @media(prefers-color-scheme: dark) {
         .header {
             background: rgba(0, 0, 0, 0.4);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
@@ -391,7 +443,7 @@ article .tags {
         max-width: 1010px
     }
 
-    .article-item-new { 
+    .article-item-new {
         display: flex;
         justify-content: center;
     }

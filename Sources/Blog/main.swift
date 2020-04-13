@@ -5,6 +5,9 @@ import MinifyCSSPublishPlugin
 import ReadingTimePublishPlugin
 import CNAMEPublishPlugin
 import SplashPublishPlugin
+import PublishColorUtils
+import TagColorCSSGeneratorPlugin
+import CodeSyntaxCSSGeneratorPlugin
 
 
 // This type acts as the configuration for your website.
@@ -16,21 +19,44 @@ struct Blog: Website {
     
     struct ItemMetadata: WebsiteItemMetadata {
         // Add any site-specific metadata that you want to use here.
+        
+        let keywords: [String]?
     }
     
     // Update these properties to configure your website:
-    let url = URL(string: "https://your-website-url.com")!
+    let url = URL(string: "https://litecode.dev")!
     let name = "LiteCode"
     let description = "A description of Blog"
     let language: Language = .english
     let imagePath: Path? = "Images"
 }
 
+extension Blog {
+    enum AvailableTag: String, CaseIterable {
+        case swiftui = "SwiftUI"
+        case ui = "UI"
+        
+        var color: Color {
+            switch self {
+            case .swiftui: return .blue
+            case .ui: return .red
+            }
+        }
+    }
+}
+
 // This will generate your website using the built-in Foundation theme:
 try Blog().publish(using: [
-    .addMarkdownFiles(),
+    .installPlugin(.splash(withClassPrefix: "s-")),
+    .installPlugin(
+        .generateCodeCSS(withClassPrefix: "pre code .s-",
+                         theme: .dynamic(light: .xcode("Light.dvtcolortheme"),
+                                         dark: .xcode("Dark.xccolortheme")))
+    ),
     .installPlugin(.readingTime()),
-    .installPlugin(.splash(withClassPrefix: "s")),
+    .addMarkdownFiles(),
+    .installPlugin(.checkTagsAvailability(Blog.AvailableTag.self)),
+    .installPlugin(.tagColorCSSGenerator(tagsCSSPrefix: "tag-", builder: { Blog.AvailableTag(rawValue: $0.string)!.color })),
     .copyResources(),
     .step(named: "Use custom Date Formatter", body: { context in
         let formatter = DateFormatter()
@@ -41,6 +67,5 @@ try Blog().publish(using: [
     .generateHTML(withTheme: .main),
     .generateRSSFeed(including: [.posts]),
     .generateSiteMap(),
-    .installPlugin(.generateCNAME(with: ["www.litecode.dev"])),
     .deploy(using: .gitHub("SpectralDragon/spectraldragon.github.io", useSSH: false))
 ])
