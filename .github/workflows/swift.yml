@@ -1,0 +1,17 @@
+name: Swift
+
+# This workflow is triggered on pushes to the repository.
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Deploy Blog
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Deploy
+      run: swift run Blog --deploy
