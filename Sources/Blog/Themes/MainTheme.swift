@@ -194,7 +194,7 @@ private extension Node where Context == HTML.BodyContext {
         .header(
             .class("header"),
             .div(
-                .class("container content-restriction"),
+                .class("container content-restriction header-container"),
                 .a(
                     .class("header-logo"),
                     .href("/"),
