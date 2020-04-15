@@ -26,7 +26,7 @@ struct Blog: Website {
     // Update these properties to configure your website:
     let url = URL(string: "https://litecode.dev")!
     let name = "LiteCode"
-    let description = "A description of Blog"
+    let description = "A personal blog of LiteCode Team"
     let language: Language = .english
     let imagePath: Path? = "Images"
 }
@@ -54,6 +54,7 @@ try Blog().publish(using: [
                                          dark: .xcode("Dark.xccolortheme")))
     ),
     .installPlugin(.readingTime()),
+    .installPlugin(.additionalBlockquote()),
     .addMarkdownFiles(),
     .installPlugin(.checkTagsAvailability(Blog.AvailableTag.self)),
     .installPlugin(.tagColorCSSGenerator(tagsCSSPrefix: "tag-", builder: { Blog.AvailableTag(rawValue: $0.string)!.color })),
@@ -69,3 +70,5 @@ try Blog().publish(using: [
     .generateSiteMap(),
     .deploy(using: .gitHub("SpectralDragon/spectraldragon.github.io", useSSH: false))
 ])
+
+

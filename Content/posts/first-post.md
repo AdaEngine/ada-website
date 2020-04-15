@@ -25,3 +25,30 @@ struct ContentView: View {
 }
 ```
 If we'll look into documentationm we doesn't see any method in protocol `NavigationViewStyle`, but if we implemented this method in class 
+
+> Some interresting thing
+
+<warning>
+    Some warning text
+    import LiteCode
+    struct ContentView: View {
+        @State var kek: String = "KEEEEK"
+        var body: some View {
+            NavigationView {
+                Text("some text")
+            }
+            .navigationViewStyle(
+            DefaultNavigationViewStyle()
+            )
+        }
+    }
+</warning>
+
+<error>
+    Some warning text
+    some shit and etc other
+</error>
+
+<info>
+Some info `information`
+</info>
