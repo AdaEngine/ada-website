@@ -121,8 +121,25 @@ html {
 }
 
 .about_me {
-    display: inline-block;
+    display: inline-flex;
+    margin-top: 20px;
+    margin-bottom: 4rem;
+    margin-left: auto;
+    margin-right: auto;
     /* justify-content: center; */
+}
+
+.author_info {
+    display: inline;
+    margin: auto 8px;
+}
+
+.author_info p {
+    margin: 0;
+}
+
+.author_info h2 {
+    margin: 2px 0px;
 }
 
 .avatar {
@@ -273,30 +290,6 @@ ul {
     margin-bottom: 7px;
 }
 
-.tags .variant-a {
-    background-color: rgba(45, 117, 192, 0.3);
-    color: #2D75C0;
-    font-weight: bold;
-}
-
-.tags .variant-с {
-    background-color: rgba(161, 79, 239, 0.3);
-    color: #A14FEF;
-    font-weight: bold;
-}
-
-.tags .variant-с:hover {
-    background-color: rgba(161, 79, 239, 0.5);
-}
-
-.tags .variant-a:hover {
-    background-color: rgba(45, 117, 192, 0.5);
-}
-
-.tags .variant-d:hover {
-    background-color: rgba(244, 63, 50, 0.5);
-}
-
 article .tags {
     display: flex;
     margin-bottom: 5px;
@@ -306,10 +299,12 @@ article .tags {
     cursor: pointer;
 }
 
-.tags .variant-d {
-    background-color: rgba(244, 63, 50, 0.3);
-    color: #F25F5C;
+.tag-in-search {
     font-weight: bold;
+    border-radius: 8px;
+    margin-bottom: 7px;
+    padding: 3px 6px;
+    margin-right: 10px;
 }
 
 /* Article */
@@ -318,6 +313,34 @@ article p {
     margin-top: 20px;
     font-size: 1.05em;
     line-height: 1.5;
+}
+
+article blockquote {
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    border-left: 0.25rem solid #111111;
+    background-color: #efefef;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+article .blockquote-warning {
+    background-color: rgba(255, 190, 11, 0.3);
+    border-left: 0.25rem solid rgba(255, 190, 11, 1);
+}
+
+article .blockquote-error {
+    background-color: rgba(255, 15, 83, 0.3);
+    border-left: 0.25rem solid rgba(255, 15, 83, 1);
+}
+
+article .blockquote-info {
+    background-color: rgba(102, 199, 244, 0.3);
+    border-left: 0.25rem solid rgba(102, 199, 244, 1);
 }
 
 /* Code */
@@ -330,7 +353,7 @@ article p code,
 article li code {
     background-color: #efefef;
     display: inline-block;
-    padding: 2px 6px;
+    padding: 0px 5px;
     border-radius: 4px;
     margin: 1px;
 }
@@ -380,6 +403,11 @@ pre code .highlight {
 @media(prefers-color-scheme: dark) {
     h1, h2, h3, h4, h5, h6 {
         color: #ffffff;
+    }
+    
+    article blockquote {
+        border-left: 0.25rem solid #dddddd;
+        background-color: #111111;
     }
 
     .separator {

@@ -40,7 +40,7 @@ extension Theme where Site == Blog {
                         .h1(
                             .text("Search by tag "),
                             .a(
-                                .class(".tags \(page.tag.cssClass)"),
+                                .class("tag-in-search \(page.tag.cssClass)"),
                                 .href(context.site.path(for: page.tag)),
                                 .text(page.tag.string)
                             )
