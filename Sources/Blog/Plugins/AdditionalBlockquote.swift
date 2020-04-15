@@ -8,19 +8,31 @@
 import Foundation
 import Publish
 import Ink
+import Splash
 
 extension Plugin {
+    
+    enum AvailableBlockquote: String, CaseIterable {
+        case warning
+        case info
+        case error
+    }
+    
     static func additionalBlockquote() -> Self {
         Plugin(name: "Additional Blockquote Modifier", installer: { context in
+            let parser = context.markdownParser
             context.markdownParser.addModifier(
                 Modifier(target: .html) { (html, markdown) -> String in
-                    return html
-                        .replacingOccurrences(of: "<warning>", with: "<blockquote class=\"blockquote-warning\"><p>")
-                        .replacingOccurrences(of: "</warning>", with: "</p></blockquote>")
-                        .replacingOccurrences(of: "<error>", with: "<blockquote class=\"blockquote-error\"><p>")
-                        .replacingOccurrences(of: "</error>", with: "</p></blockquote>")
-                        .replacingOccurrences(of: "<info>", with: "<blockquote class=\"blockquote-info\"><p>")
-                        .replacingOccurrences(of: "</info>", with: "</p></blockquote>")
+                    guard let blockquote = AvailableBlockquote.allCases.first(where: { markdown.hasPrefix("<\($0.rawValue)>") }) else { return html }
+                    
+                    let formattedMarkdown = markdown
+                        .replacingOccurrences(of: "<\(blockquote.rawValue)>", with: "")
+                        .replacingOccurrences(of: "</\(blockquote.rawValue)>", with: "")
+                        .dropFirst()
+                    
+                    let html = parser.html(from: String(formattedMarkdown))
+                    
+                    return "<blockquote class=\"blockquote-\(blockquote.rawValue)\">\(html)</blockquote>"
                 }
             )
         })
