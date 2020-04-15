@@ -44,6 +44,14 @@ struct ContentView: View {
             Text("some text")
         }
         .navigationViewStyle(DefaultNavigationViewStyle())
+        
+        if some != lol {
+            print("kek")
+        }
+    }
+    
+    func someFunc() => String {
+        return "SOME BIG TEXT"
     }
 }
 ```
