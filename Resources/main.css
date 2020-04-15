@@ -18,7 +18,7 @@
 
 @font-face {
     font-family: "Code";
-    src: url(/Fonts/JetBrainsMono-Regular.ttf);
+    src: url(/fonts/JetBrainsMono-Regular.ttf);
 }
 
 /* Global */
@@ -346,15 +346,15 @@ article .blockquote-warning {
 }
 
 article .blockquote-warning::before {
-    background-image: url("/Images/warning.svg");
+    background-image: url("/images/warning.svg");
 }
 
 article .blockquote-error::before {
-    background-image: url("/Images/error.svg")
+    background-image: url("/images/error.svg")
 }
 
 article .blockquote-info::before {
-    background-image: url("/Images/info.svg")
+    background-image: url("/images/info.svg")
 }
 
 article .blockquote-error {

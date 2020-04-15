@@ -21,7 +21,36 @@ extension Theme where Site == Blog {
         }
         
         func makePageHTML(for page: Page, context: PublishingContext<Blog>) throws -> HTML {
-            HTML(.empty)
+            if let author = page.author {
+                return
+                    HTML(
+                        .lang(context.site.language),
+                        .head(for: page, on: context.site),
+                        .body(
+                            .header(for: context.site),
+                            .div(
+                                .class("container content-restriction safe-area-insets"),
+                                
+                                .h1(
+                                    .text("Search by author "),
+                                    .code(.text(page.content.title))
+                                ),
+                                .contentBody(page.content.body),
+                                .div(
+                                    .class("collection"),
+                                    .itemList(
+                                        for: context.items(authoredBy: author, sortedBy: \.date),
+                                        context: context,
+                                        layout: PlainItemListLayout()
+                                    )
+                                )
+                            ),
+                            .footer(for: context.site)
+                        )
+                )
+            } else {
+                return HTML(.empty)
+            }
         }
         
         func makeTagListHTML(for page: TagListPage, context: PublishingContext<Blog>) throws -> HTML? {
@@ -50,7 +79,8 @@ extension Theme where Site == Blog {
                             .class("collection"),
                             .itemList(
                                 for: context.items(taggedWith: page.tag, sortedBy: \.date, order: .descending),
-                                context: context
+                                context: context,
+                                layout: PlainItemListLayout()
                             )
                         )
                     ),
@@ -62,13 +92,17 @@ extension Theme where Site == Blog {
         func makeItemHTML(for item: Item<Blog>, context: PublishingContext<Blog>) throws -> HTML {
             HTML(
                 .lang(context.site.language),
-                .head(for: item, on: context.site),
+                .head(for: item, on: context.site, keywords: item.metadata.keywords?.joined(separator: " ")),
                 .body(
                     .header(for: context.site),
                     .div(
                         .class("container content-restriction safe-area-insets"),
                         .article(
-                            .contentBody(item.body)
+                            .contentBody(item.body),
+                            .div(
+                                .tagList(for: item, on: context.site),
+                                .author(for: item, on: context.site)
+                            )
                         )
                     ),
                     .footer(for: context.site)
@@ -86,7 +120,8 @@ extension Theme where Site == Blog {
                         .class("container collection content-restriction safe-area-insets"),
                         .itemList(
                             for: context.allItems(sortedBy: \.date, order: .descending),
-                            context: context
+                            context: context,
+                            layout: MainIndexItemListLayout()
                         )
                     ),
                     .footer(for: context.site)
@@ -98,15 +133,18 @@ extension Theme where Site == Blog {
 }
 
 
-private extension Node where Context == HTML.BodyContext {
-    static func itemList(for items: [Item<Blog>], context: PublishingContext<Blog>) -> Node {
+extension Node where Context == HTML.BodyContext {
+    
+    static func itemList(for items: [Item<Blog>], context: PublishingContext<Blog>, layout: ItemListLayout<Blog>) -> Node {
         
-        let first = context.allItems(sortedBy: \.date).first
+        layout.items = items
+        layout.context = context
+        layout.prepare()
         
         return
-            .forEach(items) { item in
-                .if(item.date == first?.date, .newArticleBody(for: item, context: context),
-                    else: .articleBody(for: item, context: context))
+            .forEach(0..<items.count) { index in
+                let item = items[index]
+                return layout.itemLayout(item, at: index, context: context)
         }
     }
     
@@ -225,6 +263,29 @@ private extension Node where Context == HTML.BodyContext {
                         .text("made by Vladislav Prusakov")
                     )
                 )
+            )
+        )
+    }
+    
+    static func author(for item: Item<Blog>, on site: Blog) -> Node {
+        .div(
+            .class("about_me"),
+            .img(
+                .class("avatar"),
+                .src(site.imagePath?.appendingComponent(item.author.avatar) ?? ""),
+                .alt("\(item.author.name) Profile Picture")
+            ),
+            .div(
+                .class("author_info"),
+                .a(
+                    .href(item.author.path),
+                    .h2(.text(item.author.name))
+                ),
+                a(
+                    .href(item.author.githubPath),
+                    .text("@\(item.author.github)")
+                ),
+                .contentBody(item.author.content.body)
             )
         )
     }
