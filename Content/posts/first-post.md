@@ -4,6 +4,7 @@ description: Create your own NavigationViewStyle.
 tags: SwiftUI, UI
 image: vprusakov.jpg
 keywords: custom navigationviewstyle navigationview style swiftui
+author: SpectralDragon
 ---
 # Custom NavigationView style
 

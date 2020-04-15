@@ -21,6 +21,7 @@ struct Blog: Website {
         // Add any site-specific metadata that you want to use here.
         
         let keywords: [String]?
+        let author: String
     }
     
     // Update these properties to configure your website:
@@ -28,7 +29,7 @@ struct Blog: Website {
     let name = "LiteCode"
     let description = "A personal blog of LiteCode Team"
     let language: Language = .english
-    let imagePath: Path? = "Images"
+    let imagePath: Path? = "images"
 }
 
 extension Blog {
@@ -56,6 +57,7 @@ try Blog().publish(using: [
     .installPlugin(.readingTime()),
     .installPlugin(.additionalBlockquote()),
     .addMarkdownFiles(),
+    .installPlugin(.authorsPlugin()),
     .installPlugin(.checkTagsAvailability(Blog.AvailableTag.self)),
     .installPlugin(.tagColorCSSGenerator(tagsCSSPrefix: "tag-", builder: { Blog.AvailableTag(rawValue: $0.string)!.color })),
     .copyResources(),
