@@ -29,19 +29,24 @@ If we'll look into documentationm we doesn't see any method in protocol `Navigat
 > Some interresting thing
 
 <warning>
-    Some warning text
-    import LiteCode
-    struct ContentView: View {
-        @State var kek: String = "KEEEEK"
-        var body: some View {
-            NavigationView {
-                Text("some text")
-            }
-            .navigationViewStyle(
-            DefaultNavigationViewStyle()
-            )
+
+Some shits happend tho
+
+```swift
+import SwiftUI
+
+struct ContentView: View {
+    
+    @State var kek: String = "KEEEEK"
+    
+    var body: some View {
+        NavigationView {
+            Text("some text")
         }
+        .navigationViewStyle(DefaultNavigationViewStyle())
     }
+}
+```
 </warning>
 
 <error>

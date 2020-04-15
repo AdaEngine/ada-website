@@ -316,8 +316,8 @@ article p {
 }
 
 article blockquote {
-    padding-top: 0.35rem;
-    padding-bottom: 0.35rem;
+    padding-top: 16px;
+    padding-bottom: 16px;
     padding-left: 1.25rem;
     padding-right: 1.25rem;
     margin-inline-start: 0px;
@@ -328,9 +328,33 @@ article blockquote {
     border-bottom-right-radius: 8px;
 }
 
+article blockquote::before {
+    content: " ";
+    background-size: 24px 24px;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    display: block;
+    margin-left: -34px;
+    margin-top: 10px;
+    z-index: 100;
+}
+
 article .blockquote-warning {
     background-color: rgba(255, 190, 11, 0.3);
     border-left: 0.25rem solid rgba(255, 190, 11, 1);
+}
+
+article .blockquote-warning::before {
+    background-image: url("/Images/warning.svg");
+}
+
+article .blockquote-error::before {
+    background-image: url("/Images/error.svg")
+}
+
+article .blockquote-info::before {
+    background-image: url("/Images/info.svg")
 }
 
 article .blockquote-error {
@@ -380,6 +404,10 @@ pre code {
     overflow-x: auto;
     white-space: pre;
     -webkit-overflow-scrolling: touch;
+}
+
+blockquote pre code {
+    font-size: 0.85em;
 }
 
 pre code .highlight {
@@ -557,6 +585,12 @@ pre code .highlight {
     .footer .avatar {
         width: 70px;
         height: 70px;
+    }
+    
+    blockquote pre code {
+        margin-left: -12px;
+        margin-right: -12px;
+        border-radius: 12px;
     }
     
     pre code {
