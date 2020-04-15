@@ -546,7 +546,7 @@ pre code .highlight {
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 600px) {
 
     .article-item-new a {
         display: block;
