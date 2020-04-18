@@ -13,7 +13,8 @@ extension Plugin {
     
     static func imagePlugin() -> Self {
         Plugin(name: "Image Description Plugin", installer: { context in
-            context.markdownParser.addModifier(.imageModifier())
+            let imagePath = context.site.imagePath!
+            context.markdownParser.addModifier(.imageModifier(imagePath: imagePath))
         })
     }
 }
@@ -22,7 +23,7 @@ extension Modifier {
     
     private static let fullWidthMode = "?fullWidth"
     
-    static func imageModifier() -> Self {
+    static func imageModifier(imagePath: Path) -> Self {
         Modifier(target: .images) { html, markdown -> String in
             
             let fullWidthMode = markdown.contains(Self.fullWidthMode)
@@ -37,7 +38,7 @@ extension Modifier {
             
             let imageStyle = fullWidthMode ? "class=\"full-width-image\"" : ""
             
-            let imageHTML = "<div class=\"article-image\"><img src=\"\(path)\" alt=\"\(altSuffix)\"\(imageStyle)><p>\(altSuffix)</p></div>"
+            let imageHTML = "<div class=\"article-image\"><img src=\"\(imagePath.appendingComponent(path).absoluteString)\" alt=\"\(altSuffix)\"\(imageStyle)><p>\(altSuffix)</p></div>"
             return imageHTML
         }
     }
