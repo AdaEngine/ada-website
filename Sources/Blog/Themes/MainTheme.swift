@@ -290,6 +290,7 @@ extension Node where Context == HTML.BodyContext {
         var items: Set<Item<Blog>> = []
             
         for tag in item.tags {
+            guard items.count < 3 else { break }
             guard let foundItem = context.items(taggedWith: tag, sortedBy: \.date, order: .descending).randomElement() else { continue }
             items.insert(foundItem)
         }
@@ -304,7 +305,7 @@ extension Node where Context == HTML.BodyContext {
                     ),
                     .div(
                         .class("collection"),
-                        .itemList(for: Array(repeating: item, count: 1), context: context, layout: PlainItemListLayout())
+                        .itemList(for: Array(items), context: context, layout: PlainItemListLayout())
                     )
                 )
         )
