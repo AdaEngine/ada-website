@@ -8,6 +8,8 @@ author: SpectralDragon
 ---
 # Custom NavigationView style
 
+![Some image](/images/posts/first-post/1*eHvKZaNy4zaU76Tu6TSKWw.png?fullWidth)
+
 Hello everybody, today we will talk about custom NavigationViewStyle.
 
 ```swift
@@ -26,6 +28,8 @@ struct ContentView: View {
 }
 ```
 If we'll look into documentationm we doesn't see any method in protocol `NavigationViewStyle`, but if we implemented this method in class 
+
+> tweet https://twitter.com/SpectralDragon_/status/1250093997764288512
 
 > Some interresting thing
 

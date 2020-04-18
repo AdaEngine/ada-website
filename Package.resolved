@@ -126,6 +126,15 @@
           "revision": "e900e959a12ceb99cb61a6f529daf6d22ae779a6",
           "version": "0.1.0"
         }
+      },
+      {
+        "package": "TwitterPublishPlugin",
+        "repositoryURL": "https://github.com/insidegui/TwitterPublishPlugin.git",
+        "state": {
+          "branch": "master",
+          "revision": "3aa98fb1361cb37ab4c063c322c6291c84ece567",
+          "version": null
+        }
       }
     ]
   },
