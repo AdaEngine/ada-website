@@ -100,9 +100,11 @@ extension Theme where Site == Blog {
                         .article(
                             .contentBody(item.body),
                             .div(
+                                .class("article-footer"),
                                 .tagList(for: item, on: context.site),
-                                .author(for: item, on: context.site)
-                            )
+                                .writtenByAuthor(for: item, on: context.site)
+                            ),
+                            .relatedArticles(for: item, context: context)
                         )
                     ),
                     .footer(for: context.site)
@@ -251,42 +253,60 @@ extension Node where Context == HTML.BodyContext {
             .class("footer"),
             .div(
                 .class("footer-container content-restriction"),
-                .hr(),
-                .div(
-                    .class("about_me"),
-                    .img(
-                        .class("avatar"),
-                        .src(site.imagePath?.appendingComponent("vprusakov.jpg") ?? ""),
-                        .alt("Vladislav Prusakov Profile Picture")
-                    ),
-                    .p(
-                        .text("made by Vladislav Prusakov")
-                    )
+                .p(
+                    .text("All rights")
                 )
             )
         )
     }
     
-    static func author(for item: Item<Blog>, on site: Blog) -> Node {
+    static func writtenByAuthor(for item: Item<Blog>, on site: Blog) -> Node {
         .div(
-            .class("about_me"),
-            .img(
-                .class("avatar"),
-                .src(site.imagePath?.appendingComponent(item.author.avatar) ?? ""),
-                .alt("\(item.author.name) Profile Picture")
+            .class("written_by"),
+            .h3(
+                .text("WRITTEN BY")
             ),
             .div(
-                .class("author_info"),
-                .a(
-                    .href(item.author.path),
-                    .h2(.text(item.author.name))
+                .class("about_author_container"),
+                .img(
+                    .class("avatar"),
+                    .src(site.imagePath?.appendingComponent(item.author.avatar) ?? ""),
+                    .alt("\(item.author.name) Profile Picture")
                 ),
-                a(
-                    .href(item.author.githubPath),
-                    .text("@\(item.author.github)")
-                ),
-                .contentBody(item.author.content.body)
+                .div(
+                    .class("author_info"),
+                    .a(
+                        .href(item.author.path),
+                        .h2(.text(item.author.name))
+                    ),
+                    .contentBody(item.author.content.body)
+                )
             )
+        )
+    }
+    
+    static func relatedArticles(for item: Item<Blog>, context: PublishingContext<Blog>) -> Node {
+        
+        var items: Set<Item<Blog>> = []
+            
+        for tag in item.tags {
+            guard let foundItem = context.items(taggedWith: tag, sortedBy: \.date, order: .descending).randomElement() else { continue }
+            items.insert(foundItem)
+        }
+        
+        return
+            .div(
+                .class("related_articles"),
+                .div(
+                    .class("container content-restriction safe-area-insets"),
+                    .h3(
+                        .text("RELATED ARTICLES")
+                    ),
+                    .div(
+                        .class("collection"),
+                        .itemList(for: Array(repeating: item, count: 1), context: context, layout: PlainItemListLayout())
+                    )
+                )
         )
     }
 }

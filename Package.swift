@@ -13,7 +13,8 @@ let package = Package(
         .package(url: "https://github.com/labradon/MinifyCSSPublishPlugin.git", from: "0.1.0"),
         .package(url: "https://github.com/JohnSundell/SplashPublishPlugin.git", from: "0.1.0"),
         .package(url: "https://github.com/SpectralDragon/TagColorCSSGeneratorPlugin.git", from: "0.1.0"),
-        .package(url: "https://github.com/SpectralDragon/CodeSyntaxCSSGeneratorPlugin.git", from: "0.1.0")
+        .package(url: "https://github.com/SpectralDragon/CodeSyntaxCSSGeneratorPlugin.git", from: "0.1.0"),
+        .package(url: "https://github.com/insidegui/TwitterPublishPlugin.git", .branch("master"))
     ],
     targets: [
         .target(
@@ -24,7 +25,8 @@ let package = Package(
                 "ReadingTimePublishPlugin",
                 "SplashPublishPlugin",
                 "TagColorCSSGeneratorPlugin",
-                "CodeSyntaxCSSGeneratorPlugin"
+                "CodeSyntaxCSSGeneratorPlugin",
+                "TwitterPublishPlugin"
             ]
         )
     ]

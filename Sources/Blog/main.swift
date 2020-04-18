@@ -8,7 +8,7 @@ import SplashPublishPlugin
 import PublishColorUtils
 import TagColorCSSGeneratorPlugin
 import CodeSyntaxCSSGeneratorPlugin
-
+import TwitterPublishPlugin
 
 // This type acts as the configuration for your website.
 struct Blog: Website {
@@ -48,6 +48,7 @@ extension Blog {
 
 // This will generate your website using the built-in Foundation theme:
 try Blog().publish(using: [
+    .installPlugin(.twitter()),
     .installPlugin(.splash(withClassPrefix: "s-")),
     .installPlugin(
         .generateCodeCSS(withClassPrefix: "pre code .s-",
@@ -56,6 +57,7 @@ try Blog().publish(using: [
     ),
     .installPlugin(.readingTime()),
     .installPlugin(.additionalBlockquote()),
+    .installPlugin(.imagePlugin()),
     .addMarkdownFiles(),
     .installPlugin(.authorsPlugin()),
     .installPlugin(.checkTagsAvailability(Blog.AvailableTag.self)),
