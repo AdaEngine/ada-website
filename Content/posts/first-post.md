@@ -1,5 +1,5 @@
 ---
-date: 2020-04-03 19:22
+date: 2020-04-03
 description: Create your own NavigationViewStyle.
 tags: SwiftUI, UI
 image: vprusakov.jpg
@@ -8,7 +8,7 @@ author: SpectralDragon
 ---
 # Custom NavigationView style
 
-![Some image](first-post/1*eHvKZaNy4zaU76Tu6TSKWw.png?fullWidth)
+![Some image](posts/1*eHvKZaNy4zaU76Tu6TSKWw.png?fullWidth)
 
 Hello everybody, today we will talk about custom NavigationViewStyle.
 

@@ -54,7 +54,7 @@ extension Plugin where Site == Blog {
                 author.content = Content(title: author.name, description: author.description, body: Content.Body(html: html), date: Date(), lastModified: Date(), imagePath: context.site.imagePath, audio: nil, video: nil)
                 
                 author.path = "authors/\(author.github)"
-                Item.authors[item] = author
+                Item.authors[item.metadata] = author
                 
                 let page = Page(path: author.path, content: author.content)
                 Page.authors[page] = author
@@ -89,9 +89,9 @@ extension Page: Hashable {
 }
 
 extension Item where Site == Blog {
-    static var authors: [Item: AuthorItem] = [:]
+    static var authors: [Blog.ItemMetadata: AuthorItem] = [:]
     
     var author: AuthorItem {
-        return Self.authors[self]!
+        return Self.authors[self.metadata]!
     }
 }
