@@ -32,26 +32,21 @@ fileprivate extension Node where Context == HTML.BodyContext {
     static func articleInfo(item: Item<Blog>, context: PublishingContext<Blog>) -> Node {
         .div(
             .class("article_info"),
+            .img(
+                .class("avatar"),
+                .src(context.site.imagePath?.appendingComponent(item.author.avatar) ?? ""),
+                .alt("\(item.author.name) Profile Picture")
+            ),
             .div(
-                .img(
-                    .class("avatar"),
-                    .src(context.site.imagePath?.appendingComponent(item.author.avatar) ?? ""),
-                    .alt("\(item.author.name) Profile Picture")
+                .class("author_info"),
+                .a(
+                    .href(item.author.path),
+                    .h2(.text(item.author.name))
                 ),
                 .div(
-                    .class("author_info"),
-                    .a(
-                        .href(item.author.path),
-                        .h2(.text(item.author.name))
-                    ),
-                    .div(
-                        .span(
-                            .text(context.dateFormatter.string(from: item.date))
-                        ),
-                        .span(
-                            .text(String(format: "%g min read", item.readingTime.minutes))
-                        )
-                    )
+                    .text(context.dateFormatter.string(from: item.date)),
+                    .text(" • "),
+                    .text(String(format: "%.0g min read", item.readingTime.minutes.rounded(.up)))
                 )
             )
         )

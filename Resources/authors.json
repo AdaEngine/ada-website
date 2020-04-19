@@ -2,7 +2,17 @@
     {
         "name": "Vladislav Prusakov",
         "description": "LiteCode Team owner, iOS Engineer\n\nSwiftUI lover",
-        "github": "SpectralDragon",
-        "avatar": "vprusakov.jpg"
+        "username": "SpectralDragon",
+        "avatar": "vprusakov.jpg",
+        "socials": [
+            {
+                "username": "SpectralDragon",
+                "social": "github"
+            },
+            {
+                "username": "SpectralDragon_",
+                "social": "twitter"
+            }
+        ]
     }
 ]

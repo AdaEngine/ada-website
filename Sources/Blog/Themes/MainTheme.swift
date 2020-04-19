@@ -252,9 +252,9 @@ extension Node where Context == HTML.BodyContext {
         .footer(
             .class("footer"),
             .div(
-                .class("footer-container content-restriction"),
+                .class("footer-container content-restriction container"),
                 .p(
-                    .text("All rights")
+                    .text("Copyright © LiteCode 2020. All rights reserved.")
                 )
             )
         )
@@ -279,9 +279,36 @@ extension Node where Context == HTML.BodyContext {
                         .href(item.author.path),
                         .h2(.text(item.author.name))
                     ),
-                    .contentBody(item.author.content.body)
+                    .contentBody(item.author.content.body),
+                    .socialList(for: item, on: site)
                 )
             )
+        )
+    }
+    
+    static func socialList(for item: Item<Blog>, on site: Blog) -> Node {
+        .ul(
+            .class("socials"),
+            .forEach(item.author.socials) { social in
+                .li(
+                    .class(social.cssClass),
+                    .a(
+                        .href(social.path),
+                        .div(
+                            .style("{ display: flex; }"),
+                            .unwrap(site.imagePath, {
+                                .img(
+                                    .src($0.appendingComponent(social.social.logoPath)),
+                                    .alt(social.social.rawValue)
+                                )
+                            }),
+                            .span(
+                                .text(social.username)
+                            )
+                        )
+                    )
+                )
+            }
         )
     }
     

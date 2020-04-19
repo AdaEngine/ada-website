@@ -7,6 +7,7 @@
 
 import Foundation
 import Publish
+import Plot
 import Ink
 
 extension Plugin {
@@ -26,20 +27,32 @@ extension Modifier {
     static func imageModifier(imagePath: Path) -> Self {
         Modifier(target: .images) { html, markdown -> String in
             
-            let fullWidthMode = markdown.contains(Self.fullWidthMode)
+            let isFullMode = markdown.contains(Self.fullWidthMode)
             let input = markdown.replacingOccurrences(of: Self.fullWidthMode, with: "")
             
             let path = String(input.dropFirst("![".count).dropLast(")".count).drop(while: { $0 != "(" }).dropFirst())
 
-            var altSuffix = ""
-            if let alt = input.firstSubstring(between: "[", and: "]") {
-                altSuffix = String(alt)
-            }
+            let altSuffix = input.firstSubstring(between: "[", and: "]").flatMap(String.init)
             
-            let imageStyle = fullWidthMode ? "class=\"full-width-image\"" : ""
+            let imageHTML = Node.imageNode(path: imagePath.appendingComponent(path),
+                                           description: altSuffix,
+                                           isFullMode: isFullMode)
             
-            let imageHTML = "<div class=\"article-image\"><img src=\"\(imagePath.appendingComponent(path).absoluteString)\" alt=\"\(altSuffix)\"\(imageStyle)><p>\(altSuffix)</p></div>"
-            return imageHTML
+            return imageHTML.render()
         }
+    }
+}
+
+fileprivate extension Node where Context == HTML.BodyContext {
+    static func imageNode(path: Path, description: String?, isFullMode: Bool) -> Node {
+        .div(
+            .class("article-image"),
+            .img(
+                .class(isFullMode ? "full-width-image" : ""),
+                .src(path),
+                .unwrap(description) { .alt($0) }
+            ),
+            .unwrap(description) { .p(.text($0)) }
+        )
     }
 }
