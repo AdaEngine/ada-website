@@ -2,19 +2,9 @@
 
 @import "tags.css";
 @import "codesyntax.css";
+@import "socials.css";
 
 /* Fonts */
-/*
-@font-face {
-    font-family: "Main";
-    src: url(/fonts/SourceSansPro-Regular.ttf);
-}
-
-@font-face {
-    font-family: "Main";
-    src: url(/fonts/SourceSansPro-Bold.ttf);
-    font-weight: bold;
-} */
 
 @font-face {
     font-family: "Code";
@@ -448,6 +438,21 @@ article .full-width-image {
     margin-bottom: 0px;
 }
 
+.article_info .avatar {
+    width: 48px;
+    height: 49px;
+}
+
+.article_info {
+    display: inline-flex;
+    color: #9299A2;
+    margin-bottom: 20px;
+}
+
+.article_info h2 {
+    font-size: 16px;
+}
+
 /* Code */
 
 code {
@@ -568,6 +573,10 @@ pre code .highlight {
     }
     
     article .article-image p {
+        color: #9299A2;
+    }
+    
+    .article_info {
         color: #9299A2;
     }
     

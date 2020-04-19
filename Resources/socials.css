@@ -1,0 +1,74 @@
+/* THIS FILE WAS AUTO GENERATED. DO NOT CHANGE IT MANUAL */
+
+.socials li {
+    display: flex;
+    padding: 3px 6px;
+    margin-right: 10px;
+    font-size: 0.85em;
+    border-radius: 8px;
+    margin-bottom: 7px;
+}
+
+.socials {
+    display: flex;
+    cursor: pointer;
+    padding-top: 10px;
+}
+
+.socials img {
+    width: 16px;
+    height: 16px;
+}
+
+.socials span {
+    padding-left: 8px;
+}
+
+.socials .twitter {
+	background-color: #00ACEE66;
+	color: #FFFFFFFF;
+	font-weight: bold;
+}
+
+.socials .twitter img:hover {
+    fill: #FFFFFFFF;
+}
+
+.socials .twitter:hover {
+	background-color: #00ACEEB2;
+	color: #FFFFFFFF;
+}
+
+.socials .github {
+	background-color: #00000066;
+	color: #FFFFFFFF;
+	font-weight: bold;
+}
+
+.socials .github img:hover {
+    fill: #FFFFFFFF;
+}
+
+.socials .github:hover {
+	background-color: #000000B2;
+	color: #FFFFFFFF;
+}
+
+@media(prefers-color-scheme: dark) {
+
+	.socials .github {
+		background-color: #FFFFFF66;
+		color: #000000FF;
+		font-weight: bold;
+	}
+	
+	.socials .github img:hover {
+	    fill: #000000FF;
+	}
+	
+	.socials .github:hover {
+		background-color: #FFFFFFB2;
+		color: #000000FF;
+	}
+
+}
