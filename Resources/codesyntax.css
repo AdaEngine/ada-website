@@ -6,26 +6,6 @@ pre code .s-type {
 	color: #3E6D74FF
 }
 
-pre code .s-comment {
-	color: #007400FF
-}
-
-pre code .s-keyword {
-	color: #A90D91FF
-}
-
-pre code .s-preprocessing {
-	color: #63381FFF
-}
-
-pre code .s-call {
-	color: #25464AFF
-}
-
-pre code .s-string {
-	color: #C41A15FF
-}
-
 pre code .s-number {
 	color: #1C00CEFF
 }
@@ -38,32 +18,40 @@ pre code .s-property {
 	color: #3E6D74FF
 }
 
+pre code .s-comment {
+	color: #007400FF
+}
+
+pre code .s-preprocessing {
+	color: #63381FFF
+}
+
+pre code .s-call {
+	color: #25464AFF
+}
+
+pre code .s-keyword {
+	color: #A90D91FF
+}
+
+pre code .s-string {
+	color: #C41A15FF
+}
+
 
 
 @media(prefers-color-scheme: dark) {
-	
-	pre code .s-call {
-		color: #67B6A3FF
-	}
-	
-	pre code .s-preprocessing {
-		color: #FC8E3EFF
-	}
-	
-	pre code .s-number {
-		color: #CFBF69FF
-	}
 	
 	pre code .s-property {
 		color: #67B6A3FF
 	}
 	
-	pre code .s-keyword {
-		color: #FC5FA2FF
+	pre code .s-dotAccess {
+		color: #67B6A3FF
 	}
 	
-	pre code .s-string {
-		color: #FC695DFF
+	pre code .s-preprocessing {
+		color: #FC8E3EFF
 	}
 	
 	pre code .s-comment {
@@ -74,8 +62,20 @@ pre code .s-property {
 		color: #9EF0DDFF
 	}
 	
-	pre code .s-dotAccess {
+	pre code .s-keyword {
+		color: #FC5FA2FF
+	}
+	
+	pre code .s-number {
+		color: #CFBF69FF
+	}
+	
+	pre code .s-call {
 		color: #67B6A3FF
+	}
+	
+	pre code .s-string {
+		color: #FC695DFF
 	}
 	
 	
