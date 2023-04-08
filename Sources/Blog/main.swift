@@ -3,7 +3,6 @@ import Publish
 import Plot
 import MinifyCSSPublishPlugin
 import ReadingTimePublishPlugin
-import CNAMEPublishPlugin
 import SplashPublishPlugin
 import PublishColorUtils
 import TagColorCSSGeneratorPlugin

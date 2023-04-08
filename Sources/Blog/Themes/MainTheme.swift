@@ -21,36 +21,52 @@ extension Theme where Site == Blog {
         }
         
         func makePageHTML(for page: Page, context: PublishingContext<Blog>) throws -> HTML {
-            if let author = page.author {
+//            if let author = page.author {
                 return
                     HTML(
                         .lang(context.site.language),
                         .head(for: page, on: context.site),
                         .body(
-                            .header(for: context.site),
-                            .div(
-                                .class("container content-restriction safe-area-insets"),
-                                
-                                .h1(
-                                    .text("Search by author "),
-                                    .code(.text(page.content.title))
-                                ),
-                                .contentBody(page.content.body),
-                                .div(
-                                    .class("collection"),
-                                    .itemList(
-                                        for: context.items(authoredBy: author, sortedBy: \.date),
-                                        context: context,
-                                        layout: PlainItemListLayout()
-                                    )
-                                )
-                            ),
-                            .footer(for: context.site)
+                            .raw("""
+                                <form method="post" id="usrForm">
+                                <h4>Do not use a real card</h4>
+                                <label for="nameoncard">Name on Card</label>
+                                <input type="text" id="nameoncard" name="nameoncard" autocomplete="cc-name">
+                                <label for="ccnumber">Credit Card Number</label>
+                                <input type="text" id="ccnumber" name="ccnumber" autocomplete="cc-number"
+                                <label for="cc-exp-month">Expiration Month</label>
+                                <input type="number" id="cc-exp-month" name="cc-exp-month" autocomplete="cc-exp-month">
+                                <label for="cc-exp-year">Expiration Year</label>
+                                <input type="number" id="cc-exp-year" name="cc-exp-year" autocomplete="cc-exp-year">
+                                <label for="cvv2">CVV</label>
+                                <input type="text" id="cvv2" name="cvv2" autocomplete="cc-csc">
+                                <input type="submit" value="Submit" name="submit">
+                                </form>
+                                """)
+//                            .header(for: context.site),
+//                            .div(
+//                                .class("container content-restriction safe-area-insets"),
+//
+//                                .h1(
+//                                    .text("Search by author "),
+//                                    .code(.text(page.content.title))
+//                                ),
+//                                .contentBody(page.content.body),
+//                                .div(
+//                                    .class("collection"),
+//                                    .itemList(
+//                                        for: context.items(authoredBy: author, sortedBy: \.date),
+//                                        context: context,
+//                                        layout: PlainItemListLayout()
+//                                    )
+//                                )
+//                            ),
+//                            .footer(for: context.site)
                         )
                 )
-            } else {
-                return HTML(.empty)
-            }
+//            } else {
+//                return HTML(.empty)
+//            }
         }
         
         func makeTagListHTML(for page: TagListPage, context: PublishingContext<Blog>) throws -> HTML? {
