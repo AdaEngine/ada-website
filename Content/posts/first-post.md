@@ -29,8 +29,6 @@ struct ContentView: View {
 ```
 If we'll look into documentationm we doesn't see any method in protocol `NavigationViewStyle`, but if we implemented this method in class 
 
-> tweet https://twitter.com/SpectralDragon_/status/1250093997764288512
-
 > Some interresting thing
 
 <warning>

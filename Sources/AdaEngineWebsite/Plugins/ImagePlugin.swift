@@ -11,7 +11,6 @@ import Plot
 import Ink
 
 extension Plugin {
-    
     static func imagePlugin() -> Self {
         Plugin(name: "Image Description Plugin", installer: { context in
             let imagePath = context.site.imagePath!

@@ -48,7 +48,8 @@ extension Author.Social {
         var backgroundColor: Color {
             switch self {
             case .github:
-                return Color(hex: "#000000").adaptiveToDarkTheme(Color(hex: "#ffffff"))
+                return Color(hex: "#000000")
+                    .adaptiveToDarkTheme(Color(hex: "#ffffff"))
             case .twitter:
                 return Color(hex: "#00acee")
             }
@@ -57,7 +58,8 @@ extension Author.Social {
         var color: Color {
             switch self {
             case .github:
-                return Color(hex: "#ffffff").adaptiveToDarkTheme(Color(hex: "#000000"))
+                return Color(hex: "#ffffff")
+                    .adaptiveToDarkTheme(Color(hex: "#000000"))
             case .twitter:
                 return Color(hex: "#ffffff")
             }

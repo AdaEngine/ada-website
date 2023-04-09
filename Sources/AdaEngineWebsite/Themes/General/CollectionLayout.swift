@@ -32,22 +32,24 @@ class MainIndexItemListLayout: ItemListLayout<Blog> {
         let first = context.allItems(sortedBy: \.date, order: .descending).first
         
         for item in items {
-            if item.date == first?.date {
-                self.layout[item] = .newArticleBody(for: item, context: context)
-            } else {
-                self.layout[item] = .articleBody(for: item, context: context)
-            }
+            self.layout[item] = .component(
+                BlogArticle(
+                    item: item,
+                    context: context,
+                    isNewArticle: item.date == first?.date
+                )
+            )
         }
     }
     
     override func itemLayout(_ item: Item<Blog>, at index: Int, context: PublishingContext<Blog>) -> Node<HTML.BodyContext> {
-        return self.layout[item] ?? .articleBody(for: item, context: context)
+        return self.layout[item] ?? .component(BlogArticle(item: item, context: context, isNewArticle: false))
     }
 }
 
 
 class PlainItemListLayout: ItemListLayout<Blog> {
     override func itemLayout(_ item: Item<Blog>, at index: Int, context: PublishingContext<Blog>) -> Node<HTML.BodyContext> {
-        return .articleBody(for: item, context: context)
+        return .component(BlogArticle(item: item, context: context, isNewArticle: false))
     }
 }
