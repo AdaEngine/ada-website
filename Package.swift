@@ -1,32 +1,33 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.8
 
 import PackageDescription
 
 let package = Package(
-    name: "Blog",
+    name: "AdaEngineWebsite",
+    platforms: [.macOS(.v12)],
     products: [
-        .executable(name: "Blog", targets: ["Blog"])
+        .executable(name: "AdaEngineWebsite", targets: ["AdaEngineWebsite"])
     ],
     dependencies: [
-        .package(url: "https://github.com/johnsundell/publish.git", from: "0.3.0"),
-        .package(url: "https://github.com/alexito4/ReadingTimePublishPlugin.git", from: "0.1.0"),
-        .package(url: "https://github.com/labradon/MinifyCSSPublishPlugin.git", from: "0.1.0"),
-        .package(url: "https://github.com/JohnSundell/SplashPublishPlugin.git", from: "0.1.0"),
-        .package(url: "https://github.com/SpectralDragon/TagColorCSSGeneratorPlugin.git", from: "0.1.0"),
-        .package(url: "https://github.com/SpectralDragon/CodeSyntaxCSSGeneratorPlugin.git", from: "0.1.0"),
-        .package(url: "https://github.com/insidegui/TwitterPublishPlugin.git", .branch("master"))
+        .package(url: "https://github.com/johnsundell/publish.git", from: "0.9.0"),
+        .package(url: "https://github.com/alexito4/ReadingTimePublishPlugin.git", from: "0.3.0"),
+        .package(url: "https://github.com/labradon/MinifyCSSPublishPlugin.git", branch: "master"),
+        .package(url: "https://github.com/SpectralDragon/TagColorCSSGeneratorPlugin.git", from: "0.2.0"),
+        .package(url: "https://github.com/SpectralDragon/CodeSyntaxCSSGeneratorPlugin.git", from: "0.2.0"),
+        .package(url: "https://github.com/insidegui/TwitterPublishPlugin.git", from: "0.2.0"),
+        .package(url: "https://github.com/insidegui/DarkImagePublishPlugin", from: "1.0.0")
     ],
     targets: [
-        .target(
-            name: "Blog",
+        .executableTarget(
+            name: "AdaEngineWebsite",
             dependencies: [
-                "Publish",
+                .product(name: "Publish", package: "publish"),
                 "MinifyCSSPublishPlugin",
                 "ReadingTimePublishPlugin",
-                "SplashPublishPlugin",
                 "TagColorCSSGeneratorPlugin",
                 "CodeSyntaxCSSGeneratorPlugin",
-                "TwitterPublishPlugin"
+                "TwitterPublishPlugin",
+                "DarkImagePublishPlugin"
             ]
         )
     ]

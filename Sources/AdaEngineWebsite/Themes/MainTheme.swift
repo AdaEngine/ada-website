@@ -166,72 +166,7 @@ extension Node where Context == HTML.BodyContext {
         }
     }
     
-    static func newArticleBody(for item: Item<Blog>, context: PublishingContext<Blog>) -> Node {
-        .article(
-            .class("article-item-new"),
-            .a(
-                .href(item.path),
-                .if(item.imagePath != nil, .img(.src(context.site.preview(for: item) ?? ""))),
-                .div(
-                    .class("article-item-new-content"),
-                    .div(
-                        .class("article-item-new-header"),
-                        .h1(
-                            .text(item.title)
-                        ),
-                        .span(
-                            .class("article-item-new-sign"),
-                            .text("NEW")
-                        )
-                    ),
-                    .h3(
-                        .class("article-item-new-subtitle"),
-                        .text(item.description)
-                    ),
-                    .div(
-                        .class("article-item-info"),
-                        .tagList(for: item, on: context.site),
-                        
-                        .p(
-                            .class("article-date"),
-                            .text(context.dateFormatter.string(from: item.date))
-                        )
-                    )
-                )
-            )
-        )
-    }
-    
-    static func articleBody(for item: Item<Blog>, context: PublishingContext<Blog>) -> Node {
-        .article(
-            .class("article-item"),
-            .a(
-                .href(item.path),
-                .if(item.imagePath != nil, .img(.src(context.site.preview(for: item) ?? ""))),
-                .div(
-                    .class("article-item-content"),
-                    .h3(
-                        .text(item.title)
-                    ),
-                    .div(
-                        .class("article-item-info"),
-                        .tagList(for: item, on: context.site),
-                        
-                        .p(
-                            .class("article-date"),
-                            .text(context.dateFormatter.string(from: item.date))
-                        )
-                    ),
-                    .p(
-                        .class("article-item-description"),
-                        .text(item.description)
-                    )
-                )
-            )
-        )
-    }
-    
-    static func tagList(for item: Item<Blog>, on site: Blog) -> Node {
+    static func tagList(for item: Item<Blog>, on site: Blog) -> Node<HTML.BodyContext> {
         .ul(
             .class("tags"),
             .forEach(item.tags, { tag in
@@ -436,4 +371,3 @@ extension Blog {
         return item.imagePath.flatMap { self.imagePath?.appendingComponent($0.absoluteString) }
     }
 }
-

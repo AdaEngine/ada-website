@@ -46,7 +46,7 @@ fileprivate extension Node where Context == HTML.BodyContext {
                 .div(
                     .text(context.dateFormatter.string(from: item.date)),
                     .text(" • "),
-                    .text(String(format: "%.0g min read", item.readingTime.minutes.rounded(.up)))
+                    .text(String(format: "%d min read", item.readingTime.minutes))
                 )
             )
         )

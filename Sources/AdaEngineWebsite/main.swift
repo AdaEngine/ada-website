@@ -24,9 +24,9 @@ struct Blog: Website {
     }
     
     // Update these properties to configure your website:
-    let url = URL(string: "https://litecode.dev")!
-    let name = "LiteCode"
-    let description = "A personal blog of LiteCode Team"
+    let url = URL(string: "https://adaengine.github.io")!
+    let name = "AdaEngine"
+    let description = "A simple and fast game engine written on Swift"
     let language: Language = .english
     let imagePath: Path? = "images"
 }
@@ -78,7 +78,7 @@ try Blog().publish(using: [
     .generateHTML(withTheme: .main),
     .generateRSSFeed(including: [.posts]),
     .generateSiteMap(),
-    .deploy(using: .gitHub("SpectralDragon/spectraldragon.github.io", useSSH: false))
+    .deploy(using: .gitHub("SpectralDragon/spectraldragon.github.io", useSSH: true))
 ])
 
 

@@ -169,7 +169,7 @@ extension PublishingContext where Site == Blog {
     func items<T: Comparable>(
         authoredBy author: AuthorItem,
         sortedBy sortingKeyPath: KeyPath<Item<Site>, T>,
-        order: SortOrder = .ascending) -> [Item<Blog>] {
+        order: Publish.SortOrder = .ascending) -> [Item<Blog>] {
         return self.allItems(sortedBy: sortingKeyPath, order: order).filter { $0.author == author }
     }
 }
