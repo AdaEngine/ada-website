@@ -1,0 +1,28 @@
+{
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "name": "Debug AdaEngineWebsite",
+            "program": "${workspaceFolder:ada-website}/.build/debug/AdaEngineWebsite",
+            "args": [],
+            "cwd": "${workspaceFolder:ada-website}",
+            "preLaunchTask": "swift: Build Debug AdaEngineWebsite"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "name": "Release AdaEngineWebsite",
+            "program": "${workspaceFolder:ada-website}/.build/release/AdaEngineWebsite",
+            "args": [],
+            "cwd": "${workspaceFolder:ada-website}",
+            "preLaunchTask": "swift: Build Release AdaEngineWebsite"
+        }
+    ]
+}

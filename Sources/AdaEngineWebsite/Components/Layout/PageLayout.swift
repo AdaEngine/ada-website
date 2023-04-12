@@ -8,52 +8,19 @@
 import Plot
 import Publish
 
+/// Base page layout for header, footer and context
 struct PageLayout<Content: Component>: Component {
-    
-    let site: Blog
     
     @ComponentBuilder
     var content: Content
     
-    @ComponentBuilder
     var body: Component {
-        AEHeader(site: site)
-        
-        self.content
-        
-        AEFooter()
-    }
-}
-
-struct AEHeader: Component {
-    
-    let site: Blog
-    
-    var body: Component {
-        Header {
-            Div {
-                Link(url: "/") {
-                    H2(site.name)
-                    
-                    H2("Blog")
-                        .class("subtitle")
-                }
-                .class("header-logo")
-            }
-            .class("container content-restriction header-container")
+        ComponentGroup {
+            AEHeader()
+            
+            self.content
+            
+            AEFooter()
         }
-        .class("header")
-    }
-}
-
-struct AEFooter: Component {
-    var body: Component {
-        Footer {
-            Div {
-                Paragraph("Copyright © AdaEngine 2023. All rights reserved.")
-            }
-            .class("footer-container content-restriction container")
-        }
-        .class("footer")
     }
 }
