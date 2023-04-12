@@ -11,14 +11,15 @@ import TwitterPublishPlugin
 
 // This type acts as the configuration for your website.
 struct Blog: Website {
+    
+    // All sections on site
     enum SectionID: String, WebsiteSectionID {
-        // Add the sections that you want your website to contain here:
         case posts
     }
     
+    // TODO: Think about it later
+    // Add any site-specific metadata that you want to use here.
     struct ItemMetadata: WebsiteItemMetadata {
-        // Add any site-specific metadata that you want to use here.
-        
         let keywords: [String]?
         let author: String
     }
@@ -32,6 +33,7 @@ struct Blog: Website {
 }
 
 extension Blog {
+    // All tags available on site
     enum AvailableTag: String, CaseIterable {
         case swiftui = "SwiftUI"
         case ui = "UI"
@@ -56,9 +58,13 @@ try Blog().publish(using: [
     .installPlugin(.twitter()),
     .installPlugin(.splash(withClassPrefix: "s-")),
     .installPlugin(
-        .generateCodeCSS(withClassPrefix: "pre code .s-",
-                         theme: .dynamic(light: .xcode("Light.dvtcolortheme"),
-                                         dark: .xcode("Dark.xccolortheme")))
+        .generateCodeCSS(
+            withClassPrefix: "pre code .s-",
+            theme: .dynamic(
+                light: .xcode("Light.dvtcolortheme"),
+                dark: .xcode("Dark.xccolortheme")
+            )
+        )
     ),
     .installPlugin(.additionalBlockquote()),
     .installPlugin(.imagePlugin()),
@@ -73,12 +79,20 @@ try Blog().publish(using: [
     .installPlugin(.authorsPlugin()),
     .installPlugin(.checkTagsAvailability(Blog.AvailableTag.self)),
     .installPlugin(.articleInfoAfterFirstHeader()),
-    .installPlugin(.tagColorCSSGenerator(tagsCSSPrefix: "tag-", builder: { Blog.AvailableTag(rawValue: $0.string)!.color })),
+    .installPlugin(
+        .tagColorCSSGenerator(
+            tagsCSSPrefix: "tag-",
+            builder: {
+                Blog.AvailableTag(rawValue: $0.string)!.color
+            })
+    ),
     .copyResources(),
     .generateHTML(withTheme: .main),
     .generateRSSFeed(including: [.posts]),
     .generateSiteMap(),
-    .deploy(using: .gitHub("SpectralDragon/spectraldragon.github.io", useSSH: true))
+    .deploy(
+        using: .gitHub("AdaEngine/adaengine.github.io", useSSH: true)
+    )
 ])
 
 

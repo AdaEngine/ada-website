@@ -1,5 +1,5 @@
 //
-//  BlogArticle.swift
+//  BlogArticleRow.swift
 //  
 //
 //  Created by v.prusakov on 4/9/23.
@@ -10,7 +10,7 @@ import Publish
 import Foundation
 
 // Base article
-struct BlogArticle: Component {
+struct BlogArticleRow: Component {
     
     let item: Item<Blog>
     let context: PublishingContext<Blog>

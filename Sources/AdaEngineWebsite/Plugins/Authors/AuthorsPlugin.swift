@@ -45,7 +45,16 @@ extension Plugin where Site == Blog {
                 guard var author = authors.first(where: { item.metadata.author == $0.username }).map(AuthorItem.init) else { return }
                 
                 let html = parser.html(from: author.description)
-                author.content = Content(title: author.name, description: author.description, body: Content.Body(html: html), date: Date(), lastModified: Date(), imagePath: context.site.imagePath, audio: nil, video: nil)
+                author.content = Content(
+                    title: author.name,
+                    description: author.description,
+                    body: Content.Body(html: html),
+                    date: Date(),
+                    lastModified: Date(),
+                    imagePath: context.site.imagePath,
+                    audio: nil,
+                    video: nil
+                )
                 
                 author.path = "authors/\(author.username)"
                 Item.authors[item.metadata] = author
@@ -142,7 +151,6 @@ fileprivate extension Plugin where Site == Blog {
             
             \(tuple.map { Self.socialStyle(for: $0.light) }.joined(separator: "\n\n"))
             """
-            
             
             let stylesForDark: [String] = tuple.map {
                 guard let dark = $0.dark else { return nil }

@@ -11,29 +11,36 @@ import Plot
 
 class ItemListLayout<Site: Website> {
     
-    var items: [Item<Site>] = []
-    var context: PublishingContext<Site>?
+    typealias Element = Item<Site>
+    
+    var items: [Element] = []
+    var context: PublishingContext<Site>
+    
+    init(items: [Element], context: PublishingContext<Site>) {
+        self.items = items
+        self.context = context
+    }
     
     func prepare() { }
     
-    func itemLayout(_ item: Item<Blog>, at index: Int, context: PublishingContext<Site>) -> Node<HTML.BodyContext> { .contentBody(item.content.body) }
+    func itemLayout(_ item: Element, at index: Int) -> Node<HTML.BodyContext> {
+        return .contentBody(item.content.body)
+    }
 }
 
 
 class MainIndexItemListLayout: ItemListLayout<Blog> {
     
-    private var layout: [Item<Blog>: Node<HTML.BodyContext>] = [:]
+    private var layout: [Component] = []
     
     override func prepare() {
-        guard let context = self.context else { return }
-        
         self.layout.removeAll()
         
-        let first = context.allItems(sortedBy: \.date, order: .descending).first
+        let first = items.first
         
         for item in items {
-            self.layout[item] = .component(
-                BlogArticle(
+            self.layout.append(
+                BlogArticleRow(
                     item: item,
                     context: context,
                     isNewArticle: item.date == first?.date
@@ -42,14 +49,18 @@ class MainIndexItemListLayout: ItemListLayout<Blog> {
         }
     }
     
-    override func itemLayout(_ item: Item<Blog>, at index: Int, context: PublishingContext<Blog>) -> Node<HTML.BodyContext> {
-        return self.layout[item] ?? .component(BlogArticle(item: item, context: context, isNewArticle: false))
+    override func itemLayout(_ item: Item<Blog>, at index: Int) -> Node<HTML.BodyContext> {
+        return .component(
+            self.layout[index]
+        )
     }
 }
 
 
 class PlainItemListLayout: ItemListLayout<Blog> {
-    override func itemLayout(_ item: Item<Blog>, at index: Int, context: PublishingContext<Blog>) -> Node<HTML.BodyContext> {
-        return .component(BlogArticle(item: item, context: context, isNewArticle: false))
+    override func itemLayout(_ item: Item<Blog>, at index: Int) -> Node<HTML.BodyContext> {
+        return .component(
+            BlogArticleRow(item: item, context: self.context, isNewArticle: false)
+        )
     }
 }
