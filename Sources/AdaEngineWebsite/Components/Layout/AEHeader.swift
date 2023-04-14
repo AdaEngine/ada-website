@@ -10,21 +10,50 @@ import Publish
 
 struct AEHeader: Component {
     
-    @EnvironmentValue(.publishContext) var context
+    let section: Blog.SectionID?
+    
+    @EnvironmentValue(.publishContext)
+    private var context
+    
+    let sections: [Blog.SectionID] = [.news, .learn, .community, .features]
     
     var body: Component {
         Header {
             Div {
                 Link(url: "/") {
-                    H2(context!.site.name)
+                    H2(self.context!.site.name)
                     
-                    H2("Blog")
-                        .class("subtitle")
+                    if let section = self.section {
+                        H2(section.rawValue.capitalized)
+                            .class("subtitle")
+                    }
                 }
                 .class("header-logo")
+                
+                self.navigation
             }
             .class("container content-restriction header-container")
         }
         .class("header")
+    }
+    
+    
+    @ComponentBuilder
+    private var navigation: Component {
+        let sections = self.context!.sections.filter { self.sections.contains($0.id) }
+        
+        List(sections) { section in
+            ListItem {
+                Link(
+                    url: section.path.absoluteString,
+                    label: {
+                        Text(section.title.capitalized)
+                    }
+                )
+                .class("navigation-item-link")
+            }
+            .class("navigation-item")
+        }
+        .class("navigation")
     }
 }

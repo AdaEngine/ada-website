@@ -34,7 +34,7 @@ struct PreviousArticles: Component {
                         H3("RELATED ARTICLES")
                         
                         Div {
-                            List(Array(items)) { item in
+                            for item in Array(items) {
                                 BlogArticleRow(item: item, context: self.context!, isNewArticle: false)
                             }
                         }

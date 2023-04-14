@@ -1,5 +1,5 @@
 //
-//  ItemPage.swift
+//  SectionPage.swift
 //  
 //
 //  Created by v.prusakov on 4/13/23.
@@ -8,15 +8,15 @@
 import Plot
 import Publish
 
-struct ItemPage: Component {
+struct SectionPage: Component {
     
-    let item: Item<Blog>
+    let section: Section<Blog>
     
     @ComponentBuilder
     var body: Component {
-        switch item.sectionID {
+        switch section.id {
         case .news:
-            PostPage(item: item)
+            NewsSectionPage(section: self.section)
         default:
             EmptyComponent()
         }

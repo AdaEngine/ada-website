@@ -36,14 +36,12 @@ class MainIndexItemListLayout: ItemListLayout<Blog> {
     override func prepare() {
         self.layout.removeAll()
         
-        let first = items.first
-        
-        for item in items {
+        for (index, item) in items.enumerated() {
             self.layout.append(
                 BlogArticleRow(
                     item: item,
                     context: context,
-                    isNewArticle: item.date == first?.date
+                    isNewArticle: index == 0
                 )
             )
         }

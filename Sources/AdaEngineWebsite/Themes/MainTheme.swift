@@ -17,7 +17,13 @@ extension Theme where Site == Blog {
     private struct MainHTMLFactory: HTMLFactory {
         
         func makeSectionHTML(for section: Section<Blog>, context: PublishingContext<Blog>) throws -> HTML {
-            HTML(.empty)
+            return SitePage(
+                location: section,
+                section: section.id,
+                context: context
+            ) {
+                SectionPage(section: section)
+            }.html
         }
         
         func makePageHTML(for page: Page, context: PublishingContext<Blog>) throws -> HTML {
@@ -25,7 +31,7 @@ extension Theme where Site == Blog {
                 location: page,
                 context: context
             ) {
-                EmptyComponent()
+                page.content.body
             }.html
         }
         
@@ -36,26 +42,27 @@ extension Theme where Site == Blog {
         func makeTagDetailsHTML(for page: TagDetailsPage, context: PublishingContext<Blog>) throws -> HTML? {
             let items = context.items(taggedWith: page.tag, sortedBy: \.date, order: .descending)
             
-            let layout = PlainItemListLayout(
-                items: context.items(taggedWith: page.tag, sortedBy: \.date, order: .descending),
+            return SitePage(
+                location: page,
                 context: context
-            )
-            layout.prepare()
-            
-            return SitePage(location: page, context: context) {
+            ) {
                 Div {
                     H1 {
                         Text("Search by tag ")
                         
-                        Link(url: context.site.path(for: page.tag).string) {
+                        Link(url: context.site.path(for: page.tag).absoluteString) {
                             Text(page.tag.string)
                         }
                         .class("tag-in-search \(page.tag.cssClass)")
                     }
                     
                     Div {
-                        List(items.enumerated()) { (index, item) in
-                            layout.itemLayout(item, at: index)
+                        for item in items {
+                            BlogArticleRow(
+                                item: item,
+                                context: context,
+                                isNewArticle: false
+                            )
                         }
                     }
                     .class("collection")
@@ -67,6 +74,7 @@ extension Theme where Site == Blog {
         func makeItemHTML(for item: Item<Blog>, context: PublishingContext<Blog>) throws -> HTML {
             SitePage(
                 location: item,
+                section: item.sectionID,
                 context: context
             ) {
                 ItemPage(item: item)
@@ -83,10 +91,10 @@ extension Theme where Site == Blog {
             return SitePage(
                 location: index,
                 context: context,
-                keywords: "swift ios development apple watch iphone ipad swiftui uikit dev wwdc tutorial guide catalyst playground spectraldragon"
+                keywords: "swift adaengine development apple watch iphone ipad metal vulkan tutorial guide playground spectraldragon ada engine godot unity unreal webgl opengl glsl"
             ) {
                 Div {
-                    List(layout.items.enumerated()) { (index, item) in
+                    for (index, item) in layout.items.enumerated() {
                         layout.itemLayout(item, at: index)
                     }
                 }
