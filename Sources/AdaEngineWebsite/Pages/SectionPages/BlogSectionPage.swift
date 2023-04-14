@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  BlogSectionPage.swift
 //  
 //
 //  Created by v.prusakov on 4/13/23.
@@ -8,7 +8,7 @@
 import Plot
 import Publish
 
-struct NewsSectionPage: Component {
+struct BlogSectionPage: Component {
     
     let section: Section<Blog>
     

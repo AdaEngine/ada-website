@@ -15,7 +15,7 @@ extension Plugin where Site == Blog {
             let nonModifiedContext = context
             
             context.mutateAllSections { section in
-                guard section.id == .news else {
+                guard section.id == .blog else {
                     return
                 }
                 section.mutateItems { item in

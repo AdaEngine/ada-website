@@ -142,6 +142,10 @@ fileprivate extension Plugin where Site == Blog {
                 padding-top: 10px;
             }
             
+            .socials a {
+                display: flex;
+            }
+            
             .socials img {
                 width: 16px;
                 height: 16px;

@@ -15,7 +15,7 @@ struct ItemPage: Component {
     @ComponentBuilder
     var body: Component {
         switch item.sectionID {
-        case .news:
+        case .blog:
             PostPage(item: item)
         default:
             EmptyComponent()

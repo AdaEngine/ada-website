@@ -15,8 +15,8 @@ struct SectionPage: Component {
     @ComponentBuilder
     var body: Component {
         switch section.id {
-        case .news:
-            NewsSectionPage(section: self.section)
+        case .blog:
+            BlogSectionPage(section: self.section)
         default:
             EmptyComponent()
         }
