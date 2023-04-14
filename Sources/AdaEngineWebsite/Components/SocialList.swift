@@ -25,7 +25,6 @@ struct SocialList: Component {
                             description: social.social.rawValue
                         )
                     }
-                    .style("{ display: flex; }")
                     
                     Span {
                         Text(social.username)

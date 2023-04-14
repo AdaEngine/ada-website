@@ -68,7 +68,7 @@ struct SitePage<Content: Component> {
             .twitterCardType(location.imagePath == nil ? .summary : .summaryLargeImage),
             .forEach(stylesheetPaths, { .stylesheet($0) }),
             .viewport(.accordingToDevice),
-            .unwrap(context.site.favicon, { .favicon($0) }),
+            .favicon("Images/favicon.png"),
             .unwrap(rssFeedPath, { path in
                 let title = rssFeedTitle ?? "Subscribe to \(context.site.name)"
                 return .rssFeedLink(path.absoluteString, title: title)

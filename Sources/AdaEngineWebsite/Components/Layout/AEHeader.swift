@@ -15,7 +15,7 @@ struct AEHeader: Component {
     @EnvironmentValue(.publishContext)
     private var context
     
-    let sections: [Blog.SectionID] = [.news, .learn, .community, .features]
+    let sections: [Blog.SectionID] = [.blog, .learn, .community, .features]
     
     var body: Component {
         Header {

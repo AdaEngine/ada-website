@@ -23,7 +23,7 @@ struct Blog: Website {
     let name = "AdaEngine"
     let description = "A simple and fast game engine written on Swift"
     let language: Language = .english
-    let imagePath: Path? = "images"
+    let imagePath: Path? = "Images"
 }
 
 extension Blog {
@@ -42,7 +42,7 @@ extension Blog {
     
     // All sections on site
     enum SectionID: String, WebsiteSectionID {
-        case news
+        case blog
         
         case community
         
@@ -101,7 +101,8 @@ try Blog().publish(using: [
     .installPlugin(.make404Page()),
     .copyResources(),
     .generateHTML(withTheme: .main),
-    .generateRSSFeed(including: [.news]),
+    .installPlugin(.move404PageToRoot()),
+    .generateRSSFeed(including: [.blog]),
     .generateSiteMap(),
     .deploy(
         using: .gitHub("AdaEngine/adaengine.github.io", useSSH: true)
