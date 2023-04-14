@@ -42,7 +42,9 @@ extension Plugin where Site == Blog {
             
             let parser = context.markdownParser
             context.allItems(sortedBy: \.date).forEach { item in
-                guard var author = authors.first(where: { item.metadata.author == $0.username }).map(AuthorItem.init) else { return }
+                guard var author = authors.first(where: { item.metadata.author == $0.username }).map(AuthorItem.init) else {
+                    return
+                }
                 
                 let html = parser.html(from: author.description)
                 author.content = Content(

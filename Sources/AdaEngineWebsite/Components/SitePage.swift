@@ -8,9 +8,12 @@
 import Publish
 import Plot
 
+/// Base wrapper entyer all web page. It's wrap you content to header and footer and set base page metadata
+/// to your webpage like: keywords, analytics, styles and so on.
 struct SitePage<Content: Component> {
     
     let location: Location
+    var section: Blog.SectionID? = nil
     let context: PublishingContext<Blog>
     
     var titleSeparator: String = " | "
@@ -30,7 +33,7 @@ struct SitePage<Content: Component> {
             
                 .body(
                     .component(
-                        PageLayout {
+                        PageLayout(section: self.section) {
                             self.content
                         }
                             .environmentValue(context, key: .publishContext)

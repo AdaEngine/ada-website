@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  PostPage.swift
 //  
 //
 //  Created by v.prusakov on 4/12/23.
@@ -8,12 +8,15 @@
 import Plot
 import Publish
 
+// Contains post
 struct PostPage: Component {
+    
     let item: Item<Blog>
     
     var body: Component {
         Article {
             Div {
+                // Main article content
                 self.item.body
                 
                 Div {

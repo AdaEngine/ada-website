@@ -44,14 +44,16 @@ extension Modifier {
 
 fileprivate extension Node where Context == HTML.BodyContext {
     static func imageNode(path: Path, description: String?, isFullMode: Bool) -> Node {
-        .div(
-            .class("article-image"),
-            .img(
-                .class(isFullMode ? "full-width-image" : ""),
-                .src(path),
-                .unwrap(description) { .alt($0) }
-            ),
-            .unwrap(description) { .p(.text($0)) }
+        .component(
+            Div {
+                Image(url: path.absoluteString, description: description ?? "")
+                    .class(isFullMode ? "full-width-image" : "")
+                
+                if let description {
+                    Paragraph(description)
+                }
+            }
+            .class("article-image")
         )
     }
 }

@@ -18,7 +18,7 @@ struct TagList: Component {
     var body: Component {
         List(item.tags) { tag in
             ListItem {
-                Link(url: context!.site.path(for: tag)) {
+                Link(url: context!.site.path(for: tag).absoluteString) {
                     Text(tag.string)
                 }
             }

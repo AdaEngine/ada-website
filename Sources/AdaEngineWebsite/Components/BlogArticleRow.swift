@@ -18,9 +18,9 @@ struct BlogArticleRow: Component {
     
     var body: Component {
         Article {
-            Link(url: self.item.path.string) {
+            Link(url: self.item.path.absoluteString) {
                 if let previewPath = context.site.preview(for: self.item) {
-                    Image(previewPath.string)
+                    Image(previewPath.absoluteString)
                 }
                 
                 Div {
