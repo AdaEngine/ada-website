@@ -7,6 +7,7 @@
 
 import Publish
 import Plot
+import PublishColorUtils
 
 /// Base wrapper entyer all web page. It's wrap you content to header and footer and set base page metadata
 /// to your webpage like: keywords, analytics, styles and so on.
@@ -17,7 +18,7 @@ struct SitePage<Content: Component> {
     let context: PublishingContext<Blog>
     
     var titleSeparator: String = " | "
-    var stylesheetPaths: [Path] = ["/main.css"]
+    var stylesheetPaths: [Path] = ["Styles/main.css"]
     var rssFeedPath: Path? = .defaultForRSSFeed
     var rssFeedTitle: String? = nil
     var keywords: String? = nil
@@ -26,19 +27,16 @@ struct SitePage<Content: Component> {
     var content: Content
     
     var html: HTML {
-        HTML(
+        let component = PageLayout(section: self.section) { self.content }
+            .environmentValue(self.context, key: .publishContext)
+        
+        return HTML(
             .lang(context.site.language),
-            
             self.makeHeaderMetaData(),
-            
-                .body(
-                    .component(
-                        PageLayout(section: self.section) {
-                            self.content
-                        }
-                            .environmentValue(context, key: .publishContext)
-                    )
-                )
+            .body(
+                .component(component),
+                .navigationBurgerMenu()
+            )
         )
     }
     
@@ -69,6 +67,7 @@ struct SitePage<Content: Component> {
             .forEach(stylesheetPaths, { .stylesheet($0) }),
             .viewport(.accordingToDevice),
             .favicon("Images/favicon.png"),
+            .safariTabColor(),
             .unwrap(rssFeedPath, { path in
                 let title = rssFeedTitle ?? "Subscribe to \(context.site.name)"
                 return .rssFeedLink(path.absoluteString, title: title)
@@ -108,63 +107,43 @@ extension Node where Context == HTML.HeadContext {
             )
         )
     }
+    
+    static func safariTabColor() -> Node {
+        .group(
+            .meta(
+                .name("theme-color"),
+                .content("#FFFFFF"),
+                .attribute(named: "media", value: "(prefers-color-scheme: light)")
+            ),
+            .meta(
+                .name("theme-color"),
+                .content(Color(red: 0, green: 0, blue: 0, alpha: 0.4).hexWithAlpha),
+                .attribute(named: "media", value: "(prefers-color-scheme: dark)")
+            )
+        )
+    }
+}
+
+extension Node where Context == HTML.BodyContext {
+    static func navigationBurgerMenu() -> Node {
+        .script(
+            .text("""
+            (function(){
+                var burger = document.getElementsByClassName('burger-container')[0],
+                    header = document.querySelector('header');
+                
+                burger.onclick = function() {
+                    console.log("Menu opened");
+                    header.classList.toggle('menu-opened');
+                }
+            }());
+            """)
+        )
+    }
 }
 
 extension EnvironmentKey where Value == PublishingContext<Blog>? {
     static var publishContext: Self {
         EnvironmentKey(defaultValue: nil)
-    }
-}
-
-extension Node where Context == HTML.DocumentContext {
-    static func head(
-        for location: Location,
-        on site: Blog,
-        titleSeparator: String = " | ",
-        stylesheetPaths: [Path] = ["/main.css"],
-        rssFeedPath: Path? = .defaultForRSSFeed,
-        rssFeedTitle: String? = nil,
-        keywords: String? = nil
-    ) -> Node {
-        var title = location.title
-        
-        if title.isEmpty {
-            title = site.name
-        } else {
-            title.append(titleSeparator + site.name)
-        }
-        
-        var description = location.description
-        
-        if description.isEmpty {
-            description = site.description
-        }
-        
-        return .head(
-            .encoding(.utf8),
-            .siteName(site.name),
-            .url(site.url(for: location)),
-            .title(title),
-            .description(description),
-            .twitterCardType(location.imagePath == nil ? .summary : .summaryLargeImage),
-            .forEach(stylesheetPaths, { .stylesheet($0) }),
-            .viewport(.accordingToDevice),
-            .unwrap(site.favicon, { .favicon($0) }),
-            .unwrap(rssFeedPath, { path in
-                let title = rssFeedTitle ?? "Subscribe to \(site.name)"
-                return .rssFeedLink(path.absoluteString, title: title)
-            }),
-            .unwrap(location.imagePath ?? site.imagePath, { path in
-                let url = site.url(for: path)
-                return .socialImageLink(url)
-            }),
-            .unwrap(keywords, {
-                .meta(
-                    .name("keywords"),
-                    .content($0)
-                )
-            }),
-            .addAnalytics(for: location, on: site)
-        )
     }
 }
