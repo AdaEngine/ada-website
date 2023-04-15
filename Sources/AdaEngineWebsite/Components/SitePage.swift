@@ -133,7 +133,6 @@ extension Node where Context == HTML.BodyContext {
                     header = document.querySelector('header');
                 
                 burger.onclick = function() {
-                    console.log("Menu opened");
                     header.classList.toggle('menu-opened');
                 }
             }());
