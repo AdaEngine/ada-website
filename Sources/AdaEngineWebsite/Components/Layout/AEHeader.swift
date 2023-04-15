@@ -19,24 +19,22 @@ struct AEHeader: Component {
     
     var body: Component {
         Header {
-            Div {
-                Link(url: "/") {
-                    H2(self.context!.site.name)
-                    
-                    if let section = self.section {
-                        H2(section.rawValue.capitalized)
-                            .class("subtitle")
-                    }
-                }
-                .class("header-logo")
+            Link(url: "/") {
+                H2(self.context!.site.name)
                 
-                self.navigation
+                if let section = self.section {
+                    H2(section.rawValue.capitalized)
+                        .class("subtitle")
+                }
             }
-            .class("container content-restriction header-container")
+            .class("header-logo")
+            
+            self.burger
+            
+            self.navigation
         }
         .class("header")
     }
-    
     
     @ComponentBuilder
     private var navigation: Component {
@@ -55,5 +53,19 @@ struct AEHeader: Component {
             .class("navigation-item")
         }
         .class("navigation")
+    }
+    
+    private var burger: Component {
+        Div {
+            Div {
+                Div()
+                    .class("bar topBar")
+                
+                Div()
+                    .class("bar bottomBar")
+            }
+            .id("burger")
+        }
+        .class("burger-container")
     }
 }

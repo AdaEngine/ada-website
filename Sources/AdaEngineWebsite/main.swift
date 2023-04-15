@@ -54,7 +54,11 @@ extension Blog {
         
         case donate
     }
-    
+}
+
+
+enum Constants {
+    static let stylesPath: Path = "Resources/Styles"
 }
 
 // This will generate your website using the built-in Foundation theme:
@@ -71,6 +75,7 @@ try Blog().publish(using: [
     .installPlugin(
         .generateCodeCSS(
             withClassPrefix: "pre code .s-",
+            resourcePath: Constants.stylesPath,
             theme: .dynamic(
                 light: .xcode("Light.dvtcolortheme"),
                 dark: .xcode("Dark.xccolortheme")
@@ -88,12 +93,13 @@ try Blog().publish(using: [
         context.dateFormatter = formatter
     }),
     .installPlugin(.readingTime()),
-    .installPlugin(.authorsPlugin()),
+    .installPlugin(.authorsPlugin(styleOutputFolder: Constants.stylesPath)),
     .installPlugin(.checkTagsAvailability(Blog.AvailableTag.self)),
     .installPlugin(.articleInfoAfterFirstHeader()),
     .installPlugin(
         .tagColorCSSGenerator(
             tagsCSSPrefix: "tag-",
+            resourcePath: Constants.stylesPath,
             builder: {
                 Blog.AvailableTag(rawValue: $0.string)!.color
             })

@@ -31,14 +31,21 @@ struct AuthorItem: Equatable {
 
 extension Plugin where Site == Blog {
     
-    static func authorsPlugin(resourceFolder: Path = "Resources") -> Self {
+    static func authorsPlugin(
+        resourceFolder: Path = "Resources",
+        styleOutputFolder: Path
+    ) -> Self {
         Plugin(name: "Authors Plugin", installer: { context in
             let folder = try context.folder(at: resourceFolder)
             let file = try folder.file(at: "authors.json")
             
             let authors = try JSONDecoder().decode([Author].self, from: file.read())
             
-            try Self.generateSocialStyleFile(socials: Author.Social.Kind.allCases, resourcePath: resourceFolder, context: context)
+            try Self.generateSocialStyleFile(
+                socials: Author.Social.Kind.allCases,
+                resourcePath: styleOutputFolder,
+                context: context
+            )
             
             let parser = context.markdownParser
             context.allItems(sortedBy: \.date).forEach { item in
@@ -97,7 +104,12 @@ fileprivate extension Plugin where Site == Blog {
         """
     }
     
-    private static func generateSocialStyleFile(socials: [Author.Social.Kind], resourcePath: Path, context: PublishingContext<Blog>, socialFileName: String = "socials.css") throws {
+    private static func generateSocialStyleFile(
+        socials: [Author.Social.Kind],
+        resourcePath: Path,
+        context: PublishingContext<Blog>,
+        socialFileName: String = "socials.css"
+    ) throws {
 
         
         let tuple: [(light: SocialStyle, dark: SocialStyle?)] = socials.map { social in
