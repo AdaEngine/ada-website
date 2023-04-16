@@ -2,6 +2,7 @@
 
 @import "tags.css";
 @import "codesyntax.css";
+@import "community.css";
 @import "socials.css";
 @import "navigation.css";
 @import "root.css";
@@ -63,9 +64,9 @@ html {
     padding-right: 1.5rem;
 }
 
-.collection {
+.collection-grid {
     display: grid;
-    grid-template-columns: repeat( auto-fit, 1fr );
+    grid-template-columns: 1fr;
     grid-auto-rows: min-content;
     grid-gap: 20px;
     grid-template-rows: auto;
@@ -142,8 +143,6 @@ html {
 
 .article-item-new {
     position: relative;
-    grid-column-start: 1;
-    grid-column-end: 4;
 }
 
 .article-item-new-header {
@@ -478,9 +477,17 @@ pre code .highlight {
     padding: 1px 2px 3px 2px;
 }
 
-/* 48em = 768px big screen */
+/* Big screen */
 
-@media (min-width: 42em) {
+@media (min-width: 803px) {
+    
+    .grid-two-columns {
+        grid-template-columns: repeat( 2, 1fr );
+    }
+    
+    .grid-three-columns {
+        grid-template-columns: repeat( 3, 1fr );
+    }
     
     .container {
         margin-left: auto;
@@ -494,6 +501,8 @@ pre code .highlight {
     .article-item-new {
         display: flex;
         justify-content: center;
+        grid-column-start: 1;
+        grid-column-end: 4;
     }
     
     .footer-container {
@@ -522,9 +531,9 @@ pre code .highlight {
     }
 }
 
-/* Low screen */
+/* Small screen */
 
-@media (max-width: 42em) {
+@media (max-width: 803px) {
     
     .article-item-new a {
         display: block;
@@ -550,11 +559,6 @@ pre code .highlight {
     
     h1 {
         font-size: 28px;
-    }
-    
-    .collection {
-        display: block;
-        justify-content: space-between;
     }
     
     .footer-container {

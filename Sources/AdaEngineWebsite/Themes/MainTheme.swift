@@ -65,7 +65,7 @@ extension Theme where Site == Blog {
                             )
                         }
                     }
-                    .class("collection")
+                    .class("collection-grid")
                 }
                 .class("container content-restriction safe-area-insets")
             }.html
@@ -82,11 +82,8 @@ extension Theme where Site == Blog {
         }
         
         func makeIndexHTML(for index: Index, context: PublishingContext<Blog>) throws -> HTML {
-            let layout = MainIndexItemListLayout(
-                items: context.allItems(sortedBy: \.date, order: .descending),
-                context: context
-            )
-            layout.prepare()
+            
+            let items = context.allItems(sortedBy: \.date)
             
             return SitePage(
                 location: index,
@@ -94,11 +91,11 @@ extension Theme where Site == Blog {
                 keywords: "swift adaengine development apple watch iphone ipad metal vulkan tutorial guide playground spectraldragon ada engine godot unity unreal webgl opengl glsl"
             ) {
                 Div {
-                    for (index, item) in layout.items.enumerated() {
-                        layout.itemLayout(item, at: index)
+                    for (index, item) in items.enumerated() {
+                        BlogArticleRow(item: item, context: context, isNewArticle: index == 0)
                     }
                 }
-                .class("container collection content-restriction safe-area-insets")
+                .class("container collection-grid grid-three-columns content-restriction safe-area-insets")
             }.html
         }
     }

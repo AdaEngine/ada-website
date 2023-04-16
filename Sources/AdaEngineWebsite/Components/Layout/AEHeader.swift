@@ -19,19 +19,22 @@ struct AEHeader: Component {
     
     var body: Component {
         Header {
-            Link(url: "/") {
-                H2(self.context!.site.name)
-                
-                if let section = self.section {
-                    H2(section.rawValue.capitalized)
-                        .class("subtitle")
+            Div {
+                Link(url: "/") {
+                    H2(self.context!.site.name)
+                    
+                    if let section = self.section {
+                        H2(section.rawValue.capitalized)
+                            .class("subtitle")
+                    }
                 }
+                .class("header-logo")
+                
+                self.burger
+                
+                self.navigation
             }
-            .class("header-logo")
-            
-            self.burger
-            
-            self.navigation
+            .class("container content-restriction header-container")
         }
         .class("header")
     }
