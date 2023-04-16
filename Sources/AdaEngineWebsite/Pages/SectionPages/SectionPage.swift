@@ -17,6 +17,8 @@ struct SectionPage: Component {
         switch section.id {
         case .blog:
             BlogSectionPage(section: self.section)
+        case .community:
+            CommunitySectionPage()
         default:
             EmptyComponent()
         }

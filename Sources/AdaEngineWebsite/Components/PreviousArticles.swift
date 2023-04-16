@@ -38,7 +38,7 @@ struct PreviousArticles: Component {
                                 BlogArticleRow(item: item, context: self.context!, isNewArticle: false)
                             }
                         }
-                        .class("collection")
+                        .class("collection-grid grid-two-columns")
                     }
                     .class("container content-restriction safe-area-insets")
                 }

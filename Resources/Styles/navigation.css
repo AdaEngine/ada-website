@@ -11,6 +11,10 @@
     right: 0;
     left: 0;
     padding: 8px 16px;
+    
+    transition: all 0.3s ease-in, background 0.35s ease-in;
+    transition-delay: 0.0s;
+    
     background: rgba(255, 255, 255, 0.6); /* white */
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     backdrop-filter:saturate(180%) blur(20px)
@@ -24,6 +28,9 @@
     display: inline-flex;
     cursor: pointer;
     padding: 6px 0px;
+    opacity: 1;
+    transition: opacity 0.3s ease-in;
+    transition-delay: 0.0s;
 }
 
 .header-logo .subtitle {
@@ -51,7 +58,7 @@
 
 /* Big screen */
 
-@media (min-width: 42em) {
+@media (min-width: 803px) {
     .navigation {
         display: inline-flex;
         align-items: center;
@@ -84,12 +91,11 @@
 
 /* Small screen */
 
-@media (max-width: 42em) {
+@media (max-width: 803px) {
     
     .header .navigation-item {
-        opacity: 1;
-        transition: color .32s cubic-bezier(.4,0,.6,1);
         font-size: 28px;
+        margin-top: 5px;
         line-height: 1.1428571429;
         padding-top: 10px;
         padding-bottom: 10px;
@@ -109,51 +115,51 @@
         width: 46px;
         cursor: pointer;
         -webkit-transform: rotate(0deg);
-                transform: rotate(0deg);
+        transform: rotate(0deg);
         transition: all 0.3s cubic-bezier(0.4, 0.01, 0.165, 0.99);
         -webkit-user-select: none;
-           -moz-user-select: none;
-            -ms-user-select: none;
-                user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
         -webkit-tap-highlight-color: transparent;
     }
     
     .header .burger-container #burger {
-      width: 18px;
-      height: 8px;
-      position: relative;
-      display: block;
-      margin: -4px auto 0;
-      top: 50%;
+        width: 18px;
+        height: 8px;
+        position: relative;
+        display: block;
+        margin: -4px auto 0;
+        top: 50%;
     }
     
     .header .burger-container #burger .bar {
-      width: 100%;
-      height: 1px;
-      display: block;
-      position: relative;
-      background: #FFF;
-      transition: all 0.3s cubic-bezier(0.4, 0.01, 0.165, 0.99);
-      transition-delay: 0s;
+        width: 100%;
+        height: 1px;
+        display: block;
+        position: relative;
+        background: #FFF;
+        transition: all 0.3s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+        transition-delay: 0s;
     }
     
     .header .burger-container #burger .bar.topBar {
-      -webkit-transform: translateY(0px) rotate(0deg);
-              transform: translateY(0px) rotate(0deg);
+        -webkit-transform: translateY(0px) rotate(0deg);
+        transform: translateY(0px) rotate(0deg);
     }
     
     .header .burger-container #burger .bar.bottomBar {
-      -webkit-transform: translateY(6px) rotate(0deg);
-              transform: translateY(6px) rotate(0deg);
+        -webkit-transform: translateY(6px) rotate(0deg);
+        transform: translateY(6px) rotate(0deg);
     }
     
     .header ul.navigation {
-      position: relative;
-      display: block;
-      visibility: hidden;
-      height: 0px;
-      padding: 0px 24px 0;
-      list-style: none;
+        position: relative;
+        display: block;
+        visibility: hidden;
+        height: 0px;
+        padding: 0px 24px 0;
+        list-style: none;
     }
     
     .header.menu-opened .header-logo {
@@ -167,21 +173,20 @@
     }
     
     .header ul.navigation li.navigation-item {
-      margin-top: 5px;
-      -webkit-transform: scale(1.15) translateY(-30px);
-              transform: scale(1.15) translateY(-30px);
-      opacity: 0;
-      transition-delay: 0.15s;
-      transition: opacity 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99), -webkit-transform 0.25s cubic-bezier(0.4, 0.01, 0.165, 0.99);
-      transition: transform 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99), opacity 0.3s cubic-bezier(0.4, 0.01, 0.165, 0.99);
-      transition: transform 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99), opacity 0.3s cubic-bezier(0.4, 0.01, 0.165, 0.99), -webkit-transform 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+        -webkit-transform: scale(1.15) translateY(-30px);
+        transform: scale(1.15) translateY(-30px);
+        opacity: 0;
+        transition: opacity 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99), -webkit-transform 0.25s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+        transition: transform 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99), opacity 0.3s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+        transition: transform 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99), opacity 0.3s cubic-bezier(0.4, 0.01, 0.165, 0.99), -webkit-transform 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+        transition-delay: 0.0s;
     }
     
     .header.menu-opened {
-      height: 100%;
-      max-height: 100%;
-      transition: all 0.3s ease-in, background 0.5s ease-in;
-      transition-delay: 0.05s;
+        height: 100%;
+        max-height: 100%;
+        transition: all 0.3s ease-in, background 0.5s ease-in;
+        transition-delay: 0.05s;
     }
     
     .header.menu-opened ul.navigation {
@@ -189,57 +194,57 @@
     }
     
     .header.menu-opened .burger-container {
-      -webkit-transform: rotate(90deg);
-              transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
     }
     
     .header.menu-opened .burger-container #burger .bar {
-      transition: all 0.4s cubic-bezier(0.4, 0.01, 0.165, 0.99);
-      transition-delay: 0.2s;
+        transition: all 0.3s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+        transition-delay: 0.2s;
     }
     
     .header.menu-opened .burger-container #burger .bar.topBar {
-      -webkit-transform: translateY(4px) rotate(45deg);
-              transform: translateY(4px) rotate(45deg);
+        -webkit-transform: translateY(4px) rotate(45deg);
+        transform: translateY(4px) rotate(45deg);
     }
     
     .header.menu-opened .burger-container #burger .bar.bottomBar {
-      -webkit-transform: translateY(3px) rotate(-45deg);
-              transform: translateY(3px) rotate(-45deg);
+        -webkit-transform: translateY(3px) rotate(-45deg);
+        transform: translateY(3px) rotate(-45deg);
     }
     
     .header.menu-opened ul.navigation li.navigation-item {
-      -webkit-transform: scale(1) translateY(0px);
-              transform: scale(1) translateY(0px);
-      opacity: 1;
-      transition-delay: 0.05s;
+        -webkit-transform: scale(1) translateY(0px);
+        transform: scale(1) translateY(0px);
+        opacity: 1;
+        transition-delay: 0.05s;
     }
     
     /* TODO: Find another solution for cascade animation */
     
     .header.menu-opened ul.navigation li.navigation-item:nth-child(1) {
-      transition-delay: 0.16s;
+        transition-delay: 0.16s;
     }
     .header.menu-opened ul.navigation li.navigation-item:nth-child(2) {
-      transition-delay: 0.22s;
+        transition-delay: 0.22s;
     }
     .header.menu-opened ul.navigation li.navigation-item:nth-child(3) {
-      transition-delay: 0.28s;
+        transition-delay: 0.28s;
     }
     .header.menu-opened ul.navigation li.navigation-item:nth-child(4) {
-      transition-delay: 0.34s;
+        transition-delay: 0.34s;
     }
     .header.menu-opened ul.navigation li.navigation-item:nth-child(5) {
-      transition-delay: 0.40s;
+        transition-delay: 0.40s;
     }
     .header.menu-opened ul.navigation li.navigation-item:nth-child(6) {
-      transition-delay: 0.46s;
+        transition-delay: 0.46s;
     }
     .header.menu-opened ul.navigation li.navigation-item:nth-child(7) {
-      transition-delay: 0.52s;
+        transition-delay: 0.52s;
     }
     .header.menu-opened ul.navigation li.navigation-item:nth-child(8) {
-      transition-delay: 0.58s;
+        transition-delay: 0.58s;
     }
 }
 
@@ -258,7 +263,7 @@
     }
     
     .header.menu-opened {
-      background: var(--light);
+        background: var(--light);
     }
 }
 
@@ -276,6 +281,6 @@
     }
     
     .header.menu-opened {
-      background: var(--fill);
+        background: var(--fill);
     }
 }

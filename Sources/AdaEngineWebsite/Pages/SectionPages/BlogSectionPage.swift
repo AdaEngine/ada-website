@@ -25,6 +25,6 @@ struct BlogSectionPage: Component {
                 )
             }
         }
-        .class("container collection content-restriction safe-area-insets")
+        .class("container collection-grid grid-three-columns content-restriction safe-area-insets")
     }
 }
