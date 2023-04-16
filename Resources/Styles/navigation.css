@@ -159,7 +159,7 @@
     .header.menu-opened .header-logo {
         transition-delay: 0.15s;
         opacity: 0;
-        transition: opacity 0.6s cubic-bezier(0.4, 0.01, 0.165, 0.99), -webkit-transform 0.5s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+        transition: opacity 0.3s cubic-bezier(0.4, 0.01, 0.165, 0.99), -webkit-transform 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99);
     }
     
     .header ul.navigation li.navigation-item .navigation-item-link {
@@ -172,9 +172,9 @@
               transform: scale(1.15) translateY(-30px);
       opacity: 0;
       transition-delay: 0.15s;
-      transition: opacity 0.6s cubic-bezier(0.4, 0.01, 0.165, 0.99), -webkit-transform 0.5s cubic-bezier(0.4, 0.01, 0.165, 0.99);
-      transition: transform 0.5s cubic-bezier(0.4, 0.01, 0.165, 0.99), opacity 0.6s cubic-bezier(0.4, 0.01, 0.165, 0.99);
-      transition: transform 0.5s cubic-bezier(0.4, 0.01, 0.165, 0.99), opacity 0.6s cubic-bezier(0.4, 0.01, 0.165, 0.99), -webkit-transform 0.5s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+      transition: opacity 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99), -webkit-transform 0.25s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+      transition: transform 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99), opacity 0.3s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+      transition: transform 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99), opacity 0.3s cubic-bezier(0.4, 0.01, 0.165, 0.99), -webkit-transform 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99);
     }
     
     .header.menu-opened {
@@ -218,28 +218,28 @@
     /* TODO: Find another solution for cascade animation */
     
     .header.menu-opened ul.navigation li.navigation-item:nth-child(1) {
-      transition-delay: 0.27s;
+      transition-delay: 0.16s;
     }
     .header.menu-opened ul.navigation li.navigation-item:nth-child(2) {
-      transition-delay: 0.34s;
+      transition-delay: 0.22s;
     }
     .header.menu-opened ul.navigation li.navigation-item:nth-child(3) {
-      transition-delay: 0.41s;
+      transition-delay: 0.28s;
     }
     .header.menu-opened ul.navigation li.navigation-item:nth-child(4) {
-      transition-delay: 0.48s;
+      transition-delay: 0.34s;
     }
     .header.menu-opened ul.navigation li.navigation-item:nth-child(5) {
-      transition-delay: 0.55s;
+      transition-delay: 0.40s;
     }
     .header.menu-opened ul.navigation li.navigation-item:nth-child(6) {
-      transition-delay: 0.62s;
+      transition-delay: 0.46s;
     }
     .header.menu-opened ul.navigation li.navigation-item:nth-child(7) {
-      transition-delay: 0.69s;
+      transition-delay: 0.52s;
     }
     .header.menu-opened ul.navigation li.navigation-item:nth-child(8) {
-      transition-delay: 0.76s;
+      transition-delay: 0.58s;
     }
 }
 
