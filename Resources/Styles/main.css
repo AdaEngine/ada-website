@@ -92,7 +92,7 @@ html {
     padding: 5px 10px;
     margin-right: 10px;
     font-size: 1em;
-    border-radius: 8px;
+    border-radius: var(--corner-radius);
     margin-bottom: 7px;
 }
 
@@ -154,7 +154,7 @@ html {
     float: left;
     padding: 3px 6px;
     font-size: 0.65em;
-    border-radius: 8px;
+    border-radius: var(--corner-radius);
     margin: 8px 8px auto 8px;
     background-color: #FFE066;
 }
@@ -192,7 +192,7 @@ html {
     min-height: 20em;
     max-height: 30em;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: var(--corner-radius);
 }
 
 .article-item-new:hover {
@@ -224,7 +224,7 @@ html {
     display: block;
     object-fit: cover;
     box-shadow: none;
-    border-radius: 8px;
+    border-radius: var(--corner-radius);
     background-color: var(--fill-gray);
     -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -245,7 +245,7 @@ html {
     width: 100%;
     height: 200px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: var(--corner-radius);
     margin: 0 auto;
     padding: 0 auto;
     position: relative;
@@ -277,7 +277,7 @@ ul {
     padding: 3px 6px;
     margin-right: 10px;
     font-size: 0.85em;
-    border-radius: 8px;
+    border-radius: var(--corner-radius);
     margin-bottom: 7px;
 }
 
@@ -292,7 +292,7 @@ article .tags {
 
 .tag-in-search {
     font-weight: bold;
-    border-radius: 8px;
+    border-radius: var(--corner-radius);
     margin-bottom: 7px;
     padding: 3px 6px;
     margin-right: 10px;
@@ -522,7 +522,7 @@ pre code .highlight {
         -webkit-transform: scale(1.05, 1.05);
         transform: scale(1.05, 1.05);
         box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        border-radius: 8px;
+        border-radius: var(--corner-radius);
     }
     
     .footer .avatar {
@@ -619,7 +619,7 @@ pre code .highlight {
     
     .article-item {
         background-color: var(--background-dark-secondary);
-        border-radius: 8px;
+        border-radius: var(--corner-radius);
     }
     
     .article-item-new h3 {
