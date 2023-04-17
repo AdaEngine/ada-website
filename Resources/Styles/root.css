@@ -1,5 +1,8 @@
 
 :root {
+
+    /* Colors */
+
     --dark: #000;
     --light: #FFF;
     --glyph-gray: #F5F5F7;
@@ -90,4 +93,8 @@
     --color-aside-warning: var( --color-figure-red);
     --color-aside-warning-background: var( --color-fill-red-secondary);
     --color-aside-warning-border: var( --color-figure-red);
+
+    /* Constants */
+
+    --corner-radius: 8px;
 }

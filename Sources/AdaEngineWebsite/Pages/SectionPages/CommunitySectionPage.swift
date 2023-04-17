@@ -11,54 +11,51 @@ import PublishColorUtils
 
 struct CommunitySocial {
     let image: String
+    var darkImage: String? = nil
     let title: String
     var subtitle: String? = nil
     let description: String
     let path: String
-    let color: Color
 }
 
 struct CommunitySectionPage: Component {
     
     var socials: [CommunitySocial] = [
         CommunitySocial(
-            image: "socials/github-white.svg",
+            image: "socials/github.svg",
+            darkImage: "socials/github-white.svg",
             title: "GitHub",
             subtitle: "AdaEngine",
-            description: "",
-            path: "https://github.com/AdaEngine/AdaEngine",
-            color: .black
+            description: "The source code of AdaEngine. Learn and interact with source code, reports bugs or suggest changes using GitHub issues.",
+            path: "https://github.com/AdaEngine/AdaEngine"
         ),
 //        CommunitySocial(
 //            image: "socials/discord.svg",
 //            title: "Discord",
 //            subtitle: "AdaEngine",
-//            description: "",
-//            path: "https://github.com/AdaEngine/AdaEngine"
+//            description: "A community for discussion about game development, Swift, user support and showcases.",
+//            path: "https://discord.gg/AdaEngine",
 //        ),
         CommunitySocial(
-            image: "socials/reddit-oranged.svg",
+            image: "socials/reddit.svg",
             title: "Reddit",
             subtitle: "r/AdaEngine",
-            description: "",
-            path: "https://reddit.com/r/AdaEngine/",
-            color: Color(hex: "#FF5700")
+            description: "A community for discussion, sharing your games or plugins.",
+            path: "https://reddit.com/r/AdaEngine/"
         ),
         CommunitySocial(
             image: "socials/mastodon.svg",
             title: "Mastodon",
             subtitle: "@ada_engine",
-            description: "",
-            path: "https://mastodon.social/@ada_engine",
-            color: Color(hex: "#17063B")
+            description: "Stay tuned with quick news in boosted community in the Fediverse.",
+            path: "https://mastodon.social/@ada_engine"
         ),
         CommunitySocial(
             image: "socials/twitter-circle.svg",
             title: "Twitter",
             subtitle: "@ada_engine",
-            description: "",
-            path: "https://twitter.com/@ada_engine",
-            color: Color(hex: "#1DA1F2")
+            description: "Get quick news about engine development.",
+            path: "https://twitter.com/@ada_engine"
         )
     ]
     
@@ -83,6 +80,10 @@ struct CommunitySocialRow: Component {
         Link(url: item.path) {
             Div {
                 Image(context!.site.imagePath!.appendingComponent(item.image).absoluteString)
+                    .class("light")
+                
+                Image(context!.site.imagePath!.appendingComponent(item.darkImage ?? item.image).absoluteString)
+                    .class("dark")
             }
             .class("image-container")
             
@@ -101,11 +102,5 @@ struct CommunitySocialRow: Component {
             .class("content")
         }
         .class("community-card")
-        .style("background-color: \(item.color.hex)")
     }
-}
-
-extension Color {
-    static let black = Color(red: 0, green: 0, blue: 0)
-    static let white = Color(red: 1, green: 1, blue: 1)
 }
