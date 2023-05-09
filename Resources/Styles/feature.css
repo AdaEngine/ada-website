@@ -1,0 +1,27 @@
+@import "root.css";
+
+/* Big screen */
+
+@media (min-width: 803px) {
+
+}
+
+/* Small screen */
+
+@media (max-width: 803px) {
+    
+}
+
+@media (max-width: 803px) {
+}
+
+@media (max-width: 456px) {
+}
+
+@media(prefers-color-scheme: light) {
+    
+}
+
+@media(prefers-color-scheme: dark) {
+    
+}
