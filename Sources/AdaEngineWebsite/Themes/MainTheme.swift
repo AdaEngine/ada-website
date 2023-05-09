@@ -82,20 +82,12 @@ extension Theme where Site == Blog {
         }
         
         func makeIndexHTML(for index: Index, context: PublishingContext<Blog>) throws -> HTML {
-            
-            let items = context.allItems(sortedBy: \.date)
-            
             return SitePage(
                 location: index,
                 context: context,
-                keywords: "swift adaengine development apple watch iphone ipad metal vulkan tutorial guide playground spectraldragon ada engine godot unity unreal webgl opengl glsl"
+                keywords: "swift adaengine ada-engine development apple watch iphone ipad metal vulkan tutorial guide playground spectraldragon ada engine godot unity unreal webgl opengl glsl"
             ) {
-                Div {
-                    for (index, item) in items.enumerated() {
-                        BlogArticleRow(item: item, context: context, isNewArticle: index == 0)
-                    }
-                }
-                .class("container collection-grid grid-three-columns content-restriction safe-area-insets")
+                MainPage()
             }.html
         }
     }

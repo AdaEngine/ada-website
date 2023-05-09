@@ -19,6 +19,8 @@ struct SectionPage: Component {
             BlogSectionPage(section: self.section)
         case .community:
             CommunitySectionPage()
+        case .learn:
+            LearnSectionPage()
         default:
             EmptyComponent()
         }

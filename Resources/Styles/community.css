@@ -39,8 +39,9 @@
 
 .community-card .description {
     margin: 10px 0 0;
-    font-size: 1.0rem;
     font-weight: 300;
+    line-height: 1.5em;
+    font-size: 1.05em;
 }
 
 .community-card .content {

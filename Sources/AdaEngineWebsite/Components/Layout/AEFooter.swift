@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AEFooter.swift
 //  
 //
 //  Created by v.prusakov on 4/9/23.
@@ -12,7 +12,7 @@ struct AEFooter: Component {
     var body: Component {
         Footer {
             Div {
-                Paragraph("Copyright © 2023 Vladislav Prusakov. All rights reserved.")
+                Paragraph("Copyright © 2021-2023 Vladislav Prusakov. All rights reserved.")
             }
             .class("footer-container content-restriction container")
         }
