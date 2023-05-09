@@ -3,7 +3,7 @@ name: Swift
 # This workflow is triggered on pushes to the repository.
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
