@@ -1,11 +1,11 @@
-name: Swift
+name: Deploy website
 
 # This workflow is triggered on pushes to the repository.
 on:
   push:
     branches: [ main ]
 
-permission:
+permissions:
   contents: write
 
 env:
@@ -13,7 +13,7 @@ env:
 
 jobs:
   build:
-    name: Deploy Blog
+    name: Deploy AdaEngine Website
 
     runs-on: macos-latest
 
