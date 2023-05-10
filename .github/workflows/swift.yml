@@ -8,9 +8,6 @@ on:
 permissions:
   contents: write
 
-env:
-  DEPLOY_ACCESS_TOKEN: ${{ secrets.DEPLOY_ACCESS_TOKEN }}
-
 jobs:
   build:
     name: Deploy AdaEngine Website
@@ -18,6 +15,16 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Deploy
-      run: swift run AdaEngineWebsite --deploy
+      - uses: actions/checkout@v2
+      - name: Generate static site
+        run: swift run AdaEngineWebsite --deploy
+
+      - name: Deploy to GitHub Pages
+      - uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: main
+          folder: Output
+          token: ${{ secrets.DEPLOY_ACCESS_TOKEN }}
+          repository-name: AdaEngine/adaengine.github.io
+          single-commit: true
+          force: true
