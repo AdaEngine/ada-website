@@ -1,6 +1,5 @@
 name: Deploy website
 
-# This workflow is triggered on pushes to the repository.
 on:
   push:
     branches: [ main ]
@@ -9,18 +8,16 @@ permissions:
   contents: write
 
 jobs:
-  build:
-    name: Deploy AdaEngine Website
-
+  build-and-deploy-website:
     runs-on: macos-latest
-
     steps:
       - uses: actions/checkout@v2
+      
       - name: Generate static site
         run: swift run AdaEngineWebsite --deploy
 
       - name: Deploy to GitHub Pages
-      - uses: JamesIves/github-pages-deploy-action@v4
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: main
           folder: Output
