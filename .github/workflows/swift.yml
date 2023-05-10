@@ -12,9 +12,9 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Generate static site
-        run: swift run AdaEngineWebsite --deploy
+        run: swift run AdaEngineWebsite
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
