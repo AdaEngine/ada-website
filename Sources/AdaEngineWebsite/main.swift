@@ -66,7 +66,7 @@ let environment = ProcessInfo.processInfo.environment["DEPLOY_ACCESS_TOKEN"]
 
 let deploymentMethod: DeploymentMethod<Blog> = environment.flatMap { token in
         .git("https://x-access-token:\(token)@github.com/AdaEngine/adaengine.github.io.git", branch: "main")
-} ?? .gitHub("AdaEngine/adaengine.github.io", useSSH: true) // otherwise we publish from local machine
+} ?? .gitHub("AdaEngine/adaengine.github.io", branch: "main", useSSH: true) // otherwise we publish from local machine
 
 // This will generate your website using the built-in Foundation theme:
 try Blog().publish(using: [
