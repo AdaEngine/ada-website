@@ -5,6 +5,9 @@ on:
   push:
     branches: [ main ]
 
+permission:
+  contents: write
+
 env:
   DEPLOY_ACCESS_TOKEN: ${{ secrets.DEPLOY_ACCESS_TOKEN }}
 
