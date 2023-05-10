@@ -140,8 +140,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SpectralDragon/TagColorCSSGeneratorPlugin.git",
       "state" : {
-        "revision" : "2b1114b7f10c70baa8734638747704bea6280a4f",
-        "version" : "0.2.0"
+        "revision" : "70bafb74999e84e7b9dad5e2bee76cafa22792a7",
+        "version" : "0.3.0"
       }
     },
     {

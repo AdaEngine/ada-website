@@ -12,7 +12,7 @@ let package = Package(
         .package(url: "https://github.com/johnsundell/publish.git", from: "0.9.0"),
         .package(url: "https://github.com/alexito4/ReadingTimePublishPlugin.git", from: "0.3.0"),
         .package(url: "https://github.com/labradon/MinifyCSSPublishPlugin.git", branch: "master"),
-        .package(url: "https://github.com/SpectralDragon/TagColorCSSGeneratorPlugin.git", from: "0.2.0"),
+        .package(url: "https://github.com/SpectralDragon/TagColorCSSGeneratorPlugin.git", from: "0.3.0"),
         .package(url: "https://github.com/SpectralDragon/CodeSyntaxCSSGeneratorPlugin.git", from: "0.2.0"),
         .package(url: "https://github.com/insidegui/TwitterPublishPlugin.git", from: "0.2.0"),
         .package(url: "https://github.com/insidegui/DarkImagePublishPlugin", from: "1.0.0")
