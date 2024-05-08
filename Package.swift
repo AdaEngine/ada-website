@@ -4,12 +4,12 @@ import PackageDescription
 
 let package = Package(
     name: "AdaEngineWebsite",
-    platforms: [.macOS(.v12)],
+    platforms: [.macOS(.v13)],
     products: [
         .executable(name: "AdaEngineWebsite", targets: ["AdaEngineWebsite"])
     ],
     dependencies: [
-        .package(url: "https://github.com/johnsundell/publish.git", from: "0.9.0"),
+        .package(url: "https://github.com/AdaEngine/publish.git", branch: "master"),
         .package(url: "https://github.com/alexito4/ReadingTimePublishPlugin.git", from: "0.3.0"),
         .package(url: "https://github.com/labradon/MinifyCSSPublishPlugin.git", branch: "master"),
         .package(url: "https://github.com/SpectralDragon/TagColorCSSGeneratorPlugin.git", from: "0.3.0"),
