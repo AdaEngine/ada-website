@@ -11,6 +11,7 @@ import TwitterPublishPlugin
 
 // This type acts as the configuration for your website.
 struct Blog: Website {
+    
     // TODO: Think about it later
     // Add any site-specific metadata that you want to use here.
     struct ItemMetadata: WebsiteItemMetadata {
@@ -23,6 +24,7 @@ struct Blog: Website {
     let name = "AdaEngine"
     let description = "A simple and fast game engine written on Swift"
     let language: Language = .english
+    let favicon: Favicon = Favicon(path: "Images/favicon.png")
     let imagePath: Path? = "Images"
 }
 
