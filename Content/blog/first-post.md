@@ -1,9 +1,9 @@
 ---
 date: 2020-04-03
-description: Create your own NavigationViewStyle.
-tags: SwiftUI, UI
+description: Test Post
+tags: AdaEngine, UI
 image: vprusakov.jpg
-keywords: custom navigationviewstyle navigationview style swiftui
+keywords: adaengine release 0.1
 author: SpectralDragon
 ---
 # Custom NavigationView style
