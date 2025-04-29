@@ -5,9 +5,10 @@
 //  Created by v.prusakov on 4/16/23.
 //
 
-import Plot
-import Publish
-import PublishColorUtils
+//import Plot
+//import Publish
+//import PublishColorUtils
+import Ignite
 
 struct CommunitySocial {
     let image: String
@@ -18,7 +19,7 @@ struct CommunitySocial {
     let path: String
 }
 
-struct CommunitySectionPage: Component {
+struct CommunitySectionPage: DocumentElement {
     
     var socials: [CommunitySocial] = [
         CommunitySocial(
@@ -59,9 +60,9 @@ struct CommunitySectionPage: Component {
         )
     ]
     
-    var body: Component {
-        Div {
-            for item in self.socials {
+    var body: some HTML {
+        Group {
+            ForEach(self.socials) { item in
                 CommunitySocialRow(item: item)
             }
         }
@@ -69,34 +70,35 @@ struct CommunitySectionPage: Component {
     }
 }
 
-struct CommunitySocialRow: Component {
+struct CommunitySocialRow: DocumentElement {
     
     let item: CommunitySocial
     
-    @EnvironmentValue(.publishContext)
-    private var context
+    @Environment(\.themes)
+    private var themes
     
-    var body: Component {
-        Link(url: item.path) {
-            Div {
-                Image(context!.site.imagePath!.appendingComponent(item.image).absoluteString)
-                    .class("light")
-                
-                Image(context!.site.imagePath!.appendingComponent(item.darkImage ?? item.image).absoluteString)
-                    .class("dark")
+    var body: some HTML {
+        Link(target: "/404.html") {
+            Section {
+                Text("Example")
+//                Image(context!.site.imagePath!.appendingComponent(item.image).absoluteString)
+//                    .class("light")
+//                
+//                Image(context!.site.imagePath!.appendingComponent(item.darkImage ?? item.image).absoluteString)
+//                    .class("dark")
             }
             .class("image-container")
             
-            Div {
-                H2(item.title)
+            Section {
+                Text(item.title)
                     .class("title")
                 
                 if let subtitle = item.subtitle {
-                    Paragraph(subtitle)
+                    Text(subtitle)
                         .class("subtitle")
                 }
                 
-                Paragraph(item.description)
+                Text(item.description)
                     .class("description")
             }
             .class("content")

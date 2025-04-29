@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "AdaEngineWebsite",
-    platforms: [.macOS(.v12)],
+    platforms: [.macOS(.v13)],
     products: [
         .executable(name: "AdaEngineWebsite", targets: ["AdaEngineWebsite"])
     ],
@@ -15,7 +15,9 @@ let package = Package(
         .package(url: "https://github.com/SpectralDragon/TagColorCSSGeneratorPlugin.git", from: "0.3.0"),
         .package(url: "https://github.com/SpectralDragon/CodeSyntaxCSSGeneratorPlugin.git", from: "0.2.0"),
         .package(url: "https://github.com/insidegui/TwitterPublishPlugin.git", from: "0.2.0"),
-        .package(url: "https://github.com/insidegui/DarkImagePublishPlugin", from: "1.0.0")
+        .package(url: "https://github.com/insidegui/DarkImagePublishPlugin", from: "1.0.0"),
+        
+        .package(url: "https://github.com/twostraws/Ignite.git", branch: "main")
     ],
     targets: [
         .executableTarget(
@@ -27,7 +29,8 @@ let package = Package(
                 "TagColorCSSGeneratorPlugin",
                 "CodeSyntaxCSSGeneratorPlugin",
                 "TwitterPublishPlugin",
-                "DarkImagePublishPlugin"
+                "DarkImagePublishPlugin",
+                "Ignite"
             ]
         )
     ]

@@ -5,10 +5,13 @@
 //  Created by v.prusakov on 4/15/23.
 //
 
-import Plot
-import Publish
+//import Plot
+//import Publish
+import Ignite
 
-struct MainPage: Component {
+struct MainPage: StaticPage {
+    
+    let title = "Home"
     
     let items: [CommunitySocial] = [
         CommunitySocial(
@@ -55,18 +58,47 @@ struct MainPage: Component {
         )
     ]
     
-    @ComponentBuilder
-    var body: Component {
-        Div {
-            H3("A simple and scalable Game Engine built in Swift.")
-        }
-        .class("feature-why")
+    @HTMLBuilder
+    var body: some HTML {
+        header()
         
-        Div {
-            for item in items {
+        Section {
+            ForEach(items) { item in
                 CommunitySocialRow(item: item)
             }
         }
         .class("collection-grid grid-two-columns feature-list")
+    }
+}
+
+private extension MainPage {
+    func header() -> some HTML {
+        Group {
+            Text("A simple and scalable Game Engine built in Swift.")
+                .font(.title1)
+            
+            Group {
+                AEImage(path: "header_ident.svg")
+                
+                AEImage(path: "ae_logo.png")
+            }
+        }
+        .class("feature-why")
+    }
+}
+
+struct AEImage: DocumentElement {
+    
+    let path: String
+    
+//    @EnvironmentValue(.publishContext)
+//    private var context
+    
+    init(path: String) {
+        self.path = path
+    }
+    
+    var body: some HTML {
+        Image(path)
     }
 }

@@ -8,23 +8,23 @@
 import Plot
 import Publish
 
-struct BlogSectionPage: Component {
-    
-    let section: Section<Blog>
-    
-    @EnvironmentValue(.publishContext)
-    private var context
-    
-    var body: Component {
-        Div {
-            for (index, item) in section.items.enumerated() {
-                BlogArticleRow(
-                    item: item,
-                    context: context!,
-                    isNewArticle: index == 0
-                )
-            }
-        }
-        .class("container collection-grid grid-three-columns content-restriction safe-area-insets")
-    }
-}
+//struct BlogSectionPage: Component {
+//    
+//    let section: Section<Blog>
+//    
+//    @EnvironmentValue(.publishContext)
+//    private var context
+//    
+//    var body: Component {
+//        Div {
+//            for (index, item) in section.items.enumerated() {
+//                BlogArticleRow(
+//                    item: item,
+//                    context: context!,
+//                    isNewArticle: index == 0
+//                )
+//            }
+//        }
+//        .class("container collection-grid grid-three-columns content-restriction safe-area-insets")
+//    }
+//}

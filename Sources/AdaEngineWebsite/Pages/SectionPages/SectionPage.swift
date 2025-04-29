@@ -7,22 +7,22 @@
 
 import Plot
 import Publish
-
-struct SectionPage: Component {
-    
-    let section: Section<Blog>
-    
-    @ComponentBuilder
-    var body: Component {
-        switch section.id {
-        case .blog:
-            BlogSectionPage(section: self.section)
-        case .community:
-            CommunitySectionPage()
-        case .learn:
-            LearnSectionPage()
-        default:
-            EmptyComponent()
-        }
-    }
-}
+//
+//struct SectionPage: Component {
+//    
+//    let section: Section<Blog>
+//    
+//    @ComponentBuilder
+//    var body: Component {
+//        switch section.id {
+//        case .blog:
+//            BlogSectionPage(section: self.section)
+//        case .community:
+//            CommunitySectionPage()
+//        case .learn:
+//            LearnSectionPage()
+//        default:
+//            EmptyComponent()
+//        }
+//    }
+//}

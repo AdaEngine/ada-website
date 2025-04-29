@@ -8,17 +8,17 @@
 import Plot
 import Publish
 
-struct ItemPage: Component {
-    
-    let item: Item<Blog>
-    
-    @ComponentBuilder
-    var body: Component {
-        switch item.sectionID {
-        case .blog:
-            PostPage(item: item)
-        default:
-            EmptyComponent()
-        }
-    }
-}
+//struct ItemPage: Component {
+//    
+//    let item: Item<Blog>
+//    
+//    @ComponentBuilder
+//    var body: Component {
+//        switch item.sectionID {
+//        case .blog:
+//            PostPage(item: item)
+//        default:
+//            EmptyComponent()
+//        }
+//    }
+//}

@@ -5,26 +5,42 @@
 //  Created by v.prusakov on 4/9/23.
 //
 
-import Plot
-import Publish
+import Ignite
 
-struct AEHeader: Component {
+// All sections on site
+enum SectionID: String {
+    case blog
+
+    case community
     
-    let section: Blog.SectionID?
+    case learn
     
-    @EnvironmentValue(.publishContext)
-    private var context
+    case features
     
-    let sections: [Blog.SectionID] = [.blog, .learn, .community, .features]
+    case press
     
-    var body: Component {
-        Header {
-            Div {
-                Link(url: "/") {
-                    H2(self.context!.site.name)
+    case donate
+}
+
+struct AEHeader: DocumentElement {
+    
+    let section: SectionID?
+    
+    @Environment(\.site)
+    private var site
+    
+    let sections: [SectionID] = [.blog, .learn, .community, .features]
+    
+    var body: some HTML {
+        Tag("header") {
+            Section {
+                Link(target: "/") {
+                    Text(site.name)
+                        .font(.title2)
                     
                     if let section = self.section {
-                        H2(section.rawValue.capitalized)
+                        Text(section.rawValue.capitalized)
+                            .font(.title2)
                             .class("subtitle")
                     }
                 }
@@ -39,18 +55,13 @@ struct AEHeader: Component {
         .class("header")
     }
     
-    @ComponentBuilder
-    private var navigation: Component {
-        let sections = self.context!.sections.filter { self.sections.contains($0.id) }
-        
-        List(sections) { section in
+    @HTMLBuilder
+    private var navigation: some HTML {
+        List(self.sections) { section in
             ListItem {
-                Link(
-                    url: section.path.absoluteString,
-                    label: {
-                        Text(section.title.capitalized)
-                    }
-                )
+                Link(target: "404.html") {
+                    Text(section.rawValue.capitalized)
+                }
                 .class("navigation-item-link")
             }
             .class("navigation-item")
@@ -58,13 +69,13 @@ struct AEHeader: Component {
         .class("navigation")
     }
     
-    private var burger: Component {
+    private var burger: some HTML {
         Div {
             Div {
-                Div()
+                Div {}
                     .class("bar topBar")
                 
-                Div()
+                Div {}
                     .class("bar bottomBar")
             }
             .id("burger")
@@ -72,3 +83,5 @@ struct AEHeader: Component {
         .class("burger-container")
     }
 }
+
+typealias Div = Section

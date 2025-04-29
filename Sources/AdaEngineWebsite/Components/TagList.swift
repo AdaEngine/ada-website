@@ -7,23 +7,23 @@
 
 import Publish
 import Plot
-
-struct TagList: Component {
-    
-    let item: Item<Blog>
-    
-    @EnvironmentValue(.publishContext)
-    private var context
-    
-    var body: Component {
-        List(item.tags) { tag in
-            ListItem {
-                Link(url: context!.site.path(for: tag).absoluteString) {
-                    Text(tag.string)
-                }
-            }
-            .class(tag.cssClass)
-        }
-        .class("tags")
-    }
-}
+//
+//struct TagList: Component {
+//    
+//    let item: Item<Blog>
+//    
+//    @EnvironmentValue(.publishContext)
+//    private var context
+//    
+//    var body: Component {
+//        List(item.tags) { tag in
+//            ListItem {
+//                Link(url: context!.site.path(for: tag).absoluteString) {
+//                    Text(tag.string)
+//                }
+//            }
+//            .class(tag.cssClass)
+//        }
+//        .class("tags")
+//    }
+//}
