@@ -5,8 +5,7 @@
 //  Created by v.prusakov on 4/14/23.
 //
 
-import Plot
-import Publish
+import Ignite
 
 //extension Plugin {
 //    static func make404Page() -> Self {
@@ -47,7 +46,7 @@ import Publish
 //    }
 //}
 //
-//struct Page404: Component {
+//struct Page404: DocumentElement {
 //    var body: Component {
 //        Div {
 //            H1 {
