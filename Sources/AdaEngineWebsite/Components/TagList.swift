@@ -5,17 +5,14 @@
 //  Created by v.prusakov on 4/12/23.
 //
 
-import Publish
-import Plot
-//
-//struct TagList: Component {
-//    
+import Ignite
+
+struct TagList: DocumentElement {
+    
 //    let item: Item<Blog>
-//    
-//    @EnvironmentValue(.publishContext)
-//    private var context
-//    
-//    var body: Component {
+    
+    var body: some HTML {
+        Text("RETURN TAGS")
 //        List(item.tags) { tag in
 //            ListItem {
 //                Link(url: context!.site.path(for: tag).absoluteString) {
@@ -25,5 +22,5 @@ import Plot
 //            .class(tag.cssClass)
 //        }
 //        .class("tags")
-//    }
-//}
+    }
+}

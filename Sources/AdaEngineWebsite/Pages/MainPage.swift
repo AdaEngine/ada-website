@@ -5,8 +5,6 @@
 //  Created by v.prusakov on 4/15/23.
 //
 
-//import Plot
-//import Publish
 import Ignite
 
 struct MainPage: StaticPage {

@@ -5,30 +5,29 @@
 //  Created by v.prusakov on 4/12/23.
 //
 
-import Plot
-import Publish
+import Ignite
 
 // Contains post
-//struct PostPage: Component {
-//    
+struct PostPage: DocumentElement {
+    
 //    let item: Item<Blog>
-//    
-//    var body: Component {
-//        Article {
-//            Div {
-//                // Main article content
+    
+    var body: some HTML {
+        Tag("article") {
+            Div {
+                // Main article content
 //                self.item.body
-//                
-//                Div {
-//                    TagList(item: self.item)
-//                    
+                
+                Div {
+                    TagList()
+                    
 //                    WrittenByAuthor(author: self.item.author)
-//                }
-//                .class("article-footer")
-//                
+                }
+                .class("article-footer")
+                
 //                PreviousArticles(item: self.item)
-//            }
-//            .class("container content-restriction safe-area-insets")
-//        }
-//    }
-//}
+            }
+            .class("container content-restriction safe-area-insets")
+        }
+    }
+}
