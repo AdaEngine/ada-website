@@ -6,8 +6,7 @@
 //
 
 import Foundation
-import Publish
-import Plot
+import Ignite
 
 //extension Plugin where Site == Blog {
 //    static func articleInfoAfterFirstHeader() -> Self {

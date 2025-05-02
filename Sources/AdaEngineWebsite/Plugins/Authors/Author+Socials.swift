@@ -6,8 +6,7 @@
 //
 
 import Foundation
-import Publish
-import PublishColorUtils
+import Ignite
 
 extension Author {
     
@@ -15,8 +14,8 @@ extension Author {
         let username: String
         let social: Kind
         
-        var path: Path {
-            self.social.url.appendingComponent(self.username)
+        var path: String {
+            self.social.url.appending(self.username)
         }
     }
     
@@ -27,7 +26,7 @@ extension Author.Social {
         case twitter
         case github
         
-        var url: Path {
+        var url: String {
             switch self {
             case .github:
                 return "https://github.com/"
@@ -45,24 +44,51 @@ extension Author.Social {
             }
         }
         
-        var backgroundColor: Color {
+        var backgroundColor: MultiThemeColor {
             switch self {
             case .github:
                 return Color(hex: "#000000")
                     .adaptiveToDarkTheme(Color(hex: "#ffffff"))
             case .twitter:
                 return Color(hex: "#00acee")
+                    .withoutMultiTheme()
             }
         }
         
-        var color: Color {
+        var color: MultiThemeColor {
             switch self {
             case .github:
                 return Color(hex: "#ffffff")
                     .adaptiveToDarkTheme(Color(hex: "#000000"))
             case .twitter:
                 return Color(hex: "#ffffff")
+                    .withoutMultiTheme()
             }
         }
     }
+}
+
+extension Color {
+    var hexWithAlpha: String {
+        return String(
+            format: "#%02X%02X%02X%02X",
+            Int(self.red * 0xff),
+            Int(self.green * 0xff),
+            Int(self.blue * 0xff),
+            Int(self.opacity * 0xff)
+        )
+    }
+    
+    func adaptiveToDarkTheme(_ darkColor: Color) -> MultiThemeColor {
+        MultiThemeColor(light: self, dark: darkColor)
+    }
+    
+    func withoutMultiTheme() -> MultiThemeColor {
+        MultiThemeColor(light: self, dark: nil)
+    }
+}
+
+struct MultiThemeColor {
+    let light: Color
+    let dark: Color?
 }

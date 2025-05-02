@@ -17,7 +17,8 @@ let package = Package(
         .package(url: "https://github.com/insidegui/TwitterPublishPlugin.git", from: "0.2.0"),
         .package(url: "https://github.com/insidegui/DarkImagePublishPlugin", from: "1.0.0"),
         
-        .package(url: "https://github.com/twostraws/Ignite.git", branch: "main")
+        .package(url: "https://github.com/twostraws/Ignite.git", branch: "main"),
+        .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.9.2")
     ],
     targets: [
         .executableTarget(
@@ -30,7 +31,10 @@ let package = Package(
                 "CodeSyntaxCSSGeneratorPlugin",
                 "TwitterPublishPlugin",
                 "DarkImagePublishPlugin",
-                "Ignite"
+                
+                "Ignite",
+                .product(name: "Dependencies", package: "swift-dependencies"),
+                .product(name: "DependenciesMacros", package: "swift-dependencies")
             ]
         )
     ]

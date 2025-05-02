@@ -5,32 +5,162 @@
 //  Created by v.prusakov on 4/15/20.
 //
 
+import Dependencies
 import Foundation
-import Publish
-import PublishColorUtils
+import Ignite
 
-//struct AuthorItem: Equatable {
-//    let name: String
-//    let avatar: String
-//    let description: String
-//    let socials: [Author.Social]
-//    let username: String
-//    
+struct AuthorItem: Equatable {
+    let name: String
+    let avatar: String
+    let description: String
+    let socials: [Author.Social]
+    let username: String
+    
 //    var content: Content = Content()
-//    
+    
 //    var path: Path = ""
-//    
-//    init(author: Author) {
-//        self.name = author.name
-//        self.avatar = author.avatar
-//        self.description = author.description
-//        self.socials = author.socials
-//        self.username = author.username
-//    }
-//}
-//
+    
+    init(author: Author) {
+        self.name = author.name
+        self.avatar = author.avatar
+        self.description = author.description
+        self.socials = author.socials
+        self.username = author.username
+    }
+}
+
+struct AuthorPlugin: IgnitePlugin {
+    
+    struct SocialStyle {
+        let className: String
+        let backgroundColor: Color
+        let color: Color
+    }
+    
+    @Environment(\.decode) private var decode
+    @Dependency(\.context) private var context
+    
+    func execute() async throws {
+        guard let data = decode.data(forResource: "authors.json") else {
+            fatalError("authors.json not found")
+        }
+        let authors = try JSONDecoder().decode([Author].self, from: data)
+        
+        try self.generateSocialStyleFile(
+            socials: Author.Social.Kind.allCases
+        )
+        
+        print(authors)
+    }
+    
+    private func socialStyle(for social: SocialStyle) -> String {
+        """
+        .socials .\(social.className) {
+        \tbackground-color: \(social.backgroundColor.opacity(0.4).hexWithAlpha);
+        \tcolor: \(social.color.hexWithAlpha);
+        \tfont-weight: bold;
+        }
+        
+        .socials .\(social.className) img:hover {
+            fill: \(social.color.hexWithAlpha);
+        }
+        
+        .socials .\(social.className):hover {
+        \tbackground-color: \(social.backgroundColor.opacity(0.7).hexWithAlpha);
+        \tcolor: \(social.color.hexWithAlpha);
+        }
+        """
+    }
+    
+    private func generateSocialStyleFile(
+        socials: [Author.Social.Kind],
+        resourcePath: String = "Resources",
+        socialFileName: String = "socials.css"
+    ) throws {
+        let tuple: [(light: SocialStyle, dark: SocialStyle?)] = socials.map { social in
+            let className = social.rawValue
+            
+            let light = SocialStyle(
+                className: className,
+                backgroundColor: social.backgroundColor.light,
+                color: social.color.light
+            )
+            
+            var dark: SocialStyle?
+            
+            Author.Social.styles[social] = className
+            
+            if let darkBGColor = social.backgroundColor.dark, let darkColor = social.color.dark {
+                dark = SocialStyle(className: className, backgroundColor: darkBGColor, color: darkColor)
+            }
+            
+            return (light, dark)
+        }
+        
+        let socialFilePath = context.rootURL
+            .appending(path: resourcePath)
+            .appending(path: socialFileName)
+            .path()
+        
+        if FileManager.default.fileExists(atPath: socialFilePath) {
+            try FileManager.default.removeItem(atPath: socialFilePath)
+        }
+        
+        var content = """
+            /* XXX THIS FILE WAS AUTO GENERATED. DO NOT CHANGE IT MANUAL */
+            
+            .socials li {
+                display: flex;
+                padding: 3px 6px;
+                margin-right: 10px;
+                font-size: 0.85em;
+                border-radius: 8px;
+                margin-bottom: 7px;
+            }
+            
+            .socials {
+                display: flex;
+                cursor: pointer;
+                padding-top: 10px;
+            }
+            
+            .socials a {
+                display: flex;
+            }
+            
+            .socials img {
+                width: 16px;
+                height: 16px;
+            }
+            
+            .socials span {
+                padding-left: 8px;
+            }
+            
+            \(tuple.map { self.socialStyle(for: $0.light) }.joined(separator: "\n\n"))
+            """
+        
+        let stylesForDark: [String] = tuple.map {
+            guard let dark = $0.dark else { return nil }
+            return self.socialStyle(for: dark)
+        }
+            .compactMap { $0 }
+        
+        if !stylesForDark.isEmpty {
+            content.append("\n\n@media(prefers-color-scheme: dark) {\n\n")
+            
+            for darkStyle in stylesForDark {
+                let style = darkStyle.replacingOccurrences(of: "\n", with: "\n\t")
+                content.append("\t\(style)\n\n")
+            }
+            content.append("}")
+        }
+        
+        FileManager.default.createFile(atPath: socialFilePath, contents: content.data(using: .utf8))
+    }
+}
+
 //extension Plugin where Site == Blog {
-//    
 //    static func authorsPlugin(
 //        resourceFolder: Path = "Resources",
 //        styleOutputFolder: Path
@@ -74,7 +204,6 @@ import PublishColorUtils
 //            }
 //        })
 //    }
-//    
 //}
 //
 //fileprivate extension Plugin where Site == Blog {
@@ -110,8 +239,6 @@ import PublishColorUtils
 //        context: PublishingContext<Blog>,
 //        socialFileName: String = "socials.css"
 //    ) throws {
-//
-//        
 //        let tuple: [(light: SocialStyle, dark: SocialStyle?)] = socials.map { social in
 //            
 //            let className = social.rawValue
@@ -220,7 +347,7 @@ import PublishColorUtils
 //        return Self.authors[self.metadata]!
 //    }
 //}
-
+//
 extension Author.Social {
     
     nonisolated(unsafe) internal static var styles: [Kind: String] = [:]

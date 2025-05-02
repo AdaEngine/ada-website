@@ -1,7 +1,10 @@
 import Ignite
+import Dependencies
+import DependenciesMacros
 
 @main
 struct AdaEngineSite: Site {
+    
     var name: String = "AdaEngine"
     var url: Ignite.URL = URL(static: "https://adaengine.org")
     var language: Language = .english
@@ -20,19 +23,29 @@ struct AdaEngineSite: Site {
     var articlePages: [any ArticlePage] = [
         DefaultArticlePage()
     ]
+    
+    var articleRenderer: AdaEngineArticleRenderer.Type = AdaEngineArticleRenderer.self
 }
 
 extension AdaEngineSite {
     static func main() async {
         var site = Self()
         do {
-            try await site.publish()
-            
-            var executor = PluginsExecutor()
-            let copyResources = CopyResourcePlugin(from: "Resources")
-            executor.add(copyResources)
-            
-            try await executor.execute()
+            try await withDependencies { values in
+                values[MarkdownModifierApplier.self] = MarkdownModifierApplier(
+                    modifiers: [
+                        ImageModifier(),
+                        AdditionalBlockquoteModifier()
+                    ]
+                )
+            } operation: {
+                try await site.publish()
+                let executor = PluginsExecutor(plugins: [
+                    AuthorPlugin(),
+                    CopyResourcePlugin(from: "Resources")
+                ])
+                try await executor.execute()
+            }
         } catch {
             print(error.localizedDescription)
         }
@@ -76,5 +89,31 @@ struct AdaEngineLayout: Layout {
             
             AEFooter()
         }
+    }
+}
+
+class AdaEngineWebsiteContext {
+    let rootURL: URL
+    let buildDirURL: URL
+    
+    init(
+        rootDirictory: StaticString = #filePath,
+        buildDir: String = "Build"
+    ) {
+        self.rootURL = try! URL.selectDirectories(from: rootDirictory).source
+        self.buildDirURL = self.rootURL.appending(path: buildDir)
+    }
+}
+
+extension AdaEngineWebsiteContext: DependencyKey {
+    static var liveValue: AdaEngineWebsiteContext {
+        AdaEngineWebsiteContext()
+    }
+}
+
+extension DependencyValues {
+    var context: AdaEngineWebsiteContext {
+        get { self[AdaEngineWebsiteContext.self] }
+        set { self[AdaEngineWebsiteContext.self] = newValue }
     }
 }

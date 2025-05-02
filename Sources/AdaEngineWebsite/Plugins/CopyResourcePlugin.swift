@@ -5,30 +5,9 @@
 //  Created by Vladislav Prusakov on 29.04.2025.
 //
 
+import Dependencies
 import Foundation
 import Ignite
-
-protocol IgnitePlugin {
-    func execute() async throws
-}
-
-struct PluginsExecutor {
-    private var plugins: [any IgnitePlugin]
-    
-    init(plugins: [any IgnitePlugin] = []) {
-        self.plugins = plugins
-    }
-    
-    mutating func add<T: IgnitePlugin>(_ plugin: T) {
-        self.plugins.append(plugin)
-    }
-    
-    func execute() async throws {
-        for plugin in plugins {
-            try await plugin.execute()
-        }
-    }
-}
 
 struct CopyResourcePlugin: IgnitePlugin {
     
@@ -36,6 +15,8 @@ struct CopyResourcePlugin: IgnitePlugin {
     let fromPath: String
     let toPath: String
     let includingSubdirectories: Bool
+    
+    @Dependency(\.context) private var context
     
     init(
         rootDirictory: StaticString = #filePath,
@@ -50,7 +31,7 @@ struct CopyResourcePlugin: IgnitePlugin {
     }
     
     func execute() async throws {
-        let rootURL = try URL.selectDirectories(from: rootDir).source
+        let rootURL = context.rootURL
         let fromURL = rootURL.appending(path: fromPath)
         let toURL = rootURL.appending(path: toPath)
         try copyItemsRecursivly(from: fromURL, to: toURL)
