@@ -74,7 +74,7 @@ struct AuthorPlugin: IgnitePlugin {
     
     private func generateSocialStyleFile(
         socials: [Author.Social.Kind],
-        resourcePath: String = "Resources",
+        resourcePath: String = "Resources/Styles",
         socialFileName: String = "socials.css"
     ) throws {
         let tuple: [(light: SocialStyle, dark: SocialStyle?)] = socials.map { social in
@@ -107,7 +107,7 @@ struct AuthorPlugin: IgnitePlugin {
         }
         
         var content = """
-            /* XXX THIS FILE WAS AUTO GENERATED. DO NOT CHANGE IT MANUAL */
+            /* THIS FILE WAS AUTO GENERATED. DO NOT CHANGE IT MANUAL */
             
             .socials li {
                 display: flex;
@@ -203,118 +203,6 @@ struct AuthorPlugin: IgnitePlugin {
 //                context.addPage(page)
 //            }
 //        })
-//    }
-//}
-//
-//fileprivate extension Plugin where Site == Blog {
-//    
-//    struct SocialStyle {
-//        let className: String
-//        let backgroundColor: Color
-//        let color: Color
-//    }
-//    
-//    private static func socialStyle(for social: SocialStyle) -> String {
-//        """
-//        .socials .\(social.className) {
-//        \tbackground-color: \(social.backgroundColor.opacity(0.4).hexWithAlpha);
-//        \tcolor: \(social.color.hexWithAlpha);
-//        \tfont-weight: bold;
-//        }
-//        
-//        .socials .\(social.className) img:hover {
-//            fill: \(social.color.hexWithAlpha);
-//        }
-//        
-//        .socials .\(social.className):hover {
-//        \tbackground-color: \(social.backgroundColor.opacity(0.7).hexWithAlpha);
-//        \tcolor: \(social.color.hexWithAlpha);
-//        }
-//        """
-//    }
-//    
-//    private static func generateSocialStyleFile(
-//        socials: [Author.Social.Kind],
-//        resourcePath: Path,
-//        context: PublishingContext<Blog>,
-//        socialFileName: String = "socials.css"
-//    ) throws {
-//        let tuple: [(light: SocialStyle, dark: SocialStyle?)] = socials.map { social in
-//            
-//            let className = social.rawValue
-//            
-//            let light = SocialStyle(className: className, backgroundColor: social.backgroundColor, color: social.color)
-//            
-//            var dark: SocialStyle?
-//            
-//            Author.Social.styles[social] = className
-//            
-//            if let darkBGColor = social.backgroundColor.dark, let darkColor = social.color.dark {
-//                dark = SocialStyle(className: className, backgroundColor: darkBGColor, color: darkColor)
-//            }
-//            
-//            return (light, dark)
-//        }
-//        
-//        if let folder = try? context.folder(at: resourcePath) {
-//            if folder.containsFile(named: socialFileName) {
-//                try folder.file(at: socialFileName).delete()
-//            }
-//            
-//            let socialFile = try folder.createFile(at: socialFileName)
-//            
-//            var content = """
-//            /* THIS FILE WAS AUTO GENERATED. DO NOT CHANGE IT MANUAL */
-//
-//            .socials li {
-//                display: flex;
-//                padding: 3px 6px;
-//                margin-right: 10px;
-//                font-size: 0.85em;
-//                border-radius: 8px;
-//                margin-bottom: 7px;
-//            }
-//
-//            .socials {
-//                display: flex;
-//                cursor: pointer;
-//                padding-top: 10px;
-//            }
-//            
-//            .socials a {
-//                display: flex;
-//            }
-//            
-//            .socials img {
-//                width: 16px;
-//                height: 16px;
-//            }
-//            
-//            .socials span {
-//                padding-left: 8px;
-//            }
-//            
-//            \(tuple.map { Self.socialStyle(for: $0.light) }.joined(separator: "\n\n"))
-//            """
-//            
-//            let stylesForDark: [String] = tuple.map {
-//                guard let dark = $0.dark else { return nil }
-//                return Self.socialStyle(for: dark)
-//            }
-//            .compactMap { $0 }
-//            
-//            if !stylesForDark.isEmpty {
-//                content.append("\n\n@media(prefers-color-scheme: dark) {\n\n")
-//                
-//                for darkStyle in stylesForDark {
-//                    let style = darkStyle.replacingOccurrences(of: "\n", with: "\n\t")
-//                    content.append("\t\(style)\n\n")
-//                }
-//                content.append("}")
-//            }
-//            
-//            try socialFile.write(content)
-//        }
 //    }
 //}
 //

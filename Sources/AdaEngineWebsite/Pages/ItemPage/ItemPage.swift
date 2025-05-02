@@ -5,20 +5,20 @@
 //  Created by v.prusakov on 4/13/23.
 //
 
-import Plot
-import Publish
+import Ignite
 
-//struct ItemPage: Component {
-//    
+struct ItemPage: DocumentElement {
+    
 //    let item: Item<Blog>
-//    
-//    @ComponentBuilder
-//    var body: Component {
+    
+    @HTMLBuilder
+    var body: some HTML {
 //        switch item.sectionID {
 //        case .blog:
-//            PostPage(item: item)
+//            PostPage()
+        EmptyHTML()
 //        default:
 //            EmptyComponent()
 //        }
-//    }
-//}
+    }
+}

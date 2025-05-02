@@ -5,26 +5,24 @@
 //  Created by v.prusakov on 4/13/23.
 //
 
-import Plot
-import Publish
+import Ignite
 
-//struct BlogSectionPage: Component {
-//    
-//    let section: Section<Blog>
-//    
-//    @EnvironmentValue(.publishContext)
-//    private var context
-//    
-//    var body: Component {
-//        Div {
-//            for (index, item) in section.items.enumerated() {
-//                BlogArticleRow(
-//                    item: item,
-//                    context: context!,
-//                    isNewArticle: index == 0
-//                )
-//            }
-//        }
-//        .class("container collection-grid grid-three-columns content-restriction safe-area-insets")
-//    }
-//}
+struct BlogSectionPage: StaticPage {
+    let title: String = "Blog"
+    let path: String = SectionID.blog.rawValue
+    
+    @Environment(\.articles)
+    private var articles
+    
+    var body: some HTML {
+        Div {
+            ForEach(articles.all.enumerated()) { (index, item) in
+                BlogArticleRow(
+                    item: item,
+                    isNewArticle: index == 0
+                )
+            }
+        }
+        .class("container collection-grid grid-three-columns content-restriction safe-area-insets")
+    }
+}

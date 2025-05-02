@@ -38,11 +38,11 @@ struct AEHeader: DocumentElement {
                     Text(site.name)
                         .font(.title2)
                     
-                    if let section = self.section {
-                        Text(section.rawValue.capitalized)
-                            .font(.title2)
-                            .class("subtitle")
-                    }
+//                    if let section = self.section {
+//                        Text(section.rawValue.capitalized)
+//                            .font(.title2)
+//                            .class("subtitle")
+//                    }
                 }
                 .class("header-logo")
                 
@@ -59,7 +59,7 @@ struct AEHeader: DocumentElement {
     private var navigation: some HTML {
         List(self.sections) { section in
             ListItem {
-                Link(target: "404.html") {
+                Link(target: section.rawValue) {
                     Text(section.rawValue.capitalized)
                 }
                 .class("navigation-item-link")
