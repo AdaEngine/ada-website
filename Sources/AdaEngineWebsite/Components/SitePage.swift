@@ -5,10 +5,6 @@
 //  Created by v.prusakov on 4/13/23.
 //
 
-import Publish
-import Plot
-import PublishColorUtils
-
 ///// Base wrapper entyer all web page. It's wrap you content to header and footer and set base page metadata
 ///// to your webpage like: keywords, analytics, styles and so on.
 //struct SitePage<Content: Component> {

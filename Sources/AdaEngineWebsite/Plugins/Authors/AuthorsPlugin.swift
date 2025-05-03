@@ -29,6 +29,7 @@ struct AuthorEntity: Equatable {
     }
 }
 
+@MainActor
 struct AuthorPlugin: IgnitePlugin {
     
     struct SocialStyle {

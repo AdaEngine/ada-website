@@ -8,12 +8,12 @@
 import Dependencies
 import DependenciesMacros
 import Ignite
-import Sweep
 
 protocol HTMLModifier {
     @MainActor func modify(_ content: inout ArticleModifier) throws
 }
 
+@MainActor
 struct HTMLContentModifier {
     
     @Environment(\.articles)
@@ -32,7 +32,6 @@ struct HTMLContentModifier {
         self.modifiers.append(modifier)
     }
     
-    @MainActor
     func execute() async throws {
         for article in articles.all {
             let url = context.buildDirURL.appending(path: article.path).appending(path: "index.html")
@@ -63,7 +62,7 @@ struct ArticleModifier {
         self.rawHTML = rawHTML
     }
     
-    func tags(between: Sweep.Identifier, and terminator: Sweep.Terminator) -> [HTMLTag] {
+    func tags(between: Identifier, and terminator: Terminator) -> [HTMLTag] {
         func attributes(for substring: Substring) -> [String: String] {
             var htmlAttributes = [String: String]()
             let attributes = substring.components(separatedBy: "\" ")
@@ -85,7 +84,7 @@ struct ArticleModifier {
         }
     }
     
-    func getFirstSubstring(between: Sweep.Identifier, terminator: Sweep.Terminator) -> Substring? {
+    func getFirstSubstring(between: Identifier, terminator: Terminator) -> Substring? {
         guard let firstMatch = self.rawHTML.firstSubstring(between: between, and: terminator) else {
             return nil
         }

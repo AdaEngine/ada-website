@@ -5,9 +5,6 @@
 //  Created by v.prusakov on 4/10/20.
 //
 
-import Foundation
-import Publish
-import Plot
 //
 //extension Theme where Site == Blog {
 //    static var main: Theme {

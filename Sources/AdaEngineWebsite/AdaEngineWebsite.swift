@@ -6,9 +6,9 @@ import Ignite
 // TODO:
 
 // - [] Page 404 not generated
-// - [] articleInfoAfterFirstHeader not inserted
 // - [] Author page not generated
 // - [] Code styles not generated anymore
+// - [x] articleInfoAfterFirstHeader not inserted
 // - [x] Images as incorrect path. Have no idea how to store images.
 // - [x] Returns elements from old site.
 
@@ -19,10 +19,11 @@ struct AdaEngineSite: Site {
     let url: Ignite.URL = URL(static: "https://adaengine.org")
     let language: Language = .english
     let lightTheme = AdaEngineDarkTheme()
-    let darkTheme = AdaEngineLightTheme()
+    let darkTheme = AdaEngineDarkTheme()
     let layout = AdaEngineLayout()
     
     let homePage = MainPage()
+    let errorPage = ErrorPage()
     var staticPages: [any StaticPage] = [
         MainPage(),
         BlogSectionPage(),
@@ -79,8 +80,11 @@ extension AdaEngineSite {
 
 struct AdaEngineDarkTheme: Theme {
     var colorScheme: Ignite.ColorScheme = .dark
+    var syntaxHighlighterTheme: HighlighterTheme = .xcodeDark
 }
 
 struct AdaEngineLightTheme: Theme {
     var colorScheme: Ignite.ColorScheme = .light
+    
+    var syntaxHighlighterTheme: HighlighterTheme = .xcodeDark
 }

@@ -1,33 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "codesyntaxcssgeneratorplugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SpectralDragon/CodeSyntaxCSSGeneratorPlugin.git",
-      "state" : {
-        "revision" : "fc7fa8a5712595b483f091986e207fb5250ef8fd",
-        "version" : "0.2.0"
-      }
-    },
-    {
-      "identity" : "codextended",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/codextended.git",
-      "state" : {
-        "revision" : "8d7c46dfc9c55240870cf5561d6cefa41e3d7105",
-        "version" : "0.3.0"
-      }
-    },
-    {
-      "identity" : "collectionconcurrencykit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/collectionConcurrencyKit.git",
-      "state" : {
-        "revision" : "b4f23e24b5a1bff301efc5e70871083ca029ff95",
-        "version" : "0.2.0"
-      }
-    },
-    {
       "identity" : "combine-schedulers",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/combine-schedulers",
@@ -37,120 +10,12 @@
       }
     },
     {
-      "identity" : "darkimagepublishplugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/insidegui/DarkImagePublishPlugin",
-      "state" : {
-        "revision" : "c5d6b3bbe4e434cad20cd67c3ff2c12b99e98f0b",
-        "version" : "1.0.0"
-      }
-    },
-    {
-      "identity" : "files",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/files.git",
-      "state" : {
-        "revision" : "d273b5b7025d386feef79ef6bad7de762e106eaf",
-        "version" : "4.2.0"
-      }
-    },
-    {
       "identity" : "ignite",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/twostraws/Ignite.git",
       "state" : {
         "branch" : "main",
         "revision" : "dc47b87dda90a81948652d8adcf1242eaa8ef307"
-      }
-    },
-    {
-      "identity" : "ink",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/ink.git",
-      "state" : {
-        "revision" : "bcc9f219900a62c4210e6db726035d7f03ae757b",
-        "version" : "0.6.0"
-      }
-    },
-    {
-      "identity" : "minifycsspublishplugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/labradon/MinifyCSSPublishPlugin.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "e3b1ee2ebe2dd74e171489bc75a5b5577a18e090"
-      }
-    },
-    {
-      "identity" : "plot",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/plot.git",
-      "state" : {
-        "revision" : "271926b4413fe868739d99f5eadcf2bd6cd62fb8",
-        "version" : "0.14.0"
-      }
-    },
-    {
-      "identity" : "publish",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/publish.git",
-      "state" : {
-        "revision" : "1c8ad00d39c985cb5d497153241a2f1b654e0d40",
-        "version" : "0.9.0"
-      }
-    },
-    {
-      "identity" : "publishcolorutils",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SpectralDragon/PublishColorUtils.git",
-      "state" : {
-        "revision" : "83bc72993d25f904afe11f4f8dab9038c7573830",
-        "version" : "0.1.0"
-      }
-    },
-    {
-      "identity" : "readingtimepublishplugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/alexito4/ReadingTimePublishPlugin.git",
-      "state" : {
-        "revision" : "0a0bf141a5b626c2444601cf0ed7b2bfcfdabcdf",
-        "version" : "0.3.0"
-      }
-    },
-    {
-      "identity" : "shellout",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/shellout.git",
-      "state" : {
-        "revision" : "e1577acf2b6e90086d01a6d5e2b8efdaae033568",
-        "version" : "2.3.0"
-      }
-    },
-    {
-      "identity" : "splash",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/Splash.git",
-      "state" : {
-        "revision" : "7f4df436eb78fe64fe2c32c58006e9949fa28ad8",
-        "version" : "0.16.0"
-      }
-    },
-    {
-      "identity" : "splashpublishplugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/JohnSundell/SplashPublishPlugin.git",
-      "state" : {
-        "revision" : "4fe79070f51e288bc8ba31934a3018cbe099d5f7",
-        "version" : "0.2.0"
-      }
-    },
-    {
-      "identity" : "sweep",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/sweep.git",
-      "state" : {
-        "revision" : "801c2878e4c6c5baf32fe132e1f3f3af6f9fd1b0",
-        "version" : "0.4.0"
       }
     },
     {
@@ -232,24 +97,6 @@
       "state" : {
         "revision" : "bba848db50462894e7fc0891d018dfecad4ef11e",
         "version" : "2.8.7"
-      }
-    },
-    {
-      "identity" : "tagcolorcssgeneratorplugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SpectralDragon/TagColorCSSGeneratorPlugin.git",
-      "state" : {
-        "revision" : "70bafb74999e84e7b9dad5e2bee76cafa22792a7",
-        "version" : "0.3.0"
-      }
-    },
-    {
-      "identity" : "twitterpublishplugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/insidegui/TwitterPublishPlugin.git",
-      "state" : {
-        "revision" : "480e6ae598f2a61124beec9649ca0ae1f070471b",
-        "version" : "0.2.0"
       }
     },
     {

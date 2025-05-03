@@ -39,8 +39,12 @@ final class AdaEngineWebsiteContext {
 }
 
 extension AdaEngineWebsiteContext {
-    func image(for path: String?) -> URL? {
-        return path.map { self.imagesURL.appending(path: $0) }
+    func image(for path: String?) -> String? {
+        guard let path else {
+            return nil
+        }
+        
+        return "/Images/\(path)"
     }
     
     func author(for article: Article) -> AuthorEntity {

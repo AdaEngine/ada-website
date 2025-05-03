@@ -8,13 +8,16 @@
 import Ignite
 
 struct AEFooter: DocumentElement {
+    
+    var isPrimitive: Bool = true
+    
     var body: some HTML {
         Tag("footer") {
             Div {
-                Text("Copyright © 2021-2023 Vladislav Prusakov. All rights reserved.")
+                Text("Copyright © 2021-2025 Vladislav Prusakov. All rights reserved.")
                     .font(.body)
             }
-            .class("footer-container content-restriction container")
+//            .class("footer-container")
         }
         .class("footer")
     }

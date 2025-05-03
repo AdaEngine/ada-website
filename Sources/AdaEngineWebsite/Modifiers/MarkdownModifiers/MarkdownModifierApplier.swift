@@ -9,7 +9,7 @@ import Dependencies
 import DependenciesMacros
 import Ignite
 
-protocol MarkdownModifier {
+protocol MarkdownModifier: Sendable {
     var name: String { get }
     
     @MainActor func modify(_ markdown: inout String) throws
@@ -22,7 +22,7 @@ extension MarkdownModifier {
 }
 
 @DependencyClient
-struct MarkdownModifierApplier {
+struct MarkdownModifierApplier: Sendable {
     private let modifiers: [any MarkdownModifier]
     
     init(modifiers: [any MarkdownModifier]) {
@@ -40,6 +40,8 @@ struct MarkdownModifierApplier {
 
 extension MarkdownModifierApplier: TestDependencyKey {
     static var testValue: MarkdownModifierApplier {
-        MarkdownModifierApplier(modifiers: [])
+        MainActor.assumeIsolated {
+            MarkdownModifierApplier(modifiers: [])
+        }
     }
 }
