@@ -9,18 +9,18 @@ import Dependencies
 import Foundation
 import Ignite
 
-struct AuthorItem: Equatable {
+struct AuthorEntity: Equatable {
     let name: String
     let avatar: String
     let description: String
-    let socials: [Author.Social]
+    let socials: [AuthorDTO.Social]
     let username: String
     
-//    var content: Content = Content()
+    var content: String?
     
-//    var path: Path = ""
+    var path: String = ""
     
-    init(author: Author) {
+    init(author: AuthorDTO) {
         self.name = author.name
         self.avatar = author.avatar
         self.description = author.description
@@ -44,16 +44,47 @@ struct AuthorPlugin: IgnitePlugin {
         guard let data = decode.data(forResource: "authors.json") else {
             fatalError("authors.json not found")
         }
-        let authors = try JSONDecoder().decode([Author].self, from: data)
+        let authors = try JSONDecoder().decode([AuthorDTO].self, from: data)
         
         try self.generateSocialStyleFile(
-            socials: Author.Social.Kind.allCases
+            socials: AuthorDTO.Social.Kind.allCases
         )
         
-        print(authors)
+        context.htmlModifier.add(ArticleHTMLModifier())
+        context.authors = authors.map(AuthorEntity.init)
+        
+//        author.path = "/authors/\(author.username.lowercased().convertedToSlug())"
+        
+//        let parser = context.markdownParser
+//        context.allItems(sortedBy: \.date).forEach { item in
+//            guard var author = authors.first(where: { item.metadata.author == $0.username }).map(AuthorItem.init) else {
+//                return
+//            }
+//            
+//            let html = parser.html(from: author.description)
+//            author.content = Content(
+//                title: author.name,
+//                description: author.description,
+//                body: Content.Body(html: html),
+//                date: Date(),
+//                lastModified: Date(),
+//                imagePath: context.site.imagePath,
+//                audio: nil,
+//                video: nil
+//            )
+//            
+//            author.path = "authors/\(author.username)"
+//            Item.authors[item.metadata] = author
+//            
+//            let page = Page(path: author.path, content: author.content)
+//            Page.authors[page] = author
+//            context.addPage(page)
+//        }
     }
-    
-    private func socialStyle(for social: SocialStyle) -> String {
+}
+
+private extension AuthorPlugin {
+    func socialStyle(for social: SocialStyle) -> String {
         """
         .socials .\(social.className) {
         \tbackground-color: \(social.backgroundColor.opacity(0.4).hexWithAlpha);
@@ -72,8 +103,8 @@ struct AuthorPlugin: IgnitePlugin {
         """
     }
     
-    private func generateSocialStyleFile(
-        socials: [Author.Social.Kind],
+    func generateSocialStyleFile(
+        socials: [AuthorDTO.Social.Kind],
         resourcePath: String = "Resources/Styles",
         socialFileName: String = "socials.css"
     ) throws {
@@ -88,7 +119,7 @@ struct AuthorPlugin: IgnitePlugin {
             
             var dark: SocialStyle?
             
-            Author.Social.styles[social] = className
+            AuthorDTO.Social.styles[social] = className
             
             if let darkBGColor = social.backgroundColor.dark, let darkColor = social.color.dark {
                 dark = SocialStyle(className: className, backgroundColor: darkBGColor, color: darkColor)
@@ -160,83 +191,34 @@ struct AuthorPlugin: IgnitePlugin {
     }
 }
 
-//extension Plugin where Site == Blog {
-//    static func authorsPlugin(
-//        resourceFolder: Path = "Resources",
-//        styleOutputFolder: Path
-//    ) -> Self {
-//        Plugin(name: "Authors Plugin", installer: { context in
-//            let folder = try context.folder(at: resourceFolder)
-//            let file = try folder.file(at: "authors.json")
-//            
-//            let authors = try JSONDecoder().decode([Author].self, from: file.read())
-//            
-//            try Self.generateSocialStyleFile(
-//                socials: Author.Social.Kind.allCases,
-//                resourcePath: styleOutputFolder,
-//                context: context
-//            )
-//            
-//            let parser = context.markdownParser
-//            context.allItems(sortedBy: \.date).forEach { item in
-//                guard var author = authors.first(where: { item.metadata.author == $0.username }).map(AuthorItem.init) else {
-//                    return
-//                }
-//                
-//                let html = parser.html(from: author.description)
-//                author.content = Content(
-//                    title: author.name,
-//                    description: author.description,
-//                    body: Content.Body(html: html),
-//                    date: Date(),
-//                    lastModified: Date(),
-//                    imagePath: context.site.imagePath,
-//                    audio: nil,
-//                    video: nil
-//                )
-//                
-//                author.path = "authors/\(author.username)"
-//                Item.authors[item.metadata] = author
-//                
-//                let page = Page(path: author.path, content: author.content)
-//                Page.authors[page] = author
-//                context.addPage(page)
-//            }
-//        })
-//    }
-//}
-//
-//extension PublishingContext where Site == Blog {
-//    func items<T: Comparable>(
-//        authoredBy author: AuthorItem,
-//        sortedBy sortingKeyPath: KeyPath<Item<Site>, T>,
-//        order: Publish.SortOrder = .ascending) -> [Item<Blog>] {
-//        return self.allItems(sortedBy: sortingKeyPath, order: order).filter { $0.author == author }
-//    }
-//}
-//
-//extension Page: @retroactive Hashable {
-//    public func hash(into hasher: inout Hasher) {
-//        hasher.combine(self.path)
-//        hasher.combine(self.content.title)
-//    }
-//    
-//    nonisolated(unsafe) static var authors: [Page: AuthorItem] = [:]
-//    
-//    var author: AuthorItem? {
-//        return Self.authors[self]
-//    }
-//}
-//
-//extension Item where Site == Blog {
-//    nonisolated(unsafe) static var authors: [Blog.ItemMetadata: AuthorItem] = [:]
-//    
-//    var author: AuthorItem {
-//        return Self.authors[self.metadata]!
-//    }
-//}
-//
-extension Author.Social {
+extension ArticleLoader {
+    func items(
+        authoredBy author: AuthorEntity
+    ) -> [Article] {
+        return self.all.filter { $0.metadata["author"] as! String == author.name }
+    }
+}
+
+extension Ignite.PageMetadata: @retroactive Hashable {
+    public static func == (lhs: PageMetadata, rhs: PageMetadata) -> Bool {
+        lhs.description == rhs.description && lhs.title == rhs.title &&
+        lhs.image == rhs.image && lhs.url == rhs.url
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.image)
+        hasher.combine(self.url)
+        hasher.combine(self.title)
+        hasher.combine(self.description)
+    }
+    
+    nonisolated(unsafe) static var authors: [PageMetadata: AuthorEntity] = [:]
+    
+    var author: AuthorEntity? {
+        return Self.authors[self]
+    }
+}
+extension AuthorDTO.Social {
     
     nonisolated(unsafe) internal static var styles: [Kind: String] = [:]
     

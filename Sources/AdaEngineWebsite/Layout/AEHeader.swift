@@ -23,11 +23,10 @@ enum SectionID: String {
 }
 
 struct AEHeader: DocumentElement {
-    
-    let section: SectionID?
-    
     @Environment(\.site)
     private var site
+    @Environment(\.page)
+    private var page
     
     let sections: [SectionID] = [.blog, .learn, .community, .features]
     
@@ -38,11 +37,11 @@ struct AEHeader: DocumentElement {
                     Text(site.name)
                         .font(.title2)
                     
-//                    if let section = self.section {
-//                        Text(section.rawValue.capitalized)
-//                            .font(.title2)
-//                            .class("subtitle")
-//                    }
+                    if sections.contains(where: { $0.rawValue == page.title }) {
+                        Text(page.title.capitalized)
+                            .font(.title2)
+                            .class("subtitle")
+                    }
                 }
                 .class("header-logo")
                 
@@ -59,7 +58,7 @@ struct AEHeader: DocumentElement {
     private var navigation: some HTML {
         List(self.sections) { section in
             ListItem {
-                Link(target: section.rawValue) {
+                Link(target: "/" + section.rawValue) {
                     Text(section.rawValue.capitalized)
                 }
                 .class("navigation-item-link")

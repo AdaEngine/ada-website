@@ -5,35 +5,50 @@
 //  Created by Vladislav Prusakov on 02.05.2025.
 //
 
+import Dependencies
 import Foundation
 import Ignite
 
-struct ImageModifier: MarkdownModifier {
+struct ImagePlugin: IgnitePlugin {
+    
+    @Dependency(\.context)
+    private var context
+    
+    @MainActor
+    func execute() async throws {
+        context.htmlModifier.add(ImageModifier())
+    }
+}
+
+struct ImageModifier: HTMLModifier {
     
     private static let fullWidthMode = "?fullWidth"
     
-    func modifyMarkdown(_ markdown: inout String) {
-        let isFullMode = markdown.contains(Self.fullWidthMode)
-        let input = markdown.replacingOccurrences(of: Self.fullWidthMode, with: "")
-        
-        let path = String(input.dropFirst("![".count).dropLast(")".count).drop(while: { $0 != "(" }).dropFirst())
-        
-        if path.isEmpty {
+    func modify(_ content: inout ArticleModifier) throws {
+        let tags = content.tags(between: "<img", and: "/>")
+        guard
+            let firstTag = tags.first(where: { $0.attributes["src"]?.contains(Self.fullWidthMode) ?? false }),
+            let source = firstTag.attributes["src"]
+        else {
             return
         }
         
-        let description = input.firstSubstring(between: "[", and: "]").flatMap(String.init)
-//        let render = Div {
-//            Image(path, description: description ?? "")
-//                .class(isFullMode ? "full-width-image" : "")
-//            
-//            if let description {
-//                Text(description)
-//            }
-//        }
-//        .class("article-image")
-        
-//        print(render.render())
+        content.replace(firstTag.substring.startIndex..<firstTag.substring.endIndex) {
+            imageNode(source, description: firstTag.attributes["alt"])
+        }
+    }
+    
+    @MainActor
+    private func imageNode(_ path: String, description: String?) -> some HTML {
+        Div {
+            Image(path, description: description ?? "")
+                .class("full-width-image")
+            
+            if let description {
+                Text(description)
+            }
+        }
+        .class("article-image")
     }
 }
 

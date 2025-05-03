@@ -21,9 +21,7 @@ struct BlogArticleRow: DocumentElement {
     var body: some HTML {
         Tag("article") {
             Link(target: self.item) {
-                if let previewPath = context.preview(for: self.item.image) {
-                    Image(previewPath.absoluteString)
-                }
+                AEImage(path: self.item.image ?? "")
                 
                 Div {
                     if self.isNewArticle {

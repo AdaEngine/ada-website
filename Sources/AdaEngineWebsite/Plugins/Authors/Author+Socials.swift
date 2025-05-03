@@ -8,8 +8,7 @@
 import Foundation
 import Ignite
 
-extension Author {
-    
+extension AuthorDTO {
     struct Social: Decodable, Equatable {
         let username: String
         let social: Kind
@@ -18,10 +17,9 @@ extension Author {
             self.social.url.appending(self.username)
         }
     }
-    
 }
 
-extension Author.Social {
+extension AuthorDTO.Social {
     enum Kind: String, Decodable, Equatable, CaseIterable {
         case twitter
         case github

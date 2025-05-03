@@ -9,18 +9,22 @@ import Ignite
 
 struct TagList: DocumentElement {
     
-//    let item: Item<Blog>
+    let item: Article
     
+    @HTMLBuilder
     var body: some HTML {
-        Text("RETURN TAGS")
-//        List(item.tags) { tag in
-//            ListItem {
-//                Link(url: context!.site.path(for: tag).absoluteString) {
-//                    Text(tag.string)
-//                }
-//            }
-//            .class(tag.cssClass)
-//        }
-//        .class("tags")
+        if let tags = item.tags, !tags.isEmpty {
+            List(tags) { tag in
+                ListItem {
+                    Link(target: "/tags/\(tag)") {
+                        Text(tag)
+                    }
+                }
+//                .class(tag.cssClass)
+            }
+            .class("tags")
+        } else {
+            EmptyHTML()
+        }
     }
 }
