@@ -5,6 +5,7 @@
 //  Created by v.prusakov on 4/15/23.
 //
 
+import Dependencies
 import Ignite
 
 struct MainPage: StaticPage {
@@ -88,15 +89,28 @@ private extension MainPage {
 struct AEImage: DocumentElement {
     
     let path: String
+    let description: String?
     
-//    @EnvironmentValue(.publishContext)
-//    private var context
+    var attributes: CoreAttributes {
+        get { image.attributes }
+        set { image.attributes = newValue }
+    }
     
-    init(path: String) {
+    var isPrimitive: Bool = true
+    
+    @Dependency(\.context)
+    private var context
+    
+    private var image: Image
+    
+    init(path: String, description: String? = nil) {
         self.path = path
+        self.description = description
+        
+        self.image = Image("/Images/" + path, description: description)
     }
     
     var body: some HTML {
-        Image(path)
+        image
     }
 }

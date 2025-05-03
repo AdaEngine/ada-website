@@ -8,7 +8,8 @@
 import Dependencies
 import Ignite
 
-struct AdaEngineArticleRenderer: ArticleRenderer {
+@MainActor
+struct AdaEngineArticleRenderer: @preconcurrency ArticleRenderer {
     
     var title: String {
         self.parser.title
@@ -28,11 +29,9 @@ struct AdaEngineArticleRenderer: ArticleRenderer {
     
     init(markdown: String, removeTitleFromBody: Bool) throws {
         @Dependency(MarkdownModifierApplier.self) var modifier
-        try MainActor.assumeIsolated {
-            var markdown = markdown
-            try modifier.execute(to: &markdown)
-        }
+        var markdown = markdown
+        try modifier.execute(to: &markdown)
         self.removeTitleFromBody = removeTitleFromBody
-        self.parser = MarkdownToHTML(markdown: markdown, removeTitleFromBody: removeTitleFromBody)
+        self.parser = MarkdownToHTML(markdown: markdown, removeTitleFromBody: false)
     }
 }

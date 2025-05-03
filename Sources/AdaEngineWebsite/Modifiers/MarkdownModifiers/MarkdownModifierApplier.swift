@@ -10,7 +10,15 @@ import DependenciesMacros
 import Ignite
 
 protocol MarkdownModifier {
-    @MainActor func modifyMarkdown(_ markdown: inout String)
+    var name: String { get }
+    
+    @MainActor func modify(_ markdown: inout String) throws
+}
+
+extension MarkdownModifier {
+    var name: String {
+        String(describing: Self.self)
+    }
 }
 
 @DependencyClient
@@ -23,8 +31,9 @@ struct MarkdownModifierApplier {
     
     @MainActor
     func execute(to markdown: inout String) throws {
-        modifiers.forEach {
-            $0.modifyMarkdown(&markdown)
+        try modifiers.forEach {
+            print("🫦 Apply modifier: \($0.name)")
+            try $0.modify(&markdown)
         }
     }
 }

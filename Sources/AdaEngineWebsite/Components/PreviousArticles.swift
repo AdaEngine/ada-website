@@ -5,48 +5,51 @@
 //  Created by v.prusakov on 4/13/23.
 //
 
-import Plot
-import Publish
+import Ignite
 
-//struct PreviousArticles: Component {
-//    
-//    let item: Item<Blog>
-//    
-//    @EnvironmentValue(.publishContext)
-//    private var context
-//    
-//    var body: Component {
-//        var items: Set<Item<Blog>> = []
-//
-//        for tag in item.tags {
-//            guard items.count < 3 else { break }
-//            guard let foundItem = context!.items(taggedWith: tag, sortedBy: \.date, order: .descending).randomElement(), foundItem.hashValue != item.hashValue else {
-//                continue
-//            }
-//            
-//            items.insert(foundItem)
-//        }
-//        
-//        return ComponentGroup {
-//            if !items.isEmpty {
-//                Div {
-//                    Div {
-//                        H3("RELATED ARTICLES")
-//                        
-//                        Div {
-//                            for item in Array(items) {
-//                                BlogArticleRow(item: item, context: self.context!, isNewArticle: false)
-//                            }
-//                        }
-//                        .class("collection-grid grid-two-columns")
-//                    }
-//                    .class("container content-restriction safe-area-insets")
-//                }
-//                .class("related_articles")
-//            } else {
-//                EmptyComponent()
-//            }
-//        }
-//        
-//    }
-//}
+struct PreviousArticles: DocumentElement {
+    
+    let item: Article
+    
+    @Environment(\.articles)
+    private var articles
+    
+    var body: some HTML {
+        var items: [Article] = []
+
+        for tag in item.tags ?? [] {
+            guard items.count < 3 else { break }
+            guard
+                let foundArticle = articles.tagged(tag).sorted(by: \.date).randomElement(),
+                foundArticle.path != item.path
+            else {
+                continue
+            }
+            
+            items.append(foundArticle)
+        }
+        
+        return Group {
+            if !items.isEmpty {
+                Div {
+                    Div {
+                        Text("RELATED ARTICLES")
+                            .font(.title3)
+                        
+                        Div {
+                            ForEach(items) { item in
+                                BlogArticleRow(item: item, isNewArticle: false)
+                            }
+                        }
+                        .class("collection-grid grid-two-columns")
+                    }
+                    .class("container content-restriction safe-area-insets")
+                }
+                .class("related_articles")
+            } else {
+                EmptyHTML()
+            }
+        }
+        
+    }
+}

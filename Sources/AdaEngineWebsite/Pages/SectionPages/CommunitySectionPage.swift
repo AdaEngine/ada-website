@@ -5,10 +5,8 @@
 //  Created by v.prusakov on 4/16/23.
 //
 
-//import Plot
-//import Publish
-//import PublishColorUtils
 import Ignite
+import Dependencies
 
 struct CommunitySocial {
     let image: String
@@ -19,7 +17,10 @@ struct CommunitySocial {
     let path: String
 }
 
-struct CommunitySectionPage: DocumentElement {
+struct CommunitySectionPage: StaticPage {
+    
+    let title: String = "Community"
+    let path: String = SectionID.community.rawValue
     
     var socials: [CommunitySocial] = [
         CommunitySocial(
@@ -77,15 +78,17 @@ struct CommunitySocialRow: DocumentElement {
     @Environment(\.themes)
     private var themes
     
+    @Dependency(\.context)
+    private var context
+    
     var body: some HTML {
-        Link(target: "/404.html") {
+        Link(target: item.path) {
             Section {
-                Text("Example")
-//                Image(context!.site.imagePath!.appendingComponent(item.image).absoluteString)
-//                    .class("light")
-//                
-//                Image(context!.site.imagePath!.appendingComponent(item.darkImage ?? item.image).absoluteString)
-//                    .class("dark")
+                AEImage(path: item.image)
+                    .class("light")
+                
+                AEImage(path: item.darkImage ?? item.image)
+                    .class("dark")
             }
             .class("image-container")
             

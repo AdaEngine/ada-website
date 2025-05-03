@@ -8,7 +8,7 @@ author: SpectralDragon
 ---
 # Custom NavigationView style
 
-![Some image](news/1*eHvKZaNy4zaU76Tu6TSKWw.png?fullWidth)
+![Some image](/Images/news/1*eHvKZaNy4zaU76Tu6TSKWw.png?fullWidth)
 
 Hello everybody, today we will talk about custom NavigationViewStyle.
 

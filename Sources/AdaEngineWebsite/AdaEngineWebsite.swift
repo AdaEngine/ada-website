@@ -3,30 +3,52 @@ import DependenciesMacros
 import Foundation
 import Ignite
 
+// TODO:
+
+// - [] Page 404 not generated
+// - [] articleInfoAfterFirstHeader not inserted
+// - [] Author page not generated
+// - [] Code styles not generated anymore
+// - [x] Images as incorrect path. Have no idea how to store images.
+// - [x] Returns elements from old site.
+
+
 @main
 struct AdaEngineSite: Site {
+    let name: String = "AdaEngine"
+    let url: Ignite.URL = URL(static: "https://adaengine.org")
+    let language: Language = .english
+    let lightTheme = AdaEngineDarkTheme()
+    let darkTheme = AdaEngineLightTheme()
+    let layout = AdaEngineLayout()
     
-    var name: String = "AdaEngine"
-    var url: Ignite.URL = URL(static: "https://adaengine.org")
-    var language: Language = .english
-    
-    var homePage = MainPage()
-    
-    var lightTheme = AdaEngineDarkTheme()
-    var darkTheme = AdaEngineLightTheme()
-    var layout = AdaEngineLayout()
-    
+    let homePage = MainPage()
     var staticPages: [any StaticPage] = [
         MainPage(),
         BlogSectionPage(),
-        LearnSectionPage()
+        LearnSectionPage(),
+        CommunitySectionPage()
     ]
+    
+    let useDefaultBootstrapURLs: BootstrapOptions = .none
     
     var articlePages: [any ArticlePage] = [
         DefaultArticlePage()
     ]
     
     var articleRenderer: AdaEngineArticleRenderer.Type = AdaEngineArticleRenderer.self
+    var syntaxHighlighterConfiguration: SyntaxHighlighterConfiguration = {
+        SyntaxHighlighterConfiguration(languages: [.swift])
+    }()
+    
+    func prepare() async throws {
+        let executor = PluginsExecutor(plugins: [
+            AuthorPlugin(),
+            ImagePlugin()
+        ])
+        
+        try await executor.execute()
+    }
 }
 
 extension AdaEngineSite {
@@ -36,30 +58,22 @@ extension AdaEngineSite {
             try await withDependencies { values in
                 values[MarkdownModifierApplier.self] = MarkdownModifierApplier(
                     modifiers: [
-                        ImageModifier(),
                         AdditionalBlockquoteModifier()
                     ]
                 )
             } operation: {
                 try await site.publish()
                 let executor = PluginsExecutor(plugins: [
-                    AuthorPlugin(),
                     CopyResourcePlugin(from: "Resources")
                 ])
                 try await executor.execute()
+                
+                @Dependency(\.context) var context
+                try await context.htmlModifier.execute()
             }
         } catch {
             print(error.localizedDescription)
         }
-    }
-}
-
-struct DefaultArticlePage: ArticlePage {
-
-    var body: some HTML {
-        Text(article.title)
-            .font(.title1)
-        Text(article.description)
     }
 }
 
@@ -69,69 +83,4 @@ struct AdaEngineDarkTheme: Theme {
 
 struct AdaEngineLightTheme: Theme {
     var colorScheme: Ignite.ColorScheme = .light
-}
-
-struct AdaEngineLayout: Layout {
-    
-    @Environment(\.page)
-    private var page
-    
-    @DocumentBuilder
-    var body: some HTML {
-        Head {
-            MetaLink(href: "/Styles/main.css", rel: .stylesheet)
-        }
-        Body {
-            AEHeader(section: .blog)
-            NavigationBar()
-            
-            content
-                .class("container content-restriction safe-area-insets")
-            
-            AEFooter()
-        }
-    }
-}
-
-class AdaEngineWebsiteContext {
-    let rootURL: URL
-    let buildDirURL: URL
-    let imagesURL: URL
-    
-    var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY-MM-dd"
-        formatter.locale = Locale(identifier: "en_EN")
-        return formatter
-    }()
-    
-    init(
-        rootDirictory: StaticString = #filePath,
-        buildDir: String = "Build",
-        imagesDir: String = "Images"
-    ) {
-        self.rootURL = try! URL.selectDirectories(from: rootDirictory).source
-        self.buildDirURL = self.rootURL.appending(path: buildDir)
-        self.imagesURL = self.buildDirURL.appending(path: imagesDir)
-    }
-}
-
-extension AdaEngineWebsiteContext {
-    func preview(for path: String?) -> URL? {
-        return path.map { self.imagesURL.appending(path: $0) }
-    }
-}
-
-
-extension AdaEngineWebsiteContext: DependencyKey {
-    static var liveValue: AdaEngineWebsiteContext {
-        AdaEngineWebsiteContext()
-    }
-}
-
-extension DependencyValues {
-    var context: AdaEngineWebsiteContext {
-        get { self[AdaEngineWebsiteContext.self] }
-        set { self[AdaEngineWebsiteContext.self] = newValue }
-    }
 }

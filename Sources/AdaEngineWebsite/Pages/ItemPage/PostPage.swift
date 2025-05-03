@@ -5,29 +5,28 @@
 //  Created by v.prusakov on 4/12/23.
 //
 
+import Dependencies
 import Ignite
 
 // Contains post
-struct PostPage: DocumentElement {
+struct DefaultArticlePage: ArticlePage {
     
-//    let item: Item<Blog>
+    @Dependency(\.context)
+    private var context
     
     var body: some HTML {
         Tag("article") {
+            // Main article content
+            article.text
+            
             Div {
-                // Main article content
-//                self.item.body
+                TagList(item: article)
                 
-                Div {
-                    TagList()
-                    
-//                    WrittenByAuthor(author: self.item.author)
-                }
-                .class("article-footer")
-                
-//                PreviousArticles(item: self.item)
+                WrittenByAuthor(author: context.author(for: article))
             }
-            .class("container content-restriction safe-area-insets")
+            .class("article-footer")
+            
+            PreviousArticles(item: article)
         }
     }
 }

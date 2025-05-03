@@ -5,40 +5,44 @@
 //  Created by v.prusakov on 4/12/23.
 //
 
-import Plot
-import Publish
+import Dependencies
+import Ignite
 
-//struct WrittenByAuthor: Component {
-//    
-//    let author: AuthorItem
-//    
-//    @EnvironmentValue(.publishContext)
-//    private var context
-//    
-//    var body: Component {
-//        Div {
-//            H3("WRITTEN BY")
-//            
-//            Div {
-//                Image(
-//                    url: self.context!.site.imagePath!.appendingComponent(self.author.avatar).absoluteString,
-//                    description: "\(self.author.name) Profile Picture"
-//                )
-//                .class("avatar")
-//                
-//                Div {
-//                    Link(url: self.author.path.absoluteString) {
-//                        H2(self.author.name)
-//                    }
-//                    
-//                    self.author.content.body
-//                    
-//                    SocialList(socials: self.author.socials)
-//                }
-//                .class("author_info")
-//            }
-//            .class("about_author_container")
-//        }
-//        .class("written_by")
-//    }
-//}
+struct WrittenByAuthor: DocumentElement {
+    
+    let author: AuthorEntity
+    
+    @Dependency(\.context)
+    private var context
+    
+    var body: some HTML {
+        Div {
+            Text("WRITTEN BY")
+                .font(.title3)
+            
+            Div {
+                AEImage(
+                    path: self.author.avatar,
+                    description: "\(self.author.name) Profile Picture"
+                )
+                .class("avatar")
+                
+                Div {
+                    Link(target: self.author.path) {
+                        Text(self.author.name)
+                            .font(.title2)
+                    }
+                    
+                    if let content = author.content {
+                        content
+                    }
+                    
+                    SocialList(socials: self.author.socials)
+                }
+                .class("author_info")
+            }
+            .class("about_author_container")
+        }
+        .class("written_by")
+    }
+}
