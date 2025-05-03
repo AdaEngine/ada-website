@@ -81,8 +81,10 @@ struct CommunitySocialRow: DocumentElement {
     @Dependency(\.context)
     private var context
     
+    var isPrimitive: Bool = true
+    
     var body: some HTML {
-        Link(target: item.path) {
+        Div {
             Section {
                 AEImage(path: item.image)
                     .class("light")
@@ -105,6 +107,22 @@ struct CommunitySocialRow: DocumentElement {
                     .class("description")
             }
             .class("content")
+        }
+        .class("community-card column")
+    }
+}
+
+struct CardView<Content: HTML>: DocumentElement {
+    
+    let content: Content
+    
+    init(@HTMLBuilder content: () -> Content) {
+        self.content = content()
+    }
+    
+    var body: some HTML {
+        Div {
+            content
         }
         .class("community-card")
     }

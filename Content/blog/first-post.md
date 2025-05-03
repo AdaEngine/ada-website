@@ -2,7 +2,7 @@
 date: 2020-04-03
 description: Test Post
 tags: AdaEngine, UI
-image: vprusakov.jpg
+image: news/1*eHvKZaNy4zaU76Tu6TSKWw.png
 keywords: adaengine release 0.1
 author: SpectralDragon
 ---

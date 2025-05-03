@@ -10,6 +10,9 @@ import Ignite
 
 struct MainPage: StaticPage {
     
+    @Environment(\.articles)
+    private var articles
+    
     let title = "Home"
     
     let items: [CommunitySocial] = [
@@ -61,56 +64,100 @@ struct MainPage: StaticPage {
     var body: some HTML {
         header()
         
-        Section {
-            ForEach(items) { item in
-                CommunitySocialRow(item: item)
-            }
-        }
-        .class("collection-grid grid-two-columns feature-list")
+        latestNews()
+        features()
     }
 }
 
 private extension MainPage {
     func header() -> some HTML {
-        Group {
-            Text("A simple and scalable Game Engine built in Swift.")
-                .font(.title1)
-            
-            Group {
-                AEImage(path: "header_ident.svg")
+        HStack {
+            VStack {
+                Text("A simple and scalable Game Engine built in Swift.")
+                    .font(.system(size: .px(40)))
                 
-                AEImage(path: "ae_logo.png")
+                Text("AdaEngine built by Developers, for Developers. Feel the new experience of Swift\ncoding with powerful 2D and 3D capabilities.")
+                
+                Text("AdaEngine Free and Open Source Forever.")
+                    .fontWeight(.bold)
             }
+            
+            AEImage(path: "ae_logo.png")
+                .frame(height: 200)
         }
-        .class("feature-why")
+        .padding()
+        .background(Material.thinMaterial)
+    }
+    
+    func latestNews() -> some HTML {
+        let sortedNews = articles.all
+        
+        return Section("Latest News") {
+            Div {
+                    ArticlePreview(for: sortedNews.first!)
+                        .articlePreviewStyle(HomePageArticlePreview())
+            }
+            .padding(.top, 20)
+        }
+    }
+    
+    func features() -> some HTML {
+        Section("Features") {
+            Div {
+                ForEach(items) { item in
+                    CommunitySocialRow(item: item)
+                }
+            }
+            .class("collection-grid grid-two-columns feature-list")
+        }
     }
 }
 
-struct AEImage: DocumentElement {
-    
-    let path: String
-    let description: String?
-    
-    var attributes: CoreAttributes {
-        get { image.attributes }
-        set { image.attributes = newValue }
-    }
-    
-    var isPrimitive: Bool = true
+struct HomePageArticlePreview: @preconcurrency ArticlePreviewStyle {
     
     @Dependency(\.context)
     private var context
     
-    private var image: Image
-    
-    init(path: String, description: String? = nil) {
-        self.path = path
-        self.description = description
-        
-        self.image = Image("/Images/" + path, description: description)
+    @MainActor
+    func body(content: Ignite.Article) -> any Ignite.HTML {
+        CardView {
+            Link(target: content.path) {
+                Div {
+                    ZStack(alignment: .topLeading) {
+                        Image(context.image(for: content.image)!)
+                            .resizable()
+                        
+                        VStack {
+                            Text(content.title)
+                                .font(.title2)
+                                .frame(maxWidth: .percent(100%))
+                            
+                            Spacer()
+                            
+                            tags(content: content)
+                        }
+                        .padding()
+                    }
+                }
+            }
+            .frame(height: 300)
+            .clipped()
+        }
+        .cornerRadius(16)
     }
     
-    var body: some HTML {
-        image
+    @HTMLBuilder
+    @MainActor
+    private func tags(content: Ignite.Article) -> some HTML {
+        if let tagLinks = content.tagLinks() {
+            Section {
+                ForEach(tagLinks) { link in
+                    link
+                }
+            }
+            .style(.marginTop, "-5px")
+        } else {
+            EmptyHTML()
+        }
     }
 }

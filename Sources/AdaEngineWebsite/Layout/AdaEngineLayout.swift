@@ -14,17 +14,18 @@ struct AdaEngineLayout: Layout {
         Head {
             MetaLink(href: "/Styles/main.css", rel: .stylesheet)
             AnyHTML(safariMetaTags)
-            AnyHTML(configuredHeads(disableBootstrapCSS: true, disableIgniteCSS: true))
+//            AnyHTML(configuredHeads(disableBootstrapCSS: true, disableIgniteCSS: true))
         }
-        .standardHeadersDisabled()
+//        .standardHeadersDisabled()
         
         Body {
-            GridContainer {
+//            GridContainer {
                 AEHeader()
                 content
+                    .class("container content-restriction safe-area-insets")
                 AEFooter()
                 navigationBurger
-            }
+//            }
         }
     }
 }
