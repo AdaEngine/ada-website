@@ -74,18 +74,19 @@
         margin: 0;
         padding: 0;
         list-style: none;
-        height: 44px;
         overflow: hidden;
     }
     
     .navigation-item-link {
-        padding: 20px 15px;
+        padding: 0;
     }
     
     .header-container {
-        display: block;
+        display: flex;
         padding-left: 1.5rem;
         padding-right: 1.5rem;
+        justify-content: space-between;
+        align-items: baseline;
     }
 }
 
