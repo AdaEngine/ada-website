@@ -22,12 +22,12 @@
 
 .header h2 {
     margin: 0;
+    font-family: "Primary";
 }
 
 .header-logo {
     display: inline-flex;
     cursor: pointer;
-    padding: 6px 0px;
     opacity: 1;
     transition: opacity 0.3s ease-in;
     transition-delay: 0.0s;

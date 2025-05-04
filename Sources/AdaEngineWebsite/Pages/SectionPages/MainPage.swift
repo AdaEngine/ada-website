@@ -74,7 +74,7 @@ private extension MainPage {
         HStack {
             VStack {
                 Text("A simple and scalable Game Engine built in Swift.")
-                    .font(.system(size: .px(40)))
+                    .font(.primary(size: .px(40)))
                 
                 Text("AdaEngine built by Developers, for Developers. Feel the new experience of Swift\ncoding with powerful 2D and 3D capabilities.")
                 
@@ -159,5 +159,15 @@ struct HomePageArticlePreview: @preconcurrency ArticlePreviewStyle {
         } else {
             EmptyHTML()
         }
+    }
+}
+
+extension Font {
+    static func primary(
+        style: Font.Style = .body,
+        size: LengthUnit,
+        weight: Font.Weight = .regular
+    ) -> Font {
+        Font.custom("Primary", style: style, size: size, weight: weight)
     }
 }

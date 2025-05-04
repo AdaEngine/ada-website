@@ -20,7 +20,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: main
-          folder: Output
+          folder: Build
           token: ${{ secrets.DEPLOY_ACCESS_TOKEN }}
           repository-name: AdaEngine/adaengine.github.io
           single-commit: true

@@ -46,9 +46,9 @@ extension AuthorDTO.Social {
             switch self {
             case .github:
                 return Color(hex: "#000000")
-                    .adaptiveToDarkTheme(Color(hex: "#ffffff"))
+                    .adaptiveToDarkTheme(Color(hex: "#FFFFFF"))
             case .twitter:
-                return Color(hex: "#00acee")
+                return Color(hex: "#00ACEE")
                     .withoutMultiTheme()
             }
         }
@@ -56,10 +56,10 @@ extension AuthorDTO.Social {
         var color: MultiThemeColor {
             switch self {
             case .github:
-                return Color(hex: "#ffffff")
+                return Color(hex: "#FFFFFF")
                     .adaptiveToDarkTheme(Color(hex: "#000000"))
             case .twitter:
-                return Color(hex: "#ffffff")
+                return Color(hex: "#FFFFFF")
                     .withoutMultiTheme()
             }
         }
@@ -70,10 +70,10 @@ extension Color {
     var hexWithAlpha: String {
         return String(
             format: "#%02X%02X%02X%02X",
-            Int(self.red * 0xff),
-            Int(self.green * 0xff),
-            Int(self.blue * 0xff),
-            Int(self.opacity * 0xff)
+            self.red,
+            self.green,
+            self.blue,
+            self.opacity
         )
     }
     
@@ -82,7 +82,7 @@ extension Color {
     }
     
     func withoutMultiTheme() -> MultiThemeColor {
-        MultiThemeColor(light: self, dark: nil)
+        MultiThemeColor(light: self, dark: self)
     }
 }
 
