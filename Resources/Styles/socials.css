@@ -29,50 +29,65 @@
 }
 
 .socials .twitter {
-	background-color: #00AB54ED1227D8;
-	color: #FE01FE01FE01639C;
+	background-color: #00ACEE28;
+	color: #FFFFFF64;
 	font-weight: bold;
 }
 
 .socials .twitter img:hover {
-    fill: #FE01FE01FE01639C;
+    fill: #FFFFFF64;
 }
 
 .socials .twitter:hover {
-	background-color: #00AB54ED1245BA;
-	color: #FE01FE01FE01639C;
+	background-color: #00ACEE46;
+	color: #FFFFFF64;
 }
 
 .socials .github {
-	background-color: #00000027D8;
-	color: #FE01FE01FE01639C;
+	background-color: #00000028;
+	color: #FFFFFF64;
 	font-weight: bold;
 }
 
 .socials .github img:hover {
-    fill: #FE01FE01FE01639C;
+    fill: #FFFFFF64;
 }
 
 .socials .github:hover {
-	background-color: #00000045BA;
-	color: #FE01FE01FE01639C;
+	background-color: #00000046;
+	color: #FFFFFF64;
 }
 
 @media(prefers-color-scheme: dark) {
 
+	.socials .twitter {
+		background-color: #00ACEE28;
+		color: #FFFFFF64;
+		font-weight: bold;
+	}
+	
+	.socials .twitter img:hover {
+	    fill: #FFFFFF64;
+	}
+	
+	.socials .twitter:hover {
+		background-color: #00ACEE46;
+		color: #FFFFFF64;
+	}
+
 	.socials .github {
-		background-color: #FE01FE01FE0127D8;
-		color: #000000639C;
+		background-color: #FFFFFF28;
+		color: #00000064;
 		font-weight: bold;
 	}
 	
 	.socials .github img:hover {
-	    fill: #000000639C;
+	    fill: #00000064;
 	}
 	
 	.socials .github:hover {
-		background-color: #FE01FE01FE0145BA;
-		color: #000000639C;
+		background-color: #FFFFFF46;
+		color: #00000064;
 	}
 
 }

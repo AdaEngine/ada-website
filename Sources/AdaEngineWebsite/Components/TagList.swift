@@ -16,11 +16,11 @@ struct TagList: DocumentElement {
         if let tags = item.tags, !tags.isEmpty {
             List(tags) { tag in
                 ListItem {
-                    Link(target: "/tags/\(tag)") {
-                        Text(tag)
+                    Link(target: "/tags/\(tag.convertedToSlug())") {
+                        tag
                     }
                 }
-//                .class(tag.cssClass)
+                .class("tag-" + tag.convertedToSlug())
             }
             .class("tags")
         } else {

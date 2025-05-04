@@ -5,7 +5,7 @@ import Ignite
 
 // TODO:
 
-// - [] Page 404 not generated
+// - [x] Page 404 not generated
 // - [] Author page not generated
 // - [] Code styles not generated anymore
 // - [x] articleInfoAfterFirstHeader not inserted
@@ -24,6 +24,7 @@ struct AdaEngineSite: Site {
     
     let homePage = MainPage()
     let errorPage = ErrorPage()
+    var tagPage = TagPage()
     var staticPages: [any StaticPage] = [
         MainPage(),
         BlogSectionPage(),
@@ -65,7 +66,14 @@ extension AdaEngineSite {
             } operation: {
                 try await site.publish()
                 let executor = PluginsExecutor(plugins: [
-                    CopyResourcePlugin(from: "Resources")
+                    CopyResourcePlugin(from: "Resources"),
+                    TagGeneratorPlugin(
+                        tagsCSSPrefix: "tag-",
+                        resourcePath: Constants.stylesPath,
+                        builder: { tag in
+                            AvailableTag(rawValue: tag.name)?.color ?? Color.aliceBlue.withoutMultiTheme()
+                        }
+                    )
                 ])
                 try await executor.execute()
                 
@@ -87,4 +95,23 @@ struct AdaEngineLightTheme: Theme {
     var colorScheme: Ignite.ColorScheme = .light
     
     var syntaxHighlighterTheme: HighlighterTheme = .xcodeDark
+}
+
+enum Constants {
+    static let resourcePath: String = "Resources"
+    static let stylesPath: String = "Resources/Styles"
+}
+
+enum AvailableTag: String, CaseIterable {
+    case adaengine = "AdaEngine"
+    case ui = "UI"
+    case release = "Release"
+    
+    var color: MultiThemeColor {
+        switch self {
+        case .adaengine: return Color.blue.adaptiveToDarkTheme(.aliceBlue)
+        case .ui: return Color.red.adaptiveToDarkTheme(.bootstrapRed)
+        case .release: return Color.green.adaptiveToDarkTheme(.limeGreen)
+        }
+    }
 }
