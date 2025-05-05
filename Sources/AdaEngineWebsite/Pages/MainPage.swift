@@ -72,7 +72,7 @@ struct MainPage: StaticPage {
 
 private extension MainPage {
     func header() -> some HTML {
-        HStack {
+        Grid {
             VStack(alignment: .leading, spacing: 20) {
                 Text("A simple and scalable Game Engine built in Swift.")
                     .font(.primary(size: .px(40)))

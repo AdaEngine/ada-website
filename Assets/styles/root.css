@@ -76,6 +76,14 @@
     --color-highlight-green: #e4fee6;
     --color-highlight-red: #f8dddd;
     --color-tutorials-teal: #38a39c;
+    --color-donate-level-amount-color: #bababa;
+    --color-donate-level-bronze-color: #9f7d6c;
+    --color-donate-level-silver-color: #bbb;
+    --color-donate-level-gold-color: #c0b04bff;
+    --color-donate-level-platinum-color: #c5c5c5;
+    --color-donate-level-titanium-color: #848484;
+    --color-donate-level-diamond-color: #a3daeb;
+    --color-donate-level-patron-color: #dcdcdc;
     --color-aside-deprecated: var( --color-figure-orange);
     --color-aside-deprecated-background: var( --color-fill-orange-secondary);
     --color-aside-deprecated-border: var( --color-figure-orange);
