@@ -50,11 +50,6 @@ import Foundation
 //}
 //
 //
-//enum Constants {
-//    static let resourcePath: Path = "Resources"
-//    static let stylesPath: Path = "Resources/Styles"
-//}
-//
 //func build() throws {
 //    // This will generate your website using the built-in Foundation theme:
 //    try Blog().publish(using: [

@@ -1,0 +1,45 @@
+/* THIS FILE WAS AUTO GENERATED. DO NOT CHANGE IT MANUAL */
+        
+.tag-u-i {
+	background-color: #FF000028;
+	color: #FF000064;
+	font-weight: bold;
+}
+
+.tag-u-i:hover {
+	background-color: #FF000046;
+}
+
+.tag-ada-engine {
+	background-color: #0000FF28;
+	color: #0000FF64;
+	font-weight: bold;
+}
+
+.tag-ada-engine:hover {
+	background-color: #0000FF46;
+}
+
+@media(prefers-color-scheme: dark) {
+
+	.tag-u-i {
+		background-color: #DC354528;
+		color: #DC354564;
+		font-weight: bold;
+	}
+	
+	.tag-u-i:hover {
+		background-color: #DC354546;
+	}
+
+	.tag-ada-engine {
+		background-color: #F0F8FF28;
+		color: #F0F8FF64;
+		font-weight: bold;
+	}
+	
+	.tag-ada-engine:hover {
+		background-color: #F0F8FF46;
+	}
+
+}

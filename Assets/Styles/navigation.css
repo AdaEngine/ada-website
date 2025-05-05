@@ -37,7 +37,7 @@
 .header-logo .subtitle {
     font-weight: 200;
     color: var(--glyph-gray-secondary);
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     margin-left: 8px;
 }
 
@@ -162,14 +162,8 @@
         display: block;
         visibility: hidden;
         height: 0px;
-        padding: 0px 24px 0;
         list-style: none;
-    }
-    
-    .header.menu-opened .header-logo {
-        transition-delay: 0.15s;
-        opacity: 0;
-        transition: opacity 0.3s cubic-bezier(0.4, 0.01, 0.165, 0.99), -webkit-transform 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+        padding-top: 20px;
     }
     
     .header ul.navigation li.navigation-item .navigation-item-link {

@@ -8,7 +8,7 @@
 import Ignite
 
 // All sections on site
-enum SectionID: String {
+enum SectionID: String, CaseIterable {
     case blog
 
     case community
@@ -35,7 +35,7 @@ struct AEHeader: DocumentElement {
                     Text(site.name)
                         .font(.title2)
                     
-                    if sections.contains(where: {
+                    if SectionID.allCases.contains(where: {
                         $0.rawValue.lowercased() == page.title.lowercased()
                     }) {
                         Text(page.title.capitalized)
@@ -55,12 +55,19 @@ struct AEHeader: DocumentElement {
     
     @HTMLBuilder
     private var navigation: some HTML {
-        List(self.sections) { section in
-            ListItem {
-                Link(target: "/" + section.rawValue) {
-                    Span(section.rawValue.capitalized)
+        List {
+            ForEach(self.sections) { section in
+                ListItem {
+                    Link(target: "/" + section.rawValue) {
+                        Span(section.rawValue.capitalized)
+                    }
+                    .class("navigation-item-link")
                 }
-                .class("navigation-item-link")
+                .class("navigation-item")
+            }
+            
+            ListItem {
+                DonateButton()
             }
             .class("navigation-item")
         }
@@ -81,5 +88,3 @@ struct AEHeader: DocumentElement {
         .class("burger-container")
     }
 }
-
-typealias Div = Section

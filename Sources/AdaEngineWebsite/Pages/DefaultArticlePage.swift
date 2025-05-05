@@ -1,5 +1,5 @@
 //
-//  PostPage.swift
+//  DefaultArticlePage.swift
 //  
 //
 //  Created by v.prusakov on 4/12/23.

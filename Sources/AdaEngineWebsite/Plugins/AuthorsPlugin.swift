@@ -81,7 +81,7 @@ private extension AuthorPlugin {
     
     func generateSocialStyleFile(
         socials: [AuthorDTO.Social.Kind],
-        resourcePath: String = "Resources/Styles",
+        resourcePath: String = "Assets/styles",
         socialFileName: String = "socials.css"
     ) throws {
         let tuple: [(light: SocialStyle, dark: SocialStyle?)] = socials.map { social in
@@ -104,13 +104,11 @@ private extension AuthorPlugin {
             return (light, dark)
         }
         
-        let socialFilePath = context.rootURL
-            .appending(path: resourcePath)
-            .appending(path: socialFileName)
-            .path()
+        let resourceFolder = try context.folder(at: resourcePath)
+        let file = resourceFolder.file(at: socialFileName)
         
-        if FileManager.default.fileExists(atPath: socialFilePath) {
-            try FileManager.default.removeItem(atPath: socialFilePath)
+        if file.exists() {
+            try file.delete()
         }
         
         var content = """
@@ -163,7 +161,7 @@ private extension AuthorPlugin {
             content.append("}")
         }
         
-        FileManager.default.createFile(atPath: socialFilePath, contents: content.data(using: .utf8))
+        try resourceFolder.createFile(at: socialFileName, contents: content.data(using: .utf8))
     }
 }
 
