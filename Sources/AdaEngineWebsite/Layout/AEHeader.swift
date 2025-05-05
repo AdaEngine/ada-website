@@ -15,8 +15,6 @@ enum SectionID: String {
     
     case learn
     
-    case features
-    
     case press
     
     case donate
@@ -28,7 +26,7 @@ struct AEHeader: DocumentElement {
     @Environment(\.page)
     private var page
     
-    let sections: [SectionID] = [.blog, .learn, .community, .features]
+    let sections: [SectionID] = [.blog, .learn, .community]
     
     var body: some HTML {
         Tag("header") {
@@ -37,7 +35,9 @@ struct AEHeader: DocumentElement {
                     Text(site.name)
                         .font(.title2)
                     
-                    if sections.contains(where: { $0.rawValue == page.title }) {
+                    if sections.contains(where: {
+                        $0.rawValue.lowercased() == page.title.lowercased()
+                    }) {
                         Text(page.title.capitalized)
                             .font(.title2)
                             .class("subtitle")
@@ -46,7 +46,6 @@ struct AEHeader: DocumentElement {
                 .class("header-logo")
                 
                 self.burger
-                
                 self.navigation
             }
             .class("container content-restriction header-container")
@@ -59,7 +58,7 @@ struct AEHeader: DocumentElement {
         List(self.sections) { section in
             ListItem {
                 Link(target: "/" + section.rawValue) {
-                    Text(section.rawValue.capitalized)
+                    Span(section.rawValue.capitalized)
                 }
                 .class("navigation-item-link")
             }

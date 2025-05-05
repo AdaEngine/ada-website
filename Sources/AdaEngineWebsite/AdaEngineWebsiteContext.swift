@@ -19,6 +19,9 @@ final class AdaEngineWebsiteContext {
     
     var htmlModifier: HTMLContentModifier
     
+    var additionalStaticPages: [any StaticPage] = []
+    var additionalArticles: [any ArticlePage] = []
+    
     var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY-MM-dd"
@@ -29,7 +32,7 @@ final class AdaEngineWebsiteContext {
     init(
         rootDirictory: StaticString = #filePath,
         buildDir: String = "Build",
-        imagesDir: String = "Images"
+        imagesDir: String = "images"
     ) {
         self.rootURL = try! URL.selectDirectories(from: rootDirictory).source
         self.buildDirURL = self.rootURL.appending(path: buildDir)
@@ -44,7 +47,7 @@ extension AdaEngineWebsiteContext {
             return nil
         }
         
-        return "/Images/\(path)"
+        return "/images/\(path)"
     }
     
     func author(for article: Article) -> AuthorEntity {

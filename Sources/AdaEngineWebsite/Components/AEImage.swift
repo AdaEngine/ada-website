@@ -29,7 +29,7 @@ struct AEImage: DocumentElement {
         self.path = path
         self.description = description
         
-        self.image = Image("/Images/" + path, description: description)
+        self.image = Image("/images/" + path, description: description)
     }
     
     var body: some HTML {
