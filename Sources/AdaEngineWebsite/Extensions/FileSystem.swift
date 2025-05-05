@@ -38,6 +38,7 @@ struct Folder: FileSystemItem {
         return File(path: filePath)
     }
     
+    @discardableResult
     func createFile(at path: String, contents: Data? = nil) throws -> File {
         let filePath = self.path.appending(path: path)
         let isCreated = FileManager.default.createFile(atPath: filePath.path(), contents: contents)

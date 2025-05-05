@@ -25,7 +25,7 @@ struct TagGeneratorPlugin: IgnitePlugin {
     
     init(
         tagsCSSPrefix: String = "",
-        resourcePath: String = "Resources",
+        resourcePath: String = "Assets",
         tagsFileName: String = "tags.css",
         builder: @escaping (ArticleTag) -> MultiThemeColor
     ) {

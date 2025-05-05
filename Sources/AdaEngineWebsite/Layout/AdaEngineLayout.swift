@@ -12,11 +12,9 @@ struct AdaEngineLayout: Layout {
     @DocumentBuilder
     var body: some HTML {
         Head {
-            MetaLink(href: "/Styles/main.css", rel: .stylesheet)
+            MetaLink(href: "/styles/main.css", rel: .stylesheet)
             AnyHTML(safariMetaTags)
-//            AnyHTML(configuredHeads(disableBootstrapCSS: true, disableIgniteCSS: true))
         }
-//        .standardHeadersDisabled()
         
         Body {
                 AEHeader()
@@ -48,29 +46,6 @@ private extension AdaEngineLayout {
                 }
             }());
         """)
-    }
-    
-    func configuredHeads(
-        disableBootstrapCSS: Bool,
-        disableIgniteCSS: Bool
-    ) -> some HTML {
-        var headers = Head.standardHeaders()
-        
-        if disableIgniteCSS {
-            headers.removeAll { element in
-                element.render() == "<link href=\"/css/ignite-core.min.css\" rel=\"stylesheet\" />"
-            }
-        }
-        
-        if disableBootstrapCSS {
-            headers.removeAll { element in
-                element.render() == "<link href=\"/css/bootstrap-icons.min.css\" rel=\"stylesheet\" />"
-            }
-        }
-        
-        return ForEach(headers) { header in
-            AnyHTML(header)
-        }
     }
 }
 

@@ -33,12 +33,9 @@ struct AuthorPage: StaticPage {
                     .frame(width: 48, height: 48)
                     .avatarModifier()
                 
-//                Div {
-                    Text(author.name)
-                        .font(.title1)
-                    
-                    Text(author.description)
-//                } 
+                Text(author.name)
+                    .font(.title1)
+                Text(author.description)
             }
             
             
@@ -50,14 +47,3 @@ struct AuthorPage: StaticPage {
         }
     }
 }
-
-//            author.content = Content(
-//                title: author.name,
-//                description: author.description,
-//                body: Content.Body(html: html),
-//                date: Date(),
-//                lastModified: Date(),
-//                imagePath: context.site.imagePath,
-//                audio: nil,
-//                video: nil
-//            )

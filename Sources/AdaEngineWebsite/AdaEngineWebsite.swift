@@ -47,7 +47,14 @@ struct AdaEngineSite: Site {
         
         let executor = PluginsExecutor(plugins: [
             AuthorPlugin(),
-            ImagePlugin()
+            ImagePlugin(),
+            TagGeneratorPlugin(
+                tagsCSSPrefix: "tag-",
+                resourcePath: Constants.stylesPath,
+                builder: { tag in
+                    AvailableTag(rawValue: tag.name)?.color ?? Color.aliceBlue.withoutMultiTheme()
+                }
+            )
         ])
         
         try await executor.execute()
@@ -69,23 +76,12 @@ extension AdaEngineSite {
                 )
             } operation: {
                 try await site.publish()
-                let executor = PluginsExecutor(plugins: [
-                    CopyResourcePlugin(from: "Resources"),
-                    TagGeneratorPlugin(
-                        tagsCSSPrefix: "tag-",
-                        resourcePath: Constants.stylesPath,
-                        builder: { tag in
-                            AvailableTag(rawValue: tag.name)?.color ?? Color.aliceBlue.withoutMultiTheme()
-                        }
-                    )
-                ])
-                try await executor.execute()
                 
                 @Dependency(\.context) var context
                 try await context.htmlModifier.execute()
             }
         } catch {
-            print(error.localizedDescription)
+            fatalError("💥 \(error.localizedDescription)")
         }
     }
 }
@@ -103,7 +99,7 @@ struct AdaEngineLightTheme: Theme {
 
 enum Constants {
     static let resourcePath: String = "Resources"
-    static let stylesPath: String = "Resources/Styles"
+    static let stylesPath: String = "Assets/styles"
 }
 
 enum AvailableTag: String, CaseIterable {

@@ -24,7 +24,7 @@ final class AdaEngineWebsiteContext {
     
     var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY-MM-dd"
+        formatter.dateFormat = "dd MMM YYYY"
         formatter.locale = Locale(identifier: "en_EN")
         return formatter
     }()

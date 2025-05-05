@@ -7,6 +7,8 @@
 
 import Ignite
 
+typealias Div = Section
+
 extension HTML {
     func avatarModifier() -> some HTML {
         self.class("avatar")
