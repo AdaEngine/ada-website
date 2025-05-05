@@ -19,13 +19,11 @@ struct AdaEngineLayout: Layout {
 //        .standardHeadersDisabled()
         
         Body {
-//            GridContainer {
                 AEHeader()
                 content
                     .class("container content-restriction safe-area-insets")
                 AEFooter()
                 navigationBurger
-//            }
         }
     }
 }

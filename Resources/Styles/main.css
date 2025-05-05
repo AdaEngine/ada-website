@@ -12,12 +12,12 @@
 
 @font-face {
     font-family: "Code";
-    src: url(/Fonts/JetBrainsMono-Regular.ttf);
+    src: url(/fonts/JetBrainsMono-Regular.ttf);
 }
 
 @font-face {
     font-family: "Primary";
-    src: url(/Fonts/CalSans-Regular.ttf);
+    src: url(/fonts/CalSans-Regular.ttf);
 }
 
 /* Global */

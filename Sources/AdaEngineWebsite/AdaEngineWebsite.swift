@@ -5,9 +5,9 @@ import Ignite
 
 // TODO:
 
-// - [x] Page 404 not generated
 // - [] Author page not generated
 // - [] Code styles not generated anymore
+// - [x] Page 404 not generated
 // - [x] articleInfoAfterFirstHeader not inserted
 // - [x] Images as incorrect path. Have no idea how to store images.
 // - [x] Returns elements from old site.
@@ -29,10 +29,9 @@ struct AdaEngineSite: Site {
         MainPage(),
         BlogSectionPage(),
         LearnSectionPage(),
-        CommunitySectionPage()
+        CommunitySectionPage(),
+        DonatePage()
     ]
-    
-    let useDefaultBootstrapURLs: BootstrapOptions = .none
     
     var articlePages: [any ArticlePage] = [
         DefaultArticlePage()
@@ -43,13 +42,18 @@ struct AdaEngineSite: Site {
         SyntaxHighlighterConfiguration(languages: [.swift])
     }()
     
-    func prepare() async throws {
+    mutating func prepare() async throws {
+        @Dependency(\.context) var context
+        
         let executor = PluginsExecutor(plugins: [
             AuthorPlugin(),
             ImagePlugin()
         ])
         
         try await executor.execute()
+        
+        self.staticPages.append(contentsOf: context.additionalStaticPages)
+        self.articlePages.append(contentsOf: context.additionalArticles)
     }
 }
 

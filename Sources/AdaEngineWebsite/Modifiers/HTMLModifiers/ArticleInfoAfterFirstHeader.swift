@@ -43,9 +43,9 @@ struct ArticleHTMLModifier: HTMLModifier {
                 }
                 
                 Div {
-                    Text(context.dateFormatter.string(from: item.date))
-                    Text(" • ")
-                    Text(String(format: "%d min read", item.estimatedReadingMinutes))
+                    Span(context.dateFormatter.string(from: item.date))
+                    Span(" • ")
+                    Span(String(format: "%d min read", item.estimatedReadingMinutes))
                 }
             }
             .class("author_info")

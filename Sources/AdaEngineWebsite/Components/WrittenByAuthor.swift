@@ -25,18 +25,14 @@ struct WrittenByAuthor: DocumentElement {
                     path: self.author.avatar,
                     description: "\(self.author.name) Profile Picture"
                 )
-                .class("avatar")
+                .avatarModifier()
                 
                 Div {
                     Link(target: self.author.path) {
                         Text(self.author.name)
                             .font(.title2)
                     }
-                    
-                    if let content = author.content {
-                        content
-                    }
-                    
+                      
                     SocialList(socials: self.author.socials)
                 }
                 .class("author_info")

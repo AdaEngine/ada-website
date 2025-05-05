@@ -86,10 +86,10 @@ struct CommunitySocialRow: DocumentElement {
     var body: some HTML {
         Div {
             Section {
-                AEImage(path: item.image)
+                AEImage(path: item.image, description: item.description)
                     .class("light")
                 
-                AEImage(path: item.darkImage ?? item.image)
+                AEImage(path: item.darkImage ?? item.image, description: item.description)
                     .class("dark")
             }
             .class("image-container")

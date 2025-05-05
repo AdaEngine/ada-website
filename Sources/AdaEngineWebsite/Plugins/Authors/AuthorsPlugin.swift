@@ -15,10 +15,7 @@ struct AuthorEntity: Equatable {
     let description: String
     let socials: [AuthorDTO.Social]
     let username: String
-    
-    var content: String?
-    
-    var path: String = ""
+    let path: String
     
     init(author: AuthorDTO) {
         self.name = author.name
@@ -26,6 +23,7 @@ struct AuthorEntity: Equatable {
         self.description = author.description
         self.socials = author.socials
         self.username = author.username
+        self.path = "/authors/\(author.username.lowercased().convertedToSlug())"
     }
 }
 
@@ -52,35 +50,12 @@ struct AuthorPlugin: IgnitePlugin {
         )
         
         context.htmlModifier.add(ArticleHTMLModifier())
-        context.authors = authors.map(AuthorEntity.init)
+        let authorEntities = authors.map(AuthorEntity.init)
+        context.authors = authorEntities
         
-//        author.path = "/authors/\(author.username.lowercased().convertedToSlug())"
-        
-//        let parser = context.markdownParser
-//        context.allItems(sortedBy: \.date).forEach { item in
-//            guard var author = authors.first(where: { item.metadata.author == $0.username }).map(AuthorItem.init) else {
-//                return
-//            }
-//            
-//            let html = parser.html(from: author.description)
-//            author.content = Content(
-//                title: author.name,
-//                description: author.description,
-//                body: Content.Body(html: html),
-//                date: Date(),
-//                lastModified: Date(),
-//                imagePath: context.site.imagePath,
-//                audio: nil,
-//                video: nil
-//            )
-//            
-//            author.path = "authors/\(author.username)"
-//            Item.authors[item.metadata] = author
-//            
-//            let page = Page(path: author.path, content: author.content)
-//            Page.authors[page] = author
-//            context.addPage(page)
-//        }
+        authorEntities.forEach {
+            context.additionalStaticPages.append(AuthorPage(author: $0))
+        }
     }
 }
 
@@ -196,7 +171,7 @@ extension ArticleLoader {
     func items(
         authoredBy author: AuthorEntity
     ) -> [Article] {
-        return self.all.filter { $0.metadata["author"] as! String == author.name }
+        return self.all.filter { $0.metadata["author"] as! String == author.username }
     }
 }
 

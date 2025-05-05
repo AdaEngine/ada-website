@@ -62,17 +62,18 @@ struct MainPage: StaticPage {
     
     @HTMLBuilder
     var body: some HTML {
-        header()
-        
-        latestNews()
-        features()
+        VStack(alignment: .leading, spacing: 40) {
+            header()
+            latestNews()
+            features()
+        }
     }
 }
 
 private extension MainPage {
     func header() -> some HTML {
         HStack {
-            VStack {
+            VStack(alignment: .leading, spacing: 20) {
                 Text("A simple and scalable Game Engine built in Swift.")
                     .font(.primary(size: .px(40)))
                 
@@ -82,10 +83,9 @@ private extension MainPage {
                     .fontWeight(.bold)
             }
             
-            AEImage(path: "ae_logo.png")
+            AEImage(path: "ae_logo.svg", description: "AdaEngine Logo")
                 .frame(height: 200)
         }
-        .padding()
         .background(Material.thinMaterial)
     }
     
@@ -94,8 +94,8 @@ private extension MainPage {
         
         return Section("Latest News") {
             Div {
-                    ArticlePreview(for: sortedNews.first!)
-                        .articlePreviewStyle(HomePageArticlePreview())
+                ArticlePreview(for: sortedNews.first!)
+                    .articlePreviewStyle(HomePageArticlePreview())
             }
             .padding(.top, 20)
         }
@@ -109,65 +109,7 @@ private extension MainPage {
                 }
             }
             .class("collection-grid grid-two-columns feature-list")
+            .padding(.top, 20)
         }
-    }
-}
-
-struct HomePageArticlePreview: @preconcurrency ArticlePreviewStyle {
-    
-    @Dependency(\.context)
-    private var context
-    
-    @MainActor
-    func body(content: Ignite.Article) -> any Ignite.HTML {
-        CardView {
-            Link(target: content.path) {
-                Div {
-                    ZStack(alignment: .topLeading) {
-                        Image(context.image(for: content.image)!)
-                            .resizable()
-                        
-                        VStack {
-                            Text(content.title)
-                                .font(.title2)
-                                .frame(maxWidth: .percent(100%))
-                            
-                            Spacer()
-                            
-                            tags(content: content)
-                        }
-                        .padding()
-                    }
-                }
-            }
-            .frame(height: 300)
-            .clipped()
-        }
-        .cornerRadius(16)
-    }
-    
-    @HTMLBuilder
-    @MainActor
-    private func tags(content: Ignite.Article) -> some HTML {
-        if let tagLinks = content.tagLinks() {
-            Section {
-                ForEach(tagLinks) { link in
-                    link
-                }
-            }
-            .style(.marginTop, "-5px")
-        } else {
-            EmptyHTML()
-        }
-    }
-}
-
-extension Font {
-    static func primary(
-        style: Font.Style = .body,
-        size: LengthUnit,
-        weight: Font.Weight = .regular
-    ) -> Font {
-        Font.custom("Primary", style: style, size: size, weight: weight)
     }
 }
