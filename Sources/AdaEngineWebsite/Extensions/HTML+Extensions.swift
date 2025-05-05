@@ -14,3 +14,19 @@ extension HTML {
         self.class("avatar")
     }
 }
+
+extension HTML {
+    func background<Content: HTML>(@HTMLBuilder content: () -> Content) -> some HTML {
+        ZStack {
+            content()
+            self
+        }
+    }
+    
+    func overlay<Content: HTML>(@HTMLBuilder content: () -> Content) -> some HTML {
+        ZStack {
+            self
+            content()
+        }
+    }
+}

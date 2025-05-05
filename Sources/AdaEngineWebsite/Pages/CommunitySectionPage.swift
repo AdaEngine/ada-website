@@ -62,12 +62,16 @@ struct CommunitySectionPage: StaticPage {
     ]
     
     var body: some HTML {
-        Group {
-            ForEach(self.socials) { item in
-                CommunitySocialRow(item: item)
+        Section("Official communities") {
+            Div {
+                ForEach(self.socials) { item in
+                    Link(target: item.path) {
+                        CommunitySocialRow(item: item)
+                    }
+                }
             }
+            .class("collection-grid grid-two-columns")
         }
-        .class("collection-grid grid-two-columns")
     }
 }
 

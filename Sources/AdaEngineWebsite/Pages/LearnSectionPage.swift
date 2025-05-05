@@ -28,9 +28,11 @@ struct LearnSectionPage: StaticPage {
     ]
     
     var body: some HTML {
-        Group {
+        Div {
             ForEach(self.links) { item in
-                CommunitySocialRow(item: item)
+                Link(target: item.path) {
+                    CommunitySocialRow(item: item)
+                }
             }
         }
         .class("collection-grid grid-two-columns")
