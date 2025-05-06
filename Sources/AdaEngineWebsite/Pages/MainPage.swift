@@ -82,10 +82,16 @@ private extension MainPage {
                 Text("AdaEngine Free and Open Source Forever.")
                     .fontWeight(.bold)
             }
+            .width(2)
+
+            Spacer()
+                .width(1)
             
             AEImage(path: "ae_logo.svg", description: "AdaEngine Logo")
                 .frame(height: 200)
+                .width(1)
         }
+        .columns(4)
         .background(Material.thinMaterial)
     }
     

@@ -40,3 +40,9 @@ extension HTML {
         self.class("elevated-element")
     }
 }
+
+extension Link {
+    init<Content: HTML>(target: URL, @HTMLBuilder content: @escaping () -> Content) {
+        self.init(target: target.absoluteString, content: content)
+    }
+}

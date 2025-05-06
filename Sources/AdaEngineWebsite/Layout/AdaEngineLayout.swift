@@ -21,8 +21,11 @@ struct AdaEngineLayout: Layout {
                 content
                     .class("container content-restriction safe-area-insets")
                 AEFooter()
+                    .position(.fixedBottom)
+                    
                 navigationBurger
         }
+        .ignorePageGutters()
     }
 }
 
