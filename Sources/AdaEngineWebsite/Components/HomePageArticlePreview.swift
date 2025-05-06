@@ -9,37 +9,38 @@ import Dependencies
 import Ignite
 
 struct HomePageArticlePreview: @preconcurrency ArticlePreviewStyle {
-    
+
     @Dependency(\.context)
     private var context
-    
+
     @MainActor
     func body(content: Ignite.Article) -> any Ignite.HTML {
-        CardView {
-            Link(target: content) {
-                Card(imageName: context.image(for: content.image)!) {
-                    Div {
-                        VStack {
-                            Text(content.title)
-                                .font(.title2)
-                                .frame(maxWidth: .percent(100%))
-                            
-                            Spacer()
-                            
-                            tags(content: content)
-                        }
-                        .padding()
+        Link(target: content) {
+            ZStack(alignment: .topLeading) {
+                Image(context.image(for: content.image)!, description: content.title)
+                    .resizable()
+                    .frame(maxWidth: .percent(100%), maxHeight: .percent(100%))
+
+                 Div {
+                    VStack(alignment: .leading) {
+                        Text(content.title)
+                            .font(.title2)
+                            .frame(maxWidth: .percent(100%))
+
+                        Spacer()
+
+                        tags(content: content)
                     }
+                    .padding()
                 }
-                .contentPosition(.overlay)
-                .frame(maxHeight: 300)
-                .clipped()
             }
-            .linkStyle(.automatic)
+            .frame(maxHeight: 350)
+            .clipped()
+            .elevated()
         }
         .cornerRadius(16)
     }
-    
+
     @HTMLBuilder
     @MainActor
     private func tags(content: Ignite.Article) -> some HTML {
