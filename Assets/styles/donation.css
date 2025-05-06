@@ -7,8 +7,9 @@
   --btn-bg-dark: rgba(255, 255, 255, 0.1);
   --btn-bg-light: rgba(0, 0, 0, 0.1);
   --btn-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  --donate-opacity: #ff2d531e;
   --shine-effect-dark: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  --shine-effect: linear-gradient(90deg, transparent, #ff2d531e, transparent);
+  --shine-effect: linear-gradient(90deg, transparent, var(--donate-opacity), transparent);
   --shine-transition: 0.5s ease;
   --segment-active-color: var(--donate);
   --segment-hover-color: rgba(255, 255, 255, 0.1);
@@ -114,6 +115,7 @@ a > .donate-btn:active {
   width: 100%;
   height: 100%;
   background: var(--shine-effect);
+  color: var(--donate);
 }
 
 .donate-btn-anim::before {
@@ -188,7 +190,7 @@ a > .donate-btn:active {
     color: var(--glyph-gray);
   }
 
-  /* .donate-btn::before {
+  .donate-btn::before {
     background: var(--shine-effect-dark);
-  } */
+  }
 }
