@@ -32,7 +32,7 @@ struct MontlhySponsorCard: DocumentElement {
                         Spacer()
                         
                         HStack(alignment: .bottom, spacing: .xLarge) {
-                            VStack(alignment: .leading, spacing: 4) {
+                            VStack(alignment: .leading, spacing: 6) {
                                 ForEach(item.benefits) { benefit in
                                     Text(benefit.rawValue)
                                         .font(.system(size: 12))
