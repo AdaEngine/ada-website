@@ -30,3 +30,13 @@ extension HTML {
         }
     }
 }
+
+extension HTML {
+    func active() -> some HTML {
+        self.class("active")
+    }
+
+    func elevated() -> some HTML {
+        self.class("elevated-element")
+    }
+}
