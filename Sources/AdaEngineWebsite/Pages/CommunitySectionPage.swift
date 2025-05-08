@@ -100,7 +100,7 @@ struct CommunitySocialRow: DocumentElement {
             
             Section {
                 Text(item.title)
-                    .class("title")
+                    .font(.title4)
                 
                 if let subtitle = item.subtitle {
                     Text(subtitle)
@@ -113,21 +113,5 @@ struct CommunitySocialRow: DocumentElement {
             .class("content")
         }
         .class("community-card column")
-    }
-}
-
-struct CardView<Content: HTML>: DocumentElement {
-    
-    let content: Content
-    
-    init(@HTMLBuilder content: () -> Content) {
-        self.content = content()
-    }
-    
-    var body: some HTML {
-        Div {
-            content
-        }
-        .class("community-card")
     }
 }

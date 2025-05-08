@@ -27,13 +27,14 @@
 
 .community-card .title {
     margin: 0;
+    font-size: 1.2rem;
 }
 
 .community-card .subtitle {
     margin: 4px 0 0;
     color: var(--glyph-gray-override);
     font-style: italic;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 400;
 }
 

@@ -32,18 +32,19 @@ struct PreviousArticles: DocumentElement {
         return Group {
             if !items.isEmpty {
                 Div {
-                    Div {
-                        Text("RELATED ARTICLES")
+                    SafeAreaContainer {
+                        Text("Related articles")
                             .font(.title3)
                         
-                        Div {
+                        Grid(alignment: .topLeading) {
                             ForEach(items) { item in
-                                BlogArticleRow(item: item, isNewArticle: false)
+                                ArticlePreview(for: item)
+                                    .articlePreviewStyle(BlogArticlePreview(isNewArticle: false))
+                                    .width(1)
                             }
                         }
-                        .class("collection-grid grid-two-columns")
+                        .columns(3)
                     }
-                    .class("container content-restriction safe-area-insets")
                 }
                 .class("related_articles")
             } else {

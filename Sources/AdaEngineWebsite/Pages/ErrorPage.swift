@@ -9,7 +9,7 @@ import Ignite
 
 struct ErrorPage: Ignite.ErrorPage {
     var body: some HTML {
-        GridContainer {
+        SafeAreaContainer {
             Text("404 - Page not found!")
                 .font(.title1)
             
