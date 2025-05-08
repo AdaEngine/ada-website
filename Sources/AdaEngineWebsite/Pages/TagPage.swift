@@ -24,13 +24,15 @@ struct TagPage: Ignite.TagPage {
             .font(.title1)
         }
         
-        GridContainer {
-            Div {
+        SafeAreaContainer {
+            Grid(alignment: .topLeading) {
                 ForEach(tag.articles) { article in
                     ArticlePreview(for: article)
+                        .articlePreviewStyle(BlogArticlePreview(isNewArticle: false))
+                        .width(1)
                 }
             }
-            .class("collection-grid grid-two-columns feature-list")
+            .columns(3)
         }
     }
 }

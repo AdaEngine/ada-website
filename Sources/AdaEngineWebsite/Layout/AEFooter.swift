@@ -12,7 +12,7 @@ struct AEFooter: DocumentElement {
 
     var body: some HTML {
         Tag("footer") {
-            GridContainer {
+            SafeAreaContainer {
                 Div {
                     footerMain()
                         .padding(.bottom, 40)

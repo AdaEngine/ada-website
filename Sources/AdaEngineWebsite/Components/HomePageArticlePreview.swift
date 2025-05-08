@@ -15,44 +15,33 @@ struct HomePageArticlePreview: @preconcurrency ArticlePreviewStyle {
 
     @MainActor
     func body(content: Ignite.Article) -> any Ignite.HTML {
-        Link(target: content) {
-            ZStack(alignment: .topLeading) {
-                Image(context.image(for: content.image)!, description: content.title)
-                    .resizable()
-                    .frame(maxWidth: .percent(100%), maxHeight: .percent(100%))
+        Div {
+            Tag("a") {
+                VStack(alignment: .leading, spacing: 0) {
+                    Image(context.image(for: content.image)!, description: content.title)
+                        .resizable()
+                        
+                    Div {
+                        VStack(alignment: .leading) {
+                            Text(content.title)
+                                .font(.title2)
 
-                 Div {
-                    VStack(alignment: .leading) {
-                        Text(content.title)
-                            .font(.title2)
-                            .frame(maxWidth: .percent(100%))
+                            Text(content.description)
+                                .font(.body)
 
-                        Spacer()
-
-                        tags(content: content)
+                            Text(context.dateFormatter.string(from: content.date))
+                                .class("article-date")
+                        }
+                        .padding()
                     }
-                    .padding()
+                    .frame(width: .percent(100%))
                 }
             }
-            .frame(maxHeight: 350)
-            .clipped()
-            .elevated()
+            .attribute("href", content.path)
+            .cornerRadius(16)
         }
+        .class("article-preview")
         .cornerRadius(16)
-    }
-
-    @HTMLBuilder
-    @MainActor
-    private func tags(content: Ignite.Article) -> some HTML {
-        if let tagLinks = content.tagLinks() {
-            Section {
-                ForEach(tagLinks) { link in
-                    link
-                }
-            }
-            .style(.marginTop, "-5px")
-        } else {
-            EmptyHTML()
-        }
+        .elevated()
     }
 }
