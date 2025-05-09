@@ -15,50 +15,104 @@ struct MainPage: StaticPage {
 
     let title = "Home"
 
-    let items: [CommunitySocial] = [
-        CommunitySocial(
-            image: "authors/spectraldragon.jpg",
+    let items: [EngineInfoItem] = [
+        EngineInfoItem(
             title: "Data Driven",
             description:
-                "AdaEngine build around custom Entity Component System. It's simple to use, fast, parallel and cache-friendly.",
-            path: ""
+                """
+                AdaEngine build around custom Entity Component System.
+
+                * **Simple to use** - easy to understand and use
+                * **Fast** - optimized for performance
+                * **Cache-friendly** - optimized for memory usage
+                """,
+            content: .html {
+                CodeBlock(
+                    .swift,
+                    {
+                        """
+                        @Component
+                        struct Player: Entity { }
+
+                        struct PlayerSystem: System {
+                            func update(context: UpdateSceneContext) { }
+                        }
+                        """
+                    }
+                )
+            }
         ),
-        CommunitySocial(
-            image: "authors/spectraldragon.jpg",
-            title: "Extendable out of the box",
-            description: "Manage your scene or render plugins to extend your game.",
-            path: ""
-        ),
-        CommunitySocial(
-            image: "authors/spectraldragon.jpg",
+        EngineInfoItem(
             title: "2D Renderer",
             description:
-                "Supports real-time 2D rendering for your games and apps. Write your own shaders, materials and render pipelines or you Sprite Sheets and Sprite renderer instead.",
-            path: ""
+                """
+                Supports real-time 2D rendering for your games and apps.
+
+                * **Extendable** - Write your own shaders, materials and render pipelines
+                * **Sprite Sheets** - Built-in support for Sprite Sheets and Sprite renderer.
+                """,
+            content: .image("icons/ic_duck.png")
         ),
-        CommunitySocial(
-            image: "authors/spectraldragon.jpg",
+        EngineInfoItem(
             title: "2D Physics",
-            description: "AdaEngine supports Box2D physics.",
-            path: ""
+            description: """
+                AdaEngine supports Box2D v3 physics.
+
+                * **Parallel calculations** - optimized for multi-core processors
+                * **Lightweight** - optimized for memory usage
+                * **Fast** - optimized for performance
+                """,
+            content: .image("icons/ic_box2d.svg")
         ),
-        CommunitySocial(
-            image: "authors/spectraldragon.jpg",
+        // EngineInfoItem(
+        //     title: "Extendable out of the box",
+        //     description: "Manage your scene or render plugins to extend your game.",
+        //     content: .image("authors/spectraldragon.jpg")
+        // ),
+        EngineInfoItem(
             title: "Render Graphs",
             description: "Construct your own render pipeline using powerful of render graphs.",
-            path: ""
+            content: .image("authors/spectraldragon.jpg")
         ),
-        CommunitySocial(
-            image: "authors/spectraldragon.jpg",
-            title: "Scenes",
-            description: "Save and load game worlds into scenes, extend them and more.",
-            path: ""
+        EngineInfoItem(
+            title: "Custom UI Engine",
+            description: "Create your own UI using similar to SwiftUI approach.",
+            content: .html {
+                CodeBlock(
+                    .swift,
+                    {
+                        """
+                        struct MainView: View {
+                            @Environment(\\.scene) var scene
+
+                            var body: some View {
+                                Text("Hello, World!")
+                                .onEvent(CollisionEvent.Began.self) { _ in
+                                    scene.add(entity: Player())
+                                }
+                            }
+                        }
+                        """
+                    }
+                )
+            }
         ),
-        CommunitySocial(
-            image: "authors/spectraldragon.jpg",
+        EngineInfoItem(
+            title: "Audio",
+            description: "Play music and sound effects with ease.",
+            content: .image("authors/spectraldragon.jpg")
+        ),
+        EngineInfoItem(
             title: "Free and Open Source",
-            description: "AdaEngine is 100% free for you. Licensed by MIT. Learn, modify or use.",
-            path: ""
+            description: """
+                AdaEngine is 100% free for you. Licensed by MIT. Learn, modify or use.
+
+                * **No up-front cost**
+                * **No licensing cost**
+                * **No royalties**
+                * **No runtime fee**
+                """,
+            content: .image("authors/spectraldragon.jpg")
         ),
     ]
 
@@ -69,6 +123,8 @@ struct MainPage: StaticPage {
             latestNews()
             features()
         }
+
+        Script(file: "/js/fade_appear_effect.js")
     }
 }
 
@@ -85,6 +141,7 @@ extension MainPage {
 
                 Text("AdaEngine Free and Open Source Forever.")
                     .fontWeight(.bold)
+
             }
             .width(2)
 
@@ -108,7 +165,6 @@ extension MainPage {
         } else {
             Section("Latest News") {
                 Grid(alignment: .topLeading, spacing: 10) {
-
                     ArticlePreview(for: articles.first!)
                         .articlePreviewStyle(BlogArticlePreview(isNewArticle: true))
                         .width(2)
@@ -130,13 +186,82 @@ extension MainPage {
 
     fileprivate func features() -> some HTML {
         Section("Features") {
-            Div {
-                ForEach(items) { item in
-                    CommunitySocialRow(item: item)
+            VStack(alignment: .center, spacing: 50) {
+                ForEach(items.enumerated()) { index, item in
+                    EngineInfoRow(
+                        item: item,
+                        leftSide: index % 2 == 0
+                    )
                 }
             }
-            .class("collection-grid grid-two-columns feature-list")
             .padding(.top, 20)
         }
+    }
+}
+
+struct EngineInfoItem {
+    enum EngineInfoRowContent {
+        case image(String)
+        case _html(AnyHTML)
+
+        @MainActor
+        static func html<Content: HTML>(
+            @HTMLBuilder _ html: () -> Content
+        ) -> EngineInfoRowContent {
+            ._html(AnyHTML(html()))
+        }
+    }
+
+    let title: String
+    let description: String
+    let content: EngineInfoRowContent
+}
+
+struct EngineInfoRow: DocumentElement {
+
+    @Dependency(\.context)
+    private var context
+
+    let item: EngineInfoItem
+    let leftSide: Bool
+
+    @HTMLBuilder
+    var body: some HTML {
+        Grid(alignment: .center, spacing: 20) {
+            if !leftSide {
+                infoContent
+                    .width(2)
+            }
+
+            VStack(alignment: .leading, spacing: 10) {
+                Text(item.title)
+                    .font(.title1)
+
+                Text(markdown: item.description)
+                    .font(.body)
+            }
+            .width(2)
+
+            if leftSide {
+                infoContent
+                    .width(2)
+            }
+        }
+        .columns(4)
+        .class("engine-info-item-container")
+    }
+
+    private var infoContent: some HTML {
+        Div {
+            switch item.content {
+            case .image(let image):
+                Image(context.image(for: image) ?? "", description: item.title)
+                    .resizable()
+
+            case ._html(let html):
+                html
+            }
+        }
+        .class("engine-info-item-content")
     }
 }
