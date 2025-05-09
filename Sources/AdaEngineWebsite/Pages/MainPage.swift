@@ -64,15 +64,10 @@ struct MainPage: StaticPage {
                 """,
             content: .image("icons/ic_box2d.svg")
         ),
-        // EngineInfoItem(
-        //     title: "Extendable out of the box",
-        //     description: "Manage your scene or render plugins to extend your game.",
-        //     content: .image("authors/spectraldragon.jpg")
-        // ),
         EngineInfoItem(
             title: "Render Graphs",
             description: "Construct your own render pipeline using powerful of render graphs.",
-            content: .image("authors/spectraldragon.jpg")
+            content: .image("icons/ic_render_graph.svg")
         ),
         EngineInfoItem(
             title: "Custom UI Engine",

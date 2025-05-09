@@ -4,7 +4,7 @@ class FadeAppearEffect {
         this.options = {
             selector: '.engine-info-item-container',
             threshold: 0.1,
-            rootMargin: '20px',
+            rootMargin: '0px',
             ...options
         };
 
