@@ -84,13 +84,12 @@ struct ArticleLittlePreview: @preconcurrency ArticlePreviewStyle {
             Grid(alignment: .center) {
                 Image(context.image(for: content.image) ?? "", description: content.title)
                     .resizable()
-                    // .aspectRatio(AspectRatio.r16x9)
                     .width(1)
                 
                 Div {
                     Div {
                         Text(content.title)
-                            .font(.title4)
+                            .font(.title5)
 
                         Text(content.date.formatted(.dateTime.day().month().year()))
                             .class("article-date")
