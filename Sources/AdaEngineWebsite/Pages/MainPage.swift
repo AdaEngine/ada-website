@@ -93,9 +93,20 @@ struct MainPage: StaticPage {
             }
         ),
         EngineInfoItem(
+            title: "LDtk Integration",
+            description: "Import your LDtk projects and use them in your game.",
+            content: .image("icons/ic_ldtk.png")
+        ),
+        EngineInfoItem(
             title: "Audio",
-            description: "Play music and sound effects with ease.",
-            content: .image("authors/spectraldragon.jpg")
+            description: """
+                Play music and sound effects with ease.
+
+                * **Spatial sound** - add 3D sound to your game
+                * **Load audio files as Assets**
+                * **Play audio Assets using Audio entities**
+                """,
+            content: .image("icons/ic_headphones.svg")
         ),
         EngineInfoItem(
             title: "Free and Open Source",
@@ -107,13 +118,13 @@ struct MainPage: StaticPage {
                 * **No royalties**
                 * **No runtime fee**
                 """,
-            content: .image("authors/spectraldragon.jpg")
+            content: .image("icons/ic_opensource.svg")
         ),
     ]
 
     @HTMLBuilder
     var body: some HTML {
-        VStack(alignment: .leading, spacing: 40) {
+        VStack(alignment: .center, spacing: 100) {
             header()
             latestNews()
             features()
@@ -158,20 +169,16 @@ extension MainPage {
         if articles.isEmpty {
             EmptyHTML()
         } else {
-            Section("Latest News") {
+            Text("Latest News")
+                .font(.primary(size: .rem(3)))
+                    
+            Div {
                 Grid(alignment: .topLeading, spacing: 10) {
-                    ArticlePreview(for: articles.first!)
-                        .articlePreviewStyle(BlogArticlePreview(isNewArticle: true))
-                        .width(2)
-
-                    VStack(alignment: .leading, spacing: 20) {
-                        ForEach(articles.dropFirst().prefix(3)) { (item) in
-                            ArticlePreview(for: item)
-                                .articlePreviewStyle(ArticleLittlePreview())
-                                .elevated()
-                        }
+                    ForEach(articles.prefix(4)) { (item) in
+                        ArticlePreview(for: item)
+                            .articlePreviewStyle(HomePageArticlePreview())
+                            .width(articles.count > 1 ? 2 : 4)
                     }
-                    .width(2)
                 }
                 .columns(4)
                 .padding(.top, 20)
@@ -179,8 +186,12 @@ extension MainPage {
         }
     }
 
+    @HTMLBuilder
     fileprivate func features() -> some HTML {
-        Section("Features") {
+        Text("Features")
+            .font(.primary(size: .rem(3)))
+
+        Div {
             VStack(alignment: .center, spacing: 50) {
                 ForEach(items.enumerated()) { index, item in
                     EngineInfoRow(
@@ -230,12 +241,13 @@ struct EngineInfoRow: DocumentElement {
 
             VStack(alignment: .leading, spacing: 10) {
                 Text(item.title)
-                    .font(.title1)
+                    .font(.title2)
 
                 Text(markdown: item.description)
                     .font(.body)
             }
             .width(2)
+            .padding(.leading, !leftSide ? 50 : 0)
 
             if leftSide {
                 infoContent

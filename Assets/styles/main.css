@@ -201,6 +201,57 @@ html {
     background-color: var(--fill-gray);
 }
 
+.home-article-preview {
+    background-color: var(--fill-gray);
+    border-radius: 2rem;
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.home-article-preview:hover {
+    transform: scale(1.05, 1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.home-article-preview a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.home-article-preview a:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+.home-article-preview .background_image_overlay {
+    border-radius: 2rem;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.home-article-preview .background_image {
+    border-radius: 2rem;
+}
+
+.home-article-preview .article-tag {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.65rem;
+    color: var(--text-color);
+    text-decoration: none;
+    display: inline-block;
+    border: 1px solid transparent;
+    border-color: rgba(255, 255, 255, 1);
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.home-article-preview .article-date {
+    color: var(--text-color);
+}
+
+
 /* Code */
 
 code {
@@ -349,7 +400,7 @@ pre code .highlight {
     .separator {
         border-top: 0.5px solid rgba(255,255,255,0.1);
     }
-    
+
     body {
         background-color: var(--background-dark);
     }
@@ -357,18 +408,17 @@ pre code .highlight {
     p {
         color: #dddddd;
     }
-    
-    pre code {
-        background-color: var(--background-dark-secondary);
-        color: #a9bcbc;
-    }
 
+    .home-article-preview .background_image_overlay {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+    
     .engine-info-item-content {
-        background-color: var(--background-dark-secondary);
+        background-color: var(--fill-secondary);
     }
 
     .engine-info-item-content pre[class*="language-"] {
-        background-color: var(--background-dark-secondary);
+        background-color: var(--fill-secondary);
     }
 
     .footer {

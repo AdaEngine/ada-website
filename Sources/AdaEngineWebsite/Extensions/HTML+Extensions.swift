@@ -16,15 +16,15 @@ extension HTML {
 }
 
 extension HTML {
-    func background<Content: HTML>(@HTMLBuilder content: () -> Content) -> some HTML {
-        ZStack {
+    func background<Content: HTML>(alignment: Alignment = .center, @HTMLBuilder content: () -> Content) -> some HTML {
+        ZStack(alignment: alignment) {
             content()
             self
         }
     }
     
-    func overlay<Content: HTML>(@HTMLBuilder content: () -> Content) -> some HTML {
-        ZStack {
+    func overlay<Content: HTML>(alignment: Alignment = .center, @HTMLBuilder content: () -> Content) -> some HTML {
+        ZStack(alignment: alignment) {
             self
             content()
         }
