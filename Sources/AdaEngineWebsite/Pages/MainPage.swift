@@ -139,7 +139,7 @@ extension MainPage {
         Grid {
             VStack(alignment: .leading, spacing: 20) {
                 Text("A simple and scalable Game Engine built in Swift.")
-                    .font(.primary(size: .px(40)))
+                    .font(.primary(size: .rem(3.5)))
 
                 Text(
                     "AdaEngine built by Developers, for Developers. Feel the new experience of Swift\ncoding with powerful 2D and 3D capabilities."
@@ -148,8 +148,25 @@ extension MainPage {
                 Text("AdaEngine Free and Open Source Forever.")
                     .fontWeight(.bold)
 
+                HStack {
+                    Link(target: .learn) {
+                        Text("Get Started")
+                            .font(.primary(size: .em(1.2)))
+                    }
+
+                    Link(target: .documentation) {
+                        Text("Documentation")
+                            .font(.primary(size: .em(1.2)))
+                    }
+
+                    Link(target: .github) {
+                        Text("Github")
+                            .font(.primary(size: .em(1.2)))
+                    }
+                }
+                .class("header-buttons")
             }
-            .width(2)
+            .width(4)
 
             Spacer()
                 .width(1)
@@ -158,8 +175,9 @@ extension MainPage {
                 .frame(height: 200)
                 .width(1)
         }
-        .columns(4)
+        .columns(6)
         .background(Material.thinMaterial)
+        .frame(height: .percent(100%))
     }
 
     @HTMLBuilder

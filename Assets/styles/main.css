@@ -251,6 +251,26 @@ html {
     color: var(--text-color);
 }
 
+.header-buttons a {
+    /* background-color: var(--fill-gray); */
+    border-radius: 5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-color: var(--donate);
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.header-buttons p {
+    margin: auto;
+}
+.header-buttons a:hover {
+    background-color: var(--fill-secondary);
+    border-color: var(--fill-gray);
+}
+
+
+
 
 /* Code */
 
