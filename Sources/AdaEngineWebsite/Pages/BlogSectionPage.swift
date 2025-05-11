@@ -17,7 +17,7 @@ struct BlogSectionPage: StaticPage {
     var body: some HTML {
         SafeAreaContainer {
             Section("Blog") {
-                Grid(alignment: .leading) {
+                Grid(alignment: .topLeading) {
                     ForEach(articles.all.enumerated()) { (index, item) in
                         ArticlePreview(for: item)
                             .articlePreviewStyle(BlogArticlePreview(isNewArticle: index == 0))

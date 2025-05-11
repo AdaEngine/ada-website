@@ -13,6 +13,9 @@ struct MainPage: StaticPage {
     @Environment(\.articles)
     private var articles
 
+    @Dependency(\.context)
+    private var context
+
     let title = "Home"
 
     let items: [EngineInfoItem] = [
@@ -126,6 +129,7 @@ struct MainPage: StaticPage {
     var body: some HTML {
         VStack(alignment: .center, spacing: 100) {
             header()
+            carousel()
             latestNews()
             features()
         }
@@ -144,27 +148,29 @@ extension MainPage {
                 Text(
                     "AdaEngine built by Developers, for Developers. Feel the new experience of Swift\ncoding with powerful 2D and 3D capabilities."
                 )
+                .font(.system(size: .em(1.2)))
 
                 Text("AdaEngine Free and Open Source Forever.")
-                    .fontWeight(.bold)
+                    .font(.system(size: .em(1.2), weight: .bold))
 
                 HStack {
                     Link(target: .learn) {
                         Text("Get Started")
-                            .font(.primary(size: .em(1.2)))
+                            .font(.primary(size: .em(1.4)))
                     }
 
                     Link(target: .documentation) {
                         Text("Documentation")
-                            .font(.primary(size: .em(1.2)))
+                            .font(.primary(size: .em(1.4)))
                     }
 
                     Link(target: .github) {
                         Text("Github")
-                            .font(.primary(size: .em(1.2)))
+                            .font(.primary(size: .em(1.4)))
                     }
                 }
                 .class("header-buttons")
+                .padding(.top, 20)
             }
             .width(4)
 
@@ -176,8 +182,21 @@ extension MainPage {
                 .width(1)
         }
         .columns(6)
-        .background(Material.thinMaterial)
         .frame(height: .percent(100%))
+    }
+
+    fileprivate func carousel() -> some HTML {
+        Div {
+            Carousel([
+                "main/tilemap.png",
+                "main/space_invaders.jpeg",
+                "main/duck_hunt.png",
+            ]) { item in
+                Slide(background: context.image(for: item) ?? "")
+            }
+            .carouselStyle(.crossfade)
+        }
+        .class("carousel-container")
     }
 
     @HTMLBuilder
@@ -189,7 +208,7 @@ extension MainPage {
         } else {
             Text("Latest News")
                 .font(.primary(size: .rem(3)))
-                    
+
             Div {
                 Grid(alignment: .topLeading, spacing: 10) {
                     ForEach(articles.prefix(4)) { (item) in
@@ -262,7 +281,7 @@ struct EngineInfoRow: DocumentElement {
                     .font(.title2)
 
                 Text(markdown: item.description)
-                    .font(.body)
+                    .font(.system(size: .em(1.2)))
             }
             .width(2)
             .padding(.leading, !leftSide ? 50 : 0)
