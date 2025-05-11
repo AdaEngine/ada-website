@@ -17,31 +17,64 @@ struct HomePageArticlePreview: @preconcurrency ArticlePreviewStyle {
     func body(content: Ignite.Article) -> any Ignite.HTML {
         Div {
             Tag("a") {
-                VStack(alignment: .leading, spacing: 0) {
+                ZStack(alignment: .bottomLeading) {
                     Image(context.image(for: content.image)!, description: content.title)
                         .resizable()
-                        
+                        .class("background_image")
+                        .overlay {
+                            Div {}
+                                .frame(width: .percent(100%), height: .percent(100%))
+                                .class("background_image_overlay")
+                        }
+
                     Div {
-                        VStack(alignment: .leading) {
-                            Text(content.title)
-                                .font(.title2)
-
-                            Text(content.description)
-                                .font(.body)
-
+                        VStack(alignment: .leading, spacing: 5) {
                             Text(context.dateFormatter.string(from: content.date))
-                                .class("article-date")
+                                .font(.title6)
+
+                            tags(content: content)
+
+                            Text(content.title)
+                                .font(.title3)
+
+                            HStack(spacing: 8) {
+                                Image(
+                                    context.image(for: context.author(for: content).avatar)!,
+                                    description: "Author avatar"
+                                )
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .avatarModifier()
+
+                                Text(content.author ?? "AdaEngine Team")
+                                    .font(.primary(size: .em(0.95)))
+                            }
                         }
                         .padding()
                     }
-                    .frame(width: .percent(100%))
                 }
             }
             .attribute("href", content.path)
             .cornerRadius(16)
         }
-        .class("article-preview")
-        .cornerRadius(16)
-        .elevated()
+        .class("home-article-preview")
+    }
+}
+
+extension HomePageArticlePreview {
+    @MainActor
+    @HTMLBuilder
+    fileprivate func tags(content: Ignite.Article) -> some HTML {
+        Div {
+            HStack(spacing: 4) {
+                ForEach(content.tags ?? []) { tag in
+                    // Tag("a") {
+                    Text(tag)
+                        .class("article-tag")
+                    // }
+                    // .attribute("href", "/tags/\(tag.convertedToSlug())")
+                }
+            }
+        }
     }
 }

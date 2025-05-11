@@ -3,6 +3,7 @@
 
     /* Colors */
 
+    --text-color: #333333;
     --dark: #000;
     --light: #FFF;
     --glyph-gray: #F5F5F7;
@@ -106,4 +107,10 @@
     /* Constants */
 
     --corner-radius: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-color: #FFFFFF;
+    }
 }
