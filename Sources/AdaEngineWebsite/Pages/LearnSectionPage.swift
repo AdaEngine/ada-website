@@ -14,13 +14,13 @@ struct LearnSectionPage: StaticPage {
 
     var links: [CommunitySocial] = [
         CommunitySocial(
-            image: "icons/ic_docs.svg",
+            image: "icons/ic_learn.svg",
             title: "Tutorials",
             description: "Begin a new games with AdaEngine using tutoruals",
             path: "/adaengine-docs/tutorials/adaengine"
         ),
         CommunitySocial(
-            image: "socials/twitter-circle.svg",
+            image: "icons/ic_doc.svg",
             title: "Documentation",
             description: "Official documentation",
             path: "/adaengine-docs/documentation/adaengine"
