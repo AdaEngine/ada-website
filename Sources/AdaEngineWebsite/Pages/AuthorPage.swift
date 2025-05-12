@@ -29,7 +29,7 @@ struct AuthorPage: StaticPage {
     var body: some HTML {
         VStack {
             HStack {
-                Image(context.image(for: author.avatar)!)
+                Image(context.image(for: author.avatar)!, description: "Author Avatar")
                     .frame(width: 48, height: 48)
                     .avatarModifier()
                 

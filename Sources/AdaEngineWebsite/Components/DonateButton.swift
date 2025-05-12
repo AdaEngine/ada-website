@@ -16,7 +16,7 @@ struct DonateButton: DocumentElement {
             HStack(spacing: 2) {
                 Text("Donate")
                 
-                Image(systemName: "heart-fill")
+                Image(systemName: "heart-fill", description: "Heart")
                     .margin(0)
             }
             .horizontalAlignment(.center)

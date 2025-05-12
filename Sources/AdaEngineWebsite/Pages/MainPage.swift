@@ -141,10 +141,15 @@ struct MainPage: StaticPage {
 
 extension MainPage {
     fileprivate func header() -> some HTML {
-        Grid {
+        VStack(alignment: .center, spacing: 20) {
+            Image("/images/ae_logo.svg", description: "AdaEngine Logo")
+                .resizable()
+                .frame(height: 200)
+                .class("ae-logo-header")
+
             VStack(alignment: .leading, spacing: 20) {
                 Text("A simple and scalable Game Engine built in Swift.")
-                    .font(.primary(size: .rem(3.5)))
+                    .class("ae-header-title")
 
                 Text(
                     "AdaEngine built by Developers, for Developers. Feel the new experience of Swift\ncoding with powerful 2D and 3D capabilities."
@@ -155,14 +160,14 @@ extension MainPage {
                     .font(.system(size: .em(1.2), weight: .bold))
 
                 HStack(spacing: 30) {
-                        Link(target: .learn) {
-                            Text("Get Started")
-                                .font(.primary(size: .em(1.4)))
-                        }
+                    Link(target: .learn) {
+                        Text("Get Started")
+                            .font(.primary(size: .em(1.4)))
+                    }
                     .class("header-buttons")
 
                     Link(target: .github) {
-                        Image(systemName: "github")
+                        Image(systemName: "github", description: "github")
                             .frame(height: 20)
                             .padding(.trailing, 10)
 
@@ -173,16 +178,7 @@ extension MainPage {
                 }
                 .padding(.top, 20)
             }
-            .width(4)
-
-            Spacer()
-                .width(1)
-
-            AEImage(path: "ae_logo.svg", description: "AdaEngine Logo")
-                .frame(height: 200)
-                .width(1)
         }
-        .columns(6)
         .frame(height: .percent(100%))
     }
 
@@ -230,13 +226,12 @@ extension MainPage {
             .font(.primary(size: .rem(3)))
 
         Div {
-            VStack(alignment: .center, spacing: 50) {
-                ForEach(items.enumerated()) { index, item in
-                    EngineInfoRow(
-                        item: item,
-                        leftSide: index % 2 == 0
-                    )
-                }
+            ForEach(items.enumerated()) { index, item in
+                EngineInfoRow(
+                    item: item,
+                    leftSide: index % 2 == 0
+                )
+                .padding(.top, 20)
             }
             .padding(.top, 20)
         }
@@ -278,15 +273,15 @@ struct EngineInfoRow: DocumentElement {
                     .width(2)
             }
 
-            VStack(alignment: .leading, spacing: 10) {
+            Div {
                 Text(item.title)
                     .font(.title2)
 
                 Text(markdown: item.description)
                     .font(.system(size: .em(1.2)))
             }
+            .class("engine-info-item-text")
             .width(2)
-            .padding(.leading, !leftSide ? 50 : 0)
 
             if leftSide {
                 infoContent
@@ -294,7 +289,12 @@ struct EngineInfoRow: DocumentElement {
             }
         }
         .columns(4)
-        .class("engine-info-item-container")
+        .class(
+            "engine-info-item-container",
+            !leftSide
+                ? "engine-info-item-container-reverse"
+                : ""
+        )
     }
 
     private var infoContent: some HTML {
