@@ -1,4 +1,5 @@
 {
+  "originHash" : "ab18a38bd26fd3541b6467f5a0bfd35a1fba6b6c2a6946e9aa8f02306354a856",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -15,7 +16,7 @@
       "location" : "https://github.com/twostraws/Ignite.git",
       "state" : {
         "branch" : "main",
-        "revision" : "dc47b87dda90a81948652d8adcf1242eaa8ef307"
+        "revision" : "4ac74d1dc8d7ba1b12917993a2b5812b0da87b61"
       }
     },
     {
@@ -109,5 +110,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
