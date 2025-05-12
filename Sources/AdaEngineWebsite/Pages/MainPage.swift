@@ -127,10 +127,13 @@ struct MainPage: StaticPage {
 
     @HTMLBuilder
     var body: some HTML {
-        VStack(alignment: .center, spacing: 100) {
+        Div {
             header()
+                .padding(.bottom, 100)
             carousel()
+                .padding(.bottom, 100)
             latestNews()
+                .padding(.bottom, 100)
             features()
         }
 
@@ -161,8 +164,7 @@ extension MainPage {
 
                 HStack(spacing: 30) {
                     Link(target: .learn) {
-                        Text("Get Started")
-                            .font(.primary(size: .em(1.4)))
+                        "Get Started"
                     }
                     .class("header-buttons")
 
@@ -174,7 +176,7 @@ extension MainPage {
                         Span("... stars on GitHub")
                             .id("main-page-callout-stars-count")
                     }
-                    .font(.primary(size: .em(1.2)))
+                    .class("header-buttons-github")
                 }
                 .padding(.top, 20)
             }
@@ -205,6 +207,8 @@ extension MainPage {
         } else {
             Text("Latest News")
                 .font(.primary(size: .rem(3)))
+                .horizontalAlignment(.center)
+                .padding(.bottom, 100)
 
             Div {
                 Grid(alignment: .topLeading, spacing: 10) {
@@ -224,6 +228,8 @@ extension MainPage {
     fileprivate func features() -> some HTML {
         Text("Features")
             .font(.primary(size: .rem(3)))
+            .horizontalAlignment(.center)
+            .padding(.bottom, 100)
 
         Div {
             ForEach(items.enumerated()) { index, item in
