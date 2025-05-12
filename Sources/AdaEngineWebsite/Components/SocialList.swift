@@ -5,29 +5,26 @@
 //  Created by v.prusakov on 4/13/23.
 //
 
-import Plot
-import Publish
+import Dependencies
+import Ignite
 
-struct SocialList: Component {
+struct SocialList: DocumentElement {
     
-    let socials: [Author.Social]
+    let socials: [AuthorDTO.Social]
     
-    @EnvironmentValue(.publishContext)
+    @Dependency(\.context)
     private var context
     
-    var body: Component {
+    var body: some HTML {
         List(self.socials) { social in
             ListItem {
-                Link(url: social.path.absoluteString) {
+                Link(target: social.path) {
                     Div {
-                        Image(
-                            url: self.context!.site.imagePath!.appendingComponent(social.social.logoPath).absoluteString,
-                            description: social.social.rawValue
-                        )
+                        AEImage(path: social.social.logoPath, description: social.social.rawValue)
                     }
                     
                     Span {
-                        Text(social.username)
+                        social.username
                     }
                 }
             }
