@@ -8,7 +8,7 @@
 import Dependencies
 import Ignite
 
-struct SocialList: DocumentElement {
+struct SocialList: HTML {
     
     let socials: [AuthorDTO.Social]
     
@@ -19,9 +19,7 @@ struct SocialList: DocumentElement {
         List(self.socials) { social in
             ListItem {
                 Link(target: social.path) {
-                    Div {
-                        AEImage(path: social.social.logoPath, description: social.social.rawValue)
-                    }
+                    Image(context.image(for: social.social.logoPath) ?? "", description: social.social.rawValue)
                     
                     Span {
                         social.username

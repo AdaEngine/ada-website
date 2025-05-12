@@ -15,6 +15,12 @@ extension HTML {
     }
 }
 
+extension InlineElement {
+    func avatarModifier() -> some InlineElement {
+        self.class("avatar")
+    }
+}
+
 extension HTML {
     func background<Content: HTML>(alignment: Alignment = .center, @HTMLBuilder content: () -> Content) -> some HTML {
         ZStack(alignment: alignment) {
@@ -42,7 +48,7 @@ extension HTML {
 }
 
 extension Link {
-    init<Content: HTML>(target: URL, @HTMLBuilder content: @escaping () -> Content) {
-        self.init(target: target.absoluteString, content: content)
+    init<Content: HTML>(targetURL: URL, @HTMLBuilder content: @escaping () -> Content) {
+        self.init(target: targetURL.absoluteString, content: content)
     }
 }

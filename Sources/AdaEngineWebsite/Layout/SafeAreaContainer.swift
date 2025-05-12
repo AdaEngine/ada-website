@@ -7,7 +7,7 @@
 
 import Ignite
 
-struct SafeAreaContainer<Content: HTML>: DocumentElement {
+struct SafeAreaContainer<Content: HTML>: HTML {
     var content: () -> Content
     
     init(@HTMLBuilder content: @escaping () -> Content) {

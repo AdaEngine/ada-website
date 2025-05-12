@@ -38,9 +38,9 @@ struct ArticleHTMLModifier: HTMLModifier {
             
             Div {
                 Link(target: author.path) {
-                    Text(author.name)
-                        .font(.title2)
+                    author.name
                 }
+                .font(.title2)
                 
                 Div {
                     Span(context.dateFormatter.string(from: item.date))

@@ -7,7 +7,7 @@
 
 import Ignite
 
-struct TagList: DocumentElement {
+struct TagList: HTML {
     
     let item: Article
     
