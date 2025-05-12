@@ -62,6 +62,10 @@
 /* Big screen */
 
 @media (min-width: 803px) {
+    .donate-button {
+        padding-left: 15px;
+    }
+
     .navigation {
         display: inline-flex;
         align-items: center;
@@ -96,7 +100,6 @@
 /* Small screen */
 
 @media (max-width: 803px) {
-    
     .header .navigation-item {
         font-size: 28px;
         margin-top: 5px;

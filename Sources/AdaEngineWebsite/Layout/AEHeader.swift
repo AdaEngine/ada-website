@@ -69,7 +69,7 @@ struct AEHeader: DocumentElement {
             ListItem {
                 DonateButton()
             }
-            .class("navigation-item")
+            .class("navigation-item", "donate-button")
         }
         .class("navigation")
     }

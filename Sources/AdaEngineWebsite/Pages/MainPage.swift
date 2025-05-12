@@ -135,6 +135,7 @@ struct MainPage: StaticPage {
         }
 
         Script(file: "/js/fade_appear_effect.js")
+        Script(file: "/js/github_stars.js")
     }
 }
 
@@ -153,23 +154,23 @@ extension MainPage {
                 Text("AdaEngine Free and Open Source Forever.")
                     .font(.system(size: .em(1.2), weight: .bold))
 
-                HStack {
-                    Link(target: .learn) {
-                        Text("Get Started")
-                            .font(.primary(size: .em(1.4)))
-                    }
-
-                    Link(target: .documentation) {
-                        Text("Documentation")
-                            .font(.primary(size: .em(1.4)))
-                    }
+                HStack(spacing: 30) {
+                        Link(target: .learn) {
+                            Text("Get Started")
+                                .font(.primary(size: .em(1.4)))
+                        }
+                    .class("header-buttons")
 
                     Link(target: .github) {
-                        Text("Github")
-                            .font(.primary(size: .em(1.4)))
+                        Image(systemName: "github")
+                            .frame(height: 20)
+                            .padding(.trailing, 10)
+
+                        Span("... stars on GitHub")
+                            .id("main-page-callout-stars-count")
                     }
+                    .font(.primary(size: .em(1.2)))
                 }
-                .class("header-buttons")
                 .padding(.top, 20)
             }
             .width(4)
@@ -239,6 +240,7 @@ extension MainPage {
             }
             .padding(.top, 20)
         }
+        .class("features-container")
     }
 }
 

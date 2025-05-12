@@ -7,37 +7,6 @@
 
 import Ignite
 
-struct DonationMonthlyLevel {
-    
-    enum Benefits: String {
-        case nameInCredits = "Name in Credits"
-        case logoInCredits = "Logo in Credits"
-        case linkInCredits = "Link in Credits"
-        case supportByTeam = "Support by Team"
-        case merch = "Merch"
-    }
-    
-    var id: String {
-        (self.name + self.link).hashValue.description
-    }
-    
-    let name: String
-    let icon: String
-    let cost: String
-    let benefits: [Benefits]
-    let color: String
-    let isDark: Bool
-    let link: String
-    
-    var fontColor: String {
-        if isDark {
-            "var(--glyph-gray-override)"
-        } else {
-            Color.white.description
-        }
-    }
-}
-
 struct DonatePage: StaticPage {
     
     let title: String = "Donate"
@@ -127,10 +96,10 @@ private extension DonatePage {
             .padding(.vertical, 4)
             .frame(width: .percent(100%))
             
-            donateSection(levels: Self.monthlyUSDLevels)
+            donateSection(levels: Self.monthlyLevels(isUSD: true))
                 .id(SectionID.usd.rawValue)
             
-            donateSection(levels: Self.monthlyBoostyLevels)
+            donateSection(levels: Self.monthlyLevels(isUSD: false))
                 .id(SectionID.boosty.rawValue)
                 .hidden()
 
@@ -176,11 +145,7 @@ private extension DonatePage {
     }
 
     func oneTimeDonation() -> some HTML {
-        VStack {
-            Text("One time donation")
-                .font(.title3)
-                .padding(.vertical, 10)
-            
+        VStack(spacing: 20) {
             Link(target: "https://www.donationalerts.com/r/adaengine") {
                 HStack {
                     AEImage(path: "donation_alerts_logo.svg")
@@ -190,6 +155,18 @@ private extension DonatePage {
                         .font(.title6)
                         .foregroundStyle(Color(hex: "#f57507"))
                 }
+                .frame(width: .percent(100%))
+            }
+            .padding(.horizontal, 40)
+            .padding(.vertical, 10)
+            .class("donate-btn", "donate-btn-anim")
+            .elevated()
+
+            Link(target: "https://boosty.to/adaengine/donate") {
+                Image("/images/icons/ic_boosty.svg")
+                    .resizable()
+                    .frame(height: 43)
+                    .frame(width: .percent(100%))
             }
             .padding(.horizontal, 40)
             .padding(.vertical, 10)

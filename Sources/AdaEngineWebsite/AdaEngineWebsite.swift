@@ -3,20 +3,11 @@ import DependenciesMacros
 import Foundation
 import Ignite
 
-// TODO:
-
-// - [] Author page not generated
-// - [] Code styles not generated anymore
-// - [x] Page 404 not generated
-// - [x] articleInfoAfterFirstHeader not inserted
-// - [x] Images as incorrect path. Have no idea how to store images.
-// - [x] Returns elements from old site.
-
-
 @main
 struct AdaEngineSite: Site {
     let name: String = "AdaEngine"
     let url: Ignite.URL = URL(static: "https://adaengine.org")
+    var favicon: URL? = URL(static: "/images/favicon.png")
     let language: Language = .english
     let lightTheme = AdaEngineDarkTheme()
     let darkTheme = AdaEngineDarkTheme()
@@ -54,7 +45,8 @@ struct AdaEngineSite: Site {
                 builder: { tag in
                     AvailableTag(rawValue: tag.name)?.color ?? Color.aliceBlue.withoutMultiTheme()
                 }
-            )
+            ),
+            BoostyDonationPlugin()
         ])
         
         try await executor.execute()

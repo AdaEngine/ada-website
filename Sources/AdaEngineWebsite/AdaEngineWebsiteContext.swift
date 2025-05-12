@@ -16,6 +16,7 @@ final class AdaEngineWebsiteContext {
     let imagesURL: URL
     
     var authors: [AuthorEntity] = []
+    var boostyLevels: [BoostyLevelDTO.DataDTO] = []
     
     var htmlModifier: HTMLContentModifier
     

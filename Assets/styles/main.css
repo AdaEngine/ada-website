@@ -251,7 +251,7 @@ html {
     color: var(--text-color);
 }
 
-.header-buttons a {
+.header-buttons {
     border-radius: 5rem;
     padding: 0.5rem 1rem;
     border: 1px solid transparent;
@@ -263,7 +263,8 @@ html {
 .header-buttons p {
     margin: auto;
 }
-.header-buttons a:hover {
+
+.header-buttons:hover {
     background-color: var(--fill-secondary);
     border-color: var(--fill-gray);
 }
@@ -277,6 +278,10 @@ html {
     right: 0;
     top: 0;
     bottom: 0;
+}
+
+.features-container {
+    padding-bottom: 50px;
 }
 
 /* Code */
@@ -369,10 +374,10 @@ pre code .highlight {
 
     .safe-area-insets {
         margin-top: 86px;
-        margin-left: 16px;
-        margin-right: 16px;
-        padding-left: 0;
-        padding-right: 0;
+        margin-left: none;
+        margin-right: none;
+        padding-left: none;
+        padding-right: none;
     }
     
     .written_by .avatar {
