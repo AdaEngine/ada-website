@@ -8,7 +8,7 @@
 import Dependencies
 import Ignite
 
-struct WrittenByAuthor: DocumentElement {
+struct WrittenByAuthor: HTML {
     
     let author: AuthorEntity
     
@@ -29,9 +29,9 @@ struct WrittenByAuthor: DocumentElement {
                 
                 Div {
                     Link(target: self.author.path) {
-                        Text(self.author.name)
-                            .font(.title2)
+                        self.author.name
                     }
+                    .font(.title2)
                       
                     SocialList(socials: self.author.socials)
                 }

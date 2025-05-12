@@ -65,9 +65,10 @@ struct CommunitySectionPage: StaticPage {
         Section("Official communities") {
             Div {
                 ForEach(self.socials) { item in
-                    Link(target: item.path) {
+                    Tag("a") {
                         CommunitySocialRow(item: item)
                     }
+                    .attribute("href", item.path)
                 }
             }
             .class("collection-grid grid-two-columns")
@@ -75,8 +76,7 @@ struct CommunitySectionPage: StaticPage {
     }
 }
 
-struct CommunitySocialRow: DocumentElement {
-    
+struct CommunitySocialRow: HTML {
     let item: CommunitySocial
     
     @Environment(\.themes)

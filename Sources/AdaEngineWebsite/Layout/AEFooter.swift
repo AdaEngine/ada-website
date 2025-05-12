@@ -103,14 +103,14 @@ extension AEFooter {
                     .width(2)
 
                 HStack(spacing: 12) {
-                    Link(target: URL.github) {
+                    Link(targetURL: URL.github) {
                         Image(systemName: "github", description: "GitHub")
                     }
-                    Link(target: URL.mastodon) {
+                    Link(targetURL: URL.mastodon) {
                         Image(systemName: "mastodon", description: "Mastodon")
                     }
                     // Link(target: URL.discord) { Tag("i").class("bi bi-discord") }
-                    Link(target: URL.reddit) {
+                    Link(targetURL: URL.reddit) {
                         Image(systemName: "reddit", description: "Reddit")
                     }
                     // Link(target: "#") { Tag("i").class("bi bi-rss") }

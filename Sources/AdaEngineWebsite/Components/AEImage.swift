@@ -8,7 +8,7 @@
 import Dependencies
 import Ignite
 
-struct AEImage: DocumentElement {
+struct AEImage: HTML {
     
     let path: String
     let description: String?

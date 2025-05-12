@@ -9,7 +9,7 @@ let package = Package(
         .executable(name: "AdaEngineWebsite", targets: ["AdaEngineWebsite"])
     ],
     dependencies: [
-        .package(url: "https://github.com/twostraws/Ignite.git", branch: "main"),
+        .package(url: "https://github.com/twostraws/Ignite.git", revision: "024f32c00352e3bd3f9ad9ab86db12bbccd0ec00"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.9.2")
     ],
     targets: [

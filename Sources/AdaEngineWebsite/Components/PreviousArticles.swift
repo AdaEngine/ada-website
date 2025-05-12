@@ -7,7 +7,7 @@
 
 import Ignite
 
-struct PreviousArticles: DocumentElement {
+struct PreviousArticles: HTML {
     
     let item: Article
     

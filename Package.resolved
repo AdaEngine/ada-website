@@ -1,5 +1,5 @@
 {
-  "originHash" : "ab18a38bd26fd3541b6467f5a0bfd35a1fba6b6c2a6946e9aa8f02306354a856",
+  "originHash" : "b7458fca95345897f1475cf83c56c81d406ca8034dc836b107f55b2c9c55feeb",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -15,8 +15,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/twostraws/Ignite.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "4ac74d1dc8d7ba1b12917993a2b5812b0da87b61"
+        "revision" : "024f32c00352e3bd3f9ad9ab86db12bbccd0ec00"
       }
     },
     {

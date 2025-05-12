@@ -166,7 +166,7 @@ extension MainPage {
                     }
                     .class("header-buttons")
 
-                    Link(target: .github) {
+                    Link(targetURL: .github) {
                         Image(systemName: "github", description: "github")
                             .frame(height: 20)
                             .padding(.trailing, 10)

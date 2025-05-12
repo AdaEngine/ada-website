@@ -7,7 +7,7 @@
 
 import Ignite
 
-struct DonateButton: DocumentElement {
+struct DonateButton: HTML {
     
     var isPrimitive: Bool = true
     
