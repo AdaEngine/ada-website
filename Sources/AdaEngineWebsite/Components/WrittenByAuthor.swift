@@ -5,34 +5,34 @@
 //  Created by v.prusakov on 4/12/23.
 //
 
-import Plot
-import Publish
+import Dependencies
+import Ignite
 
-struct WrittenByAuthor: Component {
+struct WrittenByAuthor: DocumentElement {
     
-    let author: AuthorItem
+    let author: AuthorEntity
     
-    @EnvironmentValue(.publishContext)
+    @Dependency(\.context)
     private var context
     
-    var body: Component {
+    var body: some HTML {
         Div {
-            H3("WRITTEN BY")
+            Text("WRITTEN BY")
+                .font(.title3)
             
             Div {
-                Image(
-                    url: self.context!.site.imagePath!.appendingComponent(self.author.avatar).absoluteString,
+                AEImage(
+                    path: self.author.avatar,
                     description: "\(self.author.name) Profile Picture"
                 )
-                .class("avatar")
+                .avatarModifier()
                 
                 Div {
-                    Link(url: self.author.path.absoluteString) {
-                        H2(self.author.name)
+                    Link(target: self.author.path) {
+                        Text(self.author.name)
+                            .font(.title2)
                     }
-                    
-                    self.author.content.body
-                    
+                      
                     SocialList(socials: self.author.socials)
                 }
                 .class("author_info")

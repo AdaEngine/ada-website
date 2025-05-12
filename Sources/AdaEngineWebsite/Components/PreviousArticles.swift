@@ -5,46 +5,50 @@
 //  Created by v.prusakov on 4/13/23.
 //
 
-import Plot
-import Publish
+import Ignite
 
-struct PreviousArticles: Component {
+struct PreviousArticles: DocumentElement {
     
-    let item: Item<Blog>
+    let item: Article
     
-    @EnvironmentValue(.publishContext)
-    private var context
+    @Environment(\.articles)
+    private var articles
     
-    var body: Component {
-        var items: Set<Item<Blog>> = []
+    var body: some HTML {
+        var items: [Article] = []
 
-        for tag in item.tags {
+        for tag in item.tags ?? [] {
             guard items.count < 3 else { break }
-            guard let foundItem = context!.items(taggedWith: tag, sortedBy: \.date, order: .descending).randomElement(), foundItem.hashValue != item.hashValue else {
+            guard
+                let foundArticle = articles.tagged(tag).sorted(by: \.date).randomElement(),
+                foundArticle.path != item.path
+            else {
                 continue
             }
             
-            items.insert(foundItem)
+            items.append(foundArticle)
         }
         
-        return ComponentGroup {
+        return Group {
             if !items.isEmpty {
                 Div {
-                    Div {
-                        H3("RELATED ARTICLES")
+                    SafeAreaContainer {
+                        Text("Related articles")
+                            .font(.title3)
                         
-                        Div {
-                            for item in Array(items) {
-                                BlogArticleRow(item: item, context: self.context!, isNewArticle: false)
+                        Grid(alignment: .topLeading) {
+                            ForEach(items) { item in
+                                ArticlePreview(for: item)
+                                    .articlePreviewStyle(BlogArticlePreview(isNewArticle: false))
+                                    .width(1)
                             }
                         }
-                        .class("collection-grid grid-two-columns")
+                        .columns(3)
                     }
-                    .class("container content-restriction safe-area-insets")
                 }
                 .class("related_articles")
             } else {
-                EmptyComponent()
+                EmptyHTML()
             }
         }
         

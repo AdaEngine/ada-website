@@ -1,156 +1,111 @@
 {
   "pins" : [
     {
-      "identity" : "codesyntaxcssgeneratorplugin",
+      "identity" : "combine-schedulers",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SpectralDragon/CodeSyntaxCSSGeneratorPlugin.git",
+      "location" : "https://github.com/pointfreeco/combine-schedulers",
       "state" : {
-        "revision" : "fc7fa8a5712595b483f091986e207fb5250ef8fd",
-        "version" : "0.2.0"
+        "revision" : "5928286acce13def418ec36d05a001a9641086f2",
+        "version" : "1.0.3"
       }
     },
     {
-      "identity" : "codextended",
+      "identity" : "ignite",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/codextended.git",
+      "location" : "https://github.com/twostraws/Ignite.git",
       "state" : {
-        "revision" : "8d7c46dfc9c55240870cf5561d6cefa41e3d7105",
-        "version" : "0.3.0"
+        "branch" : "main",
+        "revision" : "dc47b87dda90a81948652d8adcf1242eaa8ef307"
       }
     },
     {
-      "identity" : "collectionconcurrencykit",
+      "identity" : "swift-argument-parser",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/collectionConcurrencyKit.git",
+      "location" : "https://github.com/apple/swift-argument-parser.git",
       "state" : {
-        "revision" : "b4f23e24b5a1bff301efc5e70871083ca029ff95",
-        "version" : "0.2.0"
+        "revision" : "41982a3656a71c768319979febd796c6fd111d5c",
+        "version" : "1.5.0"
       }
     },
     {
-      "identity" : "darkimagepublishplugin",
+      "identity" : "swift-clocks",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/insidegui/DarkImagePublishPlugin",
+      "location" : "https://github.com/pointfreeco/swift-clocks",
       "state" : {
-        "revision" : "c5d6b3bbe4e434cad20cd67c3ff2c12b99e98f0b",
-        "version" : "1.0.0"
+        "revision" : "cc46202b53476d64e824e0b6612da09d84ffde8e",
+        "version" : "1.0.6"
       }
     },
     {
-      "identity" : "files",
+      "identity" : "swift-cmark",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/files.git",
+      "location" : "https://github.com/swiftlang/swift-cmark.git",
       "state" : {
-        "revision" : "22fe84797d499ffca911ccd896b34efaf06a50b9",
-        "version" : "4.1.1"
+        "revision" : "b022b08312decdc46585e0b3440d97f6f22ef703",
+        "version" : "0.6.0"
       }
     },
     {
-      "identity" : "ink",
+      "identity" : "swift-collections",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/ink.git",
+      "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "878fd897945500be1885f2c88f81f8f909224796",
-        "version" : "0.4.0"
+        "revision" : "671108c96644956dddcd89dd59c203dcdb36cec7",
+        "version" : "1.1.4"
       }
     },
     {
-      "identity" : "minifycsspublishplugin",
+      "identity" : "swift-concurrency-extras",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/labradon/MinifyCSSPublishPlugin.git",
+      "location" : "https://github.com/pointfreeco/swift-concurrency-extras",
       "state" : {
-        "branch" : "master",
-        "revision" : "e3b1ee2ebe2dd74e171489bc75a5b5577a18e090"
+        "revision" : "82a4ae7170d98d8538ec77238b7eb8e7199ef2e8",
+        "version" : "1.3.1"
       }
     },
     {
-      "identity" : "plot",
+      "identity" : "swift-dependencies",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/plot.git",
+      "location" : "https://github.com/pointfreeco/swift-dependencies.git",
       "state" : {
-        "revision" : "4237057acdaaea5def56d350815e37fa8311d1fd",
-        "version" : "0.13.0"
+        "revision" : "4c90d6b2b9bf0911af87b103bb40f41771891596",
+        "version" : "1.9.2"
       }
     },
     {
-      "identity" : "publish",
+      "identity" : "swift-markdown",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/AdaEngine/publish.git",
+      "location" : "https://github.com/swiftlang/swift-markdown.git",
       "state" : {
-        "branch" : "master",
-        "revision" : "58e943047882a5a6d8135ae2711be8ba7fba57c4"
+        "revision" : "ea79e83c8744d2b50b0dc2d5bbd1e857e1253bf9",
+        "version" : "0.6.0"
       }
     },
     {
-      "identity" : "publishcolorutils",
+      "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SpectralDragon/PublishColorUtils.git",
+      "location" : "https://github.com/swiftlang/swift-syntax",
       "state" : {
-        "revision" : "83bc72993d25f904afe11f4f8dab9038c7573830",
-        "version" : "0.1.0"
+        "revision" : "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
+        "version" : "601.0.1"
       }
     },
     {
-      "identity" : "readingtimepublishplugin",
+      "identity" : "swiftsoup",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/alexito4/ReadingTimePublishPlugin.git",
+      "location" : "https://github.com/scinfu/SwiftSoup.git",
       "state" : {
-        "revision" : "0a0bf141a5b626c2444601cf0ed7b2bfcfdabcdf",
-        "version" : "0.3.0"
+        "revision" : "bba848db50462894e7fc0891d018dfecad4ef11e",
+        "version" : "2.8.7"
       }
     },
     {
-      "identity" : "shellout",
+      "identity" : "xctest-dynamic-overlay",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/shellout.git",
+      "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
       "state" : {
-        "revision" : "e1577acf2b6e90086d01a6d5e2b8efdaae033568",
-        "version" : "2.3.0"
-      }
-    },
-    {
-      "identity" : "splash",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/splash.git",
-      "state" : {
-        "revision" : "7f4df436eb78fe64fe2c32c58006e9949fa28ad8",
-        "version" : "0.16.0"
-      }
-    },
-    {
-      "identity" : "splashpublishplugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/JohnSundell/SplashPublishPlugin.git",
-      "state" : {
-        "revision" : "4fe79070f51e288bc8ba31934a3018cbe099d5f7",
-        "version" : "0.2.0"
-      }
-    },
-    {
-      "identity" : "sweep",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnsundell/sweep.git",
-      "state" : {
-        "revision" : "801c2878e4c6c5baf32fe132e1f3f3af6f9fd1b0",
-        "version" : "0.4.0"
-      }
-    },
-    {
-      "identity" : "tagcolorcssgeneratorplugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SpectralDragon/TagColorCSSGeneratorPlugin.git",
-      "state" : {
-        "revision" : "70bafb74999e84e7b9dad5e2bee76cafa22792a7",
-        "version" : "0.3.0"
-      }
-    },
-    {
-      "identity" : "twitterpublishplugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/insidegui/TwitterPublishPlugin.git",
-      "state" : {
-        "revision" : "480e6ae598f2a61124beec9649ca0ae1f070471b",
-        "version" : "0.2.0"
+        "revision" : "39de59b2d47f7ef3ca88a039dff3084688fe27f4",
+        "version" : "1.5.2"
       }
     }
   ],

@@ -5,25 +5,26 @@
 //  Created by v.prusakov on 4/12/23.
 //
 
-import Publish
-import Plot
+import Ignite
 
-struct TagList: Component {
+struct TagList: DocumentElement {
     
-    let item: Item<Blog>
+    let item: Article
     
-    @EnvironmentValue(.publishContext)
-    private var context
-    
-    var body: Component {
-        List(item.tags) { tag in
-            ListItem {
-                Link(url: context!.site.path(for: tag).absoluteString) {
-                    Text(tag.string)
+    @HTMLBuilder
+    var body: some HTML {
+        if let tags = item.tags, !tags.isEmpty {
+            List(tags) { tag in
+                ListItem {
+                    Link(target: "/tags/\(tag.convertedToSlug())") {
+                        tag
+                    }
                 }
+                .class("tag-" + tag.convertedToSlug())
             }
-            .class(tag.cssClass)
+            .class("tags")
+        } else {
+            EmptyHTML()
         }
-        .class("tags")
     }
 }
