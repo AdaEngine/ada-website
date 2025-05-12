@@ -131,9 +131,7 @@ struct MainPage: StaticPage {
             header()
                 .padding(.bottom, 100)
             carousel()
-                .padding(.bottom, 100)
             latestNews()
-                .padding(.bottom, 100)
             features()
         }
 
@@ -208,7 +206,7 @@ extension MainPage {
             Text("Latest News")
                 .font(.primary(size: .rem(3)))
                 .horizontalAlignment(.center)
-                .padding(.bottom, 100)
+                .padding(.vertical, 100)
 
             Div {
                 Grid(alignment: .topLeading, spacing: 10) {
@@ -229,7 +227,7 @@ extension MainPage {
         Text("Features")
             .font(.primary(size: .rem(3)))
             .horizontalAlignment(.center)
-            .padding(.bottom, 100)
+            .padding(.vertical, 100)
 
         Div {
             ForEach(items.enumerated()) { index, item in
