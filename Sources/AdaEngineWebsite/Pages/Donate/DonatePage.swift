@@ -148,7 +148,7 @@ private extension DonatePage {
         VStack(spacing: 20) {
             Link(target: "https://www.donationalerts.com/r/adaengine") {
                 HStack {
-                    AEImage(path: "donation_alerts_logo.svg")
+                    AEImage(path: "donation_alerts_logo.svg", description: "DonationAlerts Logo")
                         .frame(width: 37, height: 43)
 
                     Text("DonationAlerts")
@@ -163,7 +163,7 @@ private extension DonatePage {
             .elevated()
 
             Link(target: "https://boosty.to/adaengine/donate") {
-                Image("/images/icons/ic_boosty.svg")
+                Image("/images/icons/ic_boosty.svg", description: "Boosty Logo")
                     .resizable()
                     .frame(height: 43)
                     .frame(width: .percent(100%))

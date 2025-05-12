@@ -7,6 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(error => {
             console.error('Error fetching star count:', error);
-            document.getElementById('main-page-callout-stars-count').textContent = '24k stars on GitHub';
+            document.getElementById('main-page-callout-stars-count').textContent = 'GitHub';
         });
 });
