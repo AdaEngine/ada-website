@@ -16,7 +16,7 @@ struct MainPage: StaticPage {
     @Dependency(\.context)
     private var context
 
-    let title = "Home"
+    let title = "AdaEngine"
 
     let items: [EngineInfoItem] = [
         EngineInfoItem(

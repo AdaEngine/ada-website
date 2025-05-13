@@ -16,7 +16,7 @@ struct DonatePage: StaticPage {
             Grid(alignment: .top, spacing: 60) {
                 VStack(alignment: .leading, spacing: 30) {
                     Text("Support the future of AdaEngine")
-                        .font(.primary(size: .px(74)))
+                        .class("donate-title")
                         .lineSpacing(1.2)
                     
                     Text("""
@@ -69,7 +69,7 @@ private extension DonatePage {
                 .active()
                 
                 Button {
-                    "Boosty"
+                    "RUB"
                 } actions: {
                     HideElement(SectionID.usd.rawValue)
                     HideElement(SectionID.oneTime.rawValue)

@@ -8,7 +8,7 @@
 import Ignite
 
 struct BlogSectionPage: StaticPage {
-    let title: String = "Blog"
+    let title: String = "AdaEngine Blog"
     let path: String = SectionID.blog.rawValue
 
     @Environment(\.articles)
