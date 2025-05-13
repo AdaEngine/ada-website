@@ -19,7 +19,7 @@ struct CommunitySocial {
 
 struct CommunitySectionPage: StaticPage {
     
-    let title: String = "Community"
+    let title: String = "AdaEngine Community"
     let path: String = SectionID.community.rawValue
     
     var socials: [CommunitySocial] = [

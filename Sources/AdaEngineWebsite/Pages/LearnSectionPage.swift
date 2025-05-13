@@ -9,7 +9,7 @@ import Ignite
 
 struct LearnSectionPage: StaticPage {
 
-    let title: String = "Learn"
+    let title: String = "Learn AdaEngine"
     let path: String = SectionID.learn.rawValue
 
     var links: [CommunitySocial] = [
