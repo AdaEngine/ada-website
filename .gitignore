@@ -6,3 +6,6 @@
 /*.xcodeproj
 .publish
 /Output
+node_modules/
+dist/
+.vite/

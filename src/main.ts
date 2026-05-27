@@ -1,0 +1,876 @@
+import './style.css'
+import { articles, getArticleBySlug } from './content'
+import { hrefFor as createHref, resolveRoute, type StaticPageName } from './routing'
+
+const app = document.querySelector<HTMLDivElement>('#app') ?? failMissingApp()
+const baseUrl = import.meta.env.BASE_URL
+
+function failMissingApp(): never {
+  throw new Error('Root app container #app was not found')
+}
+
+type FeatureItem = {
+  title: string
+  description: string
+  code?: string
+  image?: string
+}
+
+const siteTitle = 'AdaEngine'
+const fallbackArticleImage = 'images/main/tilemap.png'
+const blogArticleImages = ['images/main/tilemap.png', 'images/main/space_invaders.jpeg', 'images/main/duck_hunt.png']
+const githubRepository = 'AdaEngine/AdaEngine'
+
+type StaticPageContent = {
+  title: string
+  lead: string
+  sections: Array<{
+    title: string
+    body: string
+    links?: Array<{ label: string; href: string }>
+  }>
+}
+
+type LearnCard = {
+  title: string
+  body: string
+  href: string
+  icon?: 'book' | 'play' | 'layout'
+}
+
+type CommunityLink = {
+  title: string
+  subtitle: string
+  href: string
+  icon?: string
+  iconMarkup?: string
+  iconClass?: string
+}
+
+type DonationOption = {
+  title: string
+  subtitle: string
+  body: string
+  href: string
+  action: string
+  icon: string
+  tone: 'boosty' | 'donation-alerts'
+}
+
+const staticPages: Record<StaticPageName, StaticPageContent> = {
+  learn: {
+    title: 'Learn AdaEngine',
+    lead: 'Master game development in Swift. From your first sprite to advanced Metal rendering techniques.',
+    sections: [
+      {
+        title: 'Documentation',
+        body: 'Read guides, API notes and examples for the engine core, ECS, renderer, physics and UI systems.',
+        links: [{ label: 'Open documentation', href: 'https://github.com/AdaEngine/AdaEngine' }],
+      },
+      {
+        title: 'Examples',
+        body: 'Explore sample projects such as tilemaps, arcade games and Swift-first game prototypes.',
+        links: [{ label: 'Browse examples', href: 'https://github.com/AdaEngine/AdaEngine/tree/main/Examples' }],
+      },
+      {
+        title: 'Features',
+        body: 'Return to the home page feature overview for a quick summary of what AdaEngine can do.',
+        links: [{ label: 'View features', href: `${hrefFor('/')}#features` }],
+      },
+    ],
+  },
+  community: {
+    title: 'Community',
+    lead: 'Join AdaEngine discussions, follow development and help the project grow together with other Swift developers.',
+    sections: [
+      {
+        title: 'GitHub Discussions',
+        body: 'Ask questions, share ideas and discuss engine development directly with the community.',
+        links: [{ label: 'Join discussions', href: 'https://github.com/AdaEngine/AdaEngine/discussions' }],
+      },
+      {
+        title: 'Source Code',
+        body: 'Report issues, contribute fixes and review the current engine implementation on GitHub.',
+        links: [{ label: 'Open repository', href: 'https://github.com/AdaEngine/AdaEngine' }],
+      },
+    ],
+  },
+  donate: {
+    title: 'Donate',
+    lead: 'AdaEngine is free and open source forever. Donations help support ongoing development, examples and documentation.',
+    sections: [
+      {
+        title: 'Support the project',
+        body: 'If AdaEngine is useful to you, consider supporting development through the donation page.',
+        links: [{ label: 'Donate on Boosty', href: 'https://boosty.to/adaengine' }],
+      },
+      {
+        title: 'Contribute instead',
+        body: 'Code contributions, bug reports, examples and documentation improvements are also a great way to help.',
+        links: [{ label: 'Contribute on GitHub', href: 'https://github.com/AdaEngine/AdaEngine' }],
+      },
+    ],
+  },
+}
+
+const learnSections: Array<{ title: string; cards: LearnCard[] }> = [
+  {
+    title: 'Getting Started',
+    cards: [
+      {
+        title: 'Quick Start Guide',
+        body: 'Install the engine and create your first window in under 5 minutes.',
+        href: 'https://github.com/AdaEngine/AdaEngine',
+        icon: 'book',
+      },
+      {
+        title: 'ECS Fundamentals',
+        body: 'Understand the Entity-Component-System architecture that powers AdaEngine.',
+        href: 'https://github.com/AdaEngine/AdaEngine',
+        icon: 'play',
+      },
+      {
+        title: '2D Physics Tutorial',
+        body: 'Add rigid bodies, collision shapes, and handle physics callbacks.',
+        href: 'https://github.com/AdaEngine/AdaEngine',
+        icon: 'layout',
+      },
+    ],
+  },
+  {
+    title: 'API Reference & Documentation',
+    cards: [
+      {
+        title: 'Core Framework',
+        body: 'Math, Collections, and basic Engine systems.',
+        href: 'https://github.com/AdaEngine/AdaEngine',
+      },
+      {
+        title: 'Rendering Pipeline',
+        body: 'Materials, Shaders, Render Graphs, and Metal integration.',
+        href: 'https://github.com/AdaEngine/AdaEngine',
+      },
+      {
+        title: 'Audio System',
+        body: 'Spatial audio, sound effects, and music streaming.',
+        href: 'https://github.com/AdaEngine/AdaEngine',
+      },
+    ],
+  },
+]
+
+const communityLinks: CommunityLink[] = [
+  {
+    title: 'GitHub',
+    subtitle: 'Contribute to source code',
+    href: 'https://github.com/AdaEngine/AdaEngine',
+    icon: 'images/socials/github.svg',
+  },
+  {
+    title: 'Discord',
+    subtitle: 'Live chat & support',
+    href: 'https://discord.gg/adaengine',
+    icon: 'images/socials/discord.svg',
+  },
+  {
+    title: 'Reddit',
+    subtitle: 'r/AdaEngine discussions',
+    href: 'https://www.reddit.com/r/AdaEngine/',
+    icon: 'images/socials/reddit.svg',
+  },
+  {
+    title: 'Telegram',
+    subtitle: 'Announcements channel',
+    href: 'https://t.me/adaengine',
+    iconClass: 'community-link-icon-telegram',
+    iconMarkup:
+      '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M42.2 8.7 35.8 39c-.5 2.1-1.8 2.6-3.6 1.6l-9.9-7.3-4.8 4.6c-.5.5-1 .9-2 .9l.7-10.1L34.6 12c.8-.7-.2-1.1-1.2-.4L10.6 25.9.8 22.8c-2.1-.7-2.2-2.1.4-3.1L39.5 4.9c1.8-.7 3.4.4 2.7 3.8Z"/></svg>',
+  },
+  {
+    title: 'X (Twitter)',
+    subtitle: 'Follow @AdaEngine',
+    href: 'https://x.com/AdaEngine',
+    iconClass: 'community-link-icon-x',
+    iconMarkup:
+      '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M28.4 20.6 43.1 4h-3.5L26.9 18.4 16.7 4H5l15.5 21.9L5 43.4h3.5L22 28.1l10.8 15.3h11.7L28.4 20.6Zm-4.8 5.4-1.6-2.2L9.6 6.5H15l10 14 1.6 2.2 13 18.2h-5.4L23.6 26Z"/></svg>',
+  },
+]
+
+const donationOptions: DonationOption[] = [
+  {
+    title: 'Boosty',
+    subtitle: 'Monthly Sponsorship',
+    body: 'Become a backer on Boosty to get early access to updates, exclusive tutorials, and your name in the engine credits.',
+    href: 'https://boosty.to/adaengine',
+    action: 'Support on Boosty',
+    icon: 'images/icons/ic_boosty.svg',
+    tone: 'boosty',
+  },
+  {
+    title: 'DonationAlerts',
+    subtitle: 'One-time Donation',
+    body: 'Prefer to make a one-time contribution? You can support us via DonationAlerts with various payment methods.',
+    href: 'https://www.donationalerts.com/r/adaengine',
+    action: 'Donate via DA',
+    icon: 'images/donation_alerts_logo.svg',
+    tone: 'donation-alerts',
+  },
+]
+
+const features: FeatureItem[] = [
+  {
+    title: 'Data Driven',
+    description: 'AdaEngine build around custom Entity Component System. Simple to use, fast and cache-friendly for your game architecture.',
+    code: `@Component\nstruct Player: Entity { }\n\nstruct PlayerSystem: System {\n    func update(context: UpdateSceneContext) { }\n}`,
+  },
+  {
+    title: '2D Renderer',
+    description:
+      'Supports real-time 2D rendering for your games and apps. Write custom shaders, materials and render pipelines.',
+    image: 'images/icons/ic_duck.png',
+  },
+  {
+    title: '2D Physics',
+    description: 'AdaEngine supports Box2D v3 physics with parallel calculations, lightweight memory usage and fast simulation.',
+    image: 'images/icons/ic_box2d.svg',
+  },
+  {
+    title: 'Render Graphs',
+    description: 'Construct your own render pipeline using powerful render graphs.',
+    image: 'images/icons/ic_render_graph.svg',
+  },
+  {
+    title: 'Custom UI Engine',
+    description: 'Create your own UI using a SwiftUI-like approach that fits naturally into AdaEngine scenes.',
+    code: `struct MainView: View {\n    @Environment(\\.scene) var scene\n\n    var body: some View {\n        Text("Hello, World!")\n    }\n}`,
+  },
+  {
+    title: 'Free and Open Source',
+    description: 'AdaEngine is 100% free for you. Licensed by MIT. Learn, modify or use without royalties or runtime fees.',
+    image: 'images/icons/ic_opensource.svg',
+  },
+]
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+function highlightSwiftCode(value: string): string {
+  const keywords = new Set(['struct', 'class', 'func', 'var', 'let', 'some', 'override', 'import', 'return', 'for', 'in', 'mutating'])
+  const tokenPattern = /"[^"\\]*(?:\\.[^"\\]*)*"|@[A-Za-z_][\w.]*|\b[A-Za-z_][A-Za-z0-9_]*\b/g
+  let html = ''
+  let lastIndex = 0
+
+  value.replace(tokenPattern, (token, offset: number) => {
+    html += escapeHtml(value.slice(lastIndex, offset))
+
+    if (token.startsWith('"')) {
+      html += `<span class="syntax-string">${escapeHtml(token)}</span>`
+    } else if (token.startsWith('@')) {
+      html += `<span class="syntax-attribute">${escapeHtml(token)}</span>`
+    } else if (keywords.has(token)) {
+      html += `<span class="syntax-keyword">${escapeHtml(token)}</span>`
+    } else if (/^[A-Z]/.test(token)) {
+      html += `<span class="syntax-type">${escapeHtml(token)}</span>`
+    } else {
+      html += escapeHtml(token)
+    }
+
+    lastIndex = offset + token.length
+    return token
+  })
+
+  return html + escapeHtml(value.slice(lastIndex))
+}
+
+function featureDetails(item: FeatureItem): string {
+  return `${item.description} Designed for Swift-first workflows with a small, composable API surface and production-friendly defaults.`
+}
+
+function formatDate(date: string): string {
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(new Date(date))
+}
+
+function hrefFor(path: string): string {
+  return createHref(path, baseUrl)
+}
+
+function assetFor(path: string): string {
+  const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`
+  const normalizedPath = path.replace(/^\/+/, '')
+  return `${normalizedBase}${normalizedPath}`
+}
+
+function formatStarCount(count: number): string {
+  if (count < 1000) return String(count)
+  if (count < 1_000_000) return `${(count / 1000).toFixed(count < 10_000 ? 1 : 0)}k`
+  return `${(count / 1_000_000).toFixed(1)}m`
+}
+
+async function setupGitHubStars() {
+  const starBadge = document.querySelector<HTMLElement>('[data-github-stars]')
+  const starCount = document.querySelector<HTMLElement>('[data-github-stars-value]')
+  if (!starCount) return
+
+  try {
+    const response = await fetch(`https://api.github.com/repos/${githubRepository}`, {
+      headers: { Accept: 'application/vnd.github+json' },
+    })
+    if (!response.ok) return
+    const repository = (await response.json()) as { stargazers_count?: number }
+    if (typeof repository.stargazers_count !== 'number') return
+    const formattedCount = formatStarCount(repository.stargazers_count)
+    starCount.textContent = formattedCount
+    starBadge?.setAttribute('aria-label', `${formattedCount} GitHub stars`)
+  } catch {
+    // Keep the GitHub link usable even if the public API is unavailable.
+  }
+}
+
+function renderHeader(): string {
+  const currentRoute = resolveRoute(window.location.pathname, import.meta.env.BASE_URL)
+  const activePage = currentRoute.name === 'static-page' ? currentRoute.page : currentRoute.name
+  const navItems = [
+    { label: 'Home', href: hrefFor('/'), active: activePage === 'home' },
+    ...(articles.length ? [{ label: 'News', href: hrefFor('/blog'), active: activePage === 'blog' }] : []),
+    { label: 'Learn', href: hrefFor('/learn'), active: activePage === 'learn' },
+    { label: 'Socials', href: hrefFor('/community'), active: activePage === 'community' },
+    { label: 'Donate', href: hrefFor('/donate'), active: activePage === 'donate' },
+  ]
+  const isLearnPage = activePage === 'learn'
+
+  return `
+    <header class="header${isLearnPage ? ' header-learn' : ''}">
+      <section class="container content-restriction header-container">
+        <a class="header-logo" href="${hrefFor('/')}" aria-label="AdaEngine home">
+          <picture class="header-logo-picture">
+            <source srcset="${assetFor('images/ae_logo~dark.svg')}" media="(prefers-color-scheme: dark)" />
+            <img src="${assetFor('images/ae_logo.svg')}" alt="AdaEngine" />
+          </picture>
+          <h2>${siteTitle}</h2>
+        </a>
+        <button class="burger-container" type="button" aria-label="Open menu" aria-expanded="false">
+          <span id="burger" aria-hidden="true"><span class="bar topBar"></span><span class="bar bottomBar"></span></span>
+        </button>
+        <nav aria-label="Main navigation">
+          <ul class="navigation">
+            ${navItems.map((item) => `<li class="navigation-item"><a class="navigation-item-link${item.active ? ' is-active' : ''}" href="${item.href}">${item.label}</a></li>`).join('')}
+            <li class="navigation-item download-button"><a class="navigation-item-link" href="https://github.com/AdaEngine/AdaEngine/releases">Download</a></li>
+          </ul>
+        </nav>
+      </section>
+    </header>
+  `
+}
+
+function renderHero(): string {
+  return `
+    <section class="hero-section safe-area-insets">
+      <div class="hero-copy">
+        <p class="hero-eyebrow">AdaEngine for Swift developers</p>
+        <h1 class="ae-header-title">The Open-Source Engine for Swift Developers</h1>
+        <p class="hero-subtitle">Build high-performance 2D and 3D games using modern Swift. Clean architecture, native feeling, and developer-first tooling.</p>
+        <div class="hero-actions">
+          <a class="header-buttons" href="#features">Get Started</a>
+          <a class="header-buttons-github" href="https://github.com/${githubRepository}" aria-label="AdaEngine on GitHub">
+            <span class="github-button-label">
+              <svg class="github-button-icon" viewBox="0 0 438.549 438.549" aria-hidden="true" focusable="false"><path d="M409.132 114.573c-19.608-33.596-46.205-60.194-79.798-79.8C295.736 15.166 259.057 5.365 219.27 5.365c-39.78 0-76.47 9.804-110.062 29.408-33.596 19.605-60.192 46.204-79.8 79.8C9.803 148.168 0 184.853 0 224.63c0 47.78 13.94 90.745 41.827 128.906 27.884 38.164 63.906 64.572 108.063 79.227 5.14.954 8.945.283 11.42-1.996 2.474-2.282 3.71-5.14 3.71-8.562 0-.57-.05-5.708-.144-15.417-.098-9.71-.144-18.18-.144-25.406l-6.567 1.136c-4.187.767-9.47 1.092-15.846 1-6.375-.09-12.992-.757-19.843-2-6.854-1.23-13.23-4.085-19.13-8.558-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.9-9.233-8.992-14.56-4.093-5.33-8.232-8.944-12.42-10.847l-1.998-1.43c-1.332-.952-2.568-2.1-3.71-3.43-1.143-1.33-1.998-2.663-2.57-3.997-.57-1.335-.097-2.43 1.428-3.29 1.525-.858 4.28-1.275 8.28-1.275l5.708.853c3.807.763 8.516 3.042 14.133 6.85 5.615 3.807 10.23 8.755 13.847 14.843 4.38 7.807 9.657 13.755 15.846 17.848 6.184 4.093 12.42 6.136 18.7 6.136 6.28 0 11.703-.476 16.273-1.423 4.565-.95 8.848-2.382 12.847-4.284 1.713-12.758 6.377-22.56 13.988-29.41-10.847-1.14-20.6-2.857-29.263-5.14-8.658-2.286-17.605-5.996-26.835-11.14-9.235-5.137-16.896-11.516-22.985-19.126-6.09-7.614-11.088-17.61-14.987-29.98-3.9-12.373-5.852-26.647-5.852-42.825 0-23.035 7.52-42.637 22.557-58.817-7.044-17.318-6.38-36.732 1.997-58.24 5.52-1.715 13.706-.428 24.554 3.853 10.85 4.284 18.794 7.953 23.84 10.995 5.046 3.04 9.09 5.618 12.135 7.708 17.706-4.947 35.977-7.42 54.82-7.42s37.116 2.473 54.822 7.42l10.85-6.85c7.418-4.57 16.18-8.757 26.26-12.564 10.09-3.806 17.803-4.854 23.135-3.14 8.562 21.51 9.325 40.923 2.28 58.24 15.035 16.18 22.558 35.788 22.558 58.818 0 16.178-1.958 30.497-5.853 42.966-3.9 12.47-8.94 22.457-15.125 29.98-6.19 7.52-13.9 13.85-23.13 18.985-9.233 5.14-18.183 8.85-26.84 11.135-8.663 2.286-18.416 4.004-29.264 5.146 9.894 8.563 14.842 22.078 14.842 40.54v60.237c0 3.422 1.19 6.28 3.572 8.562 2.38 2.278 6.136 2.95 11.276 1.994 44.163-14.653 80.185-41.062 108.068-79.226 27.88-38.16 41.826-81.126 41.826-128.906-.01-39.77-9.818-76.454-29.414-110.05z"/></svg>
+              GitHub
+            </span>
+            <span class="github-stars" data-github-stars aria-label="Loading GitHub stars">
+              <svg class="github-star-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 2.6 2.92 5.92 6.53.95-4.72 4.6 1.11 6.5L12 17.5l-5.84 3.07 1.11-6.5-4.72-4.6 6.53-.95L12 2.6z"/></svg>
+              <span data-github-stars-value>...</span>
+            </span>
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <picture class="ae-logo-header"><source srcset="${assetFor('images/ae_logo~dark.svg')}" media="(prefers-color-scheme: dark)" /><img src="${assetFor('images/ae_logo.svg')}" alt="" /></picture>
+        <div class="hero-orbit hero-orbit-one"></div>
+        <div class="hero-orbit hero-orbit-two"></div>
+      </div>
+    </section>
+  `
+}
+
+function renderTagList(tags: string[] = []): string {
+  if (!tags.length) return ''
+
+  return `<ul class="tags">${tags.map((tag) => `<li>${tag}</li>`).join('')}</ul>`
+}
+
+function renderLatestNews(): string {
+  if (!articles.length) return ''
+
+  return `
+    <section id="latest-news" class="latest-news safe-area-insets">
+      <h2 class="section-title">Latest News</h2>
+      <div class="home-articles-grid">
+        ${articles
+          .slice(0, 4)
+          .map(
+            (article) => `
+              <article class="home-article-preview">
+                <a href="${hrefFor(`/articles/${article.slug}`)}">
+                  <div class="article-preview-image">
+                    <img class="background_image" src="${assetFor(fallbackArticleImage)}" alt="${escapeHtml(article.title)}" />
+                    <div class="background_image_overlay"></div>
+                    <div class="article-preview-content">
+                      <p class="article-date">${formatDate(article.date)}</p>
+                      ${renderTagList(article.tags)}
+                      <h3>${article.title}</h3>
+                      <p>AdaEngine Team</p>
+                    </div>
+                  </div>
+                </a>
+              </article>
+            `,
+          )
+          .join('')}
+      </div>
+    </section>
+  `
+}
+
+function renderBlogTag(tags: string[] = []): string {
+  const tag = tags[0] ?? 'News'
+  const tone = ['release', 'tutorial', 'engineering', 'markdown', 'frontmatter', 'vite'].find((value) =>
+    tag.toLowerCase().includes(value),
+  )
+
+  return `<span class="blog-entry-tag blog-entry-tag-${tone ?? 'default'}">${escapeHtml(tag)}</span>`
+}
+
+function blogArticleImageFor(article: { image?: string }, index: number): string {
+  return article.image ?? blogArticleImages[index % blogArticleImages.length] ?? fallbackArticleImage
+}
+
+function renderBlogPage() {
+  app.innerHTML = `
+    ${renderHeader()}
+    <main class="page-shell blog-page-shell">
+      <section class="container content-restriction blog-page">
+        <header class="blog-page-hero">
+          <h1>Engine News</h1>
+          <p>Updates, release notes, and engineering deep dives from the AdaEngine team.</p>
+        </header>
+        ${
+          articles.length
+            ? `<div class="blog-timeline">
+                ${articles
+                  .map(
+                    (article, index) => `
+                      <article class="blog-entry">
+                        <aside class="blog-entry-meta" aria-label="Article metadata">
+                          <time datetime="${article.date}">${formatDate(article.date)}</time>
+                          ${renderBlogTag(article.tags)}
+                        </aside>
+                        <a class="blog-entry-card" href="${hrefFor(`/articles/${article.slug}`)}">
+                          <img class="blog-entry-cover" src="${assetFor(blogArticleImageFor(article, index))}" alt="" loading="lazy" />
+                          <span class="blog-entry-cover-overlay" aria-hidden="true"></span>
+                          <span class="blog-entry-content">
+                            <h2>${escapeHtml(article.title)}</h2>
+                            <p>${escapeHtml(article.description)}</p>
+                            <span class="blog-entry-action">Read full article →</span>
+                          </span>
+                        </a>
+                      </article>
+                    `,
+                  )
+                  .join('')}
+              </div>`
+            : `<div class="blog-empty">
+                <h2>No articles yet</h2>
+                <p>Fresh AdaEngine updates will appear here soon.</p>
+              </div>`
+        }
+      </section>
+    </main>
+    ${renderFooter()}
+  `
+}
+
+function renderFeatures(): string {
+  return `
+    <section id="features" class="features-container safe-area-insets">
+      <div class="section-heading">
+        <p class="eyebrow">Capabilities</p>
+        <h2 class="section-title">Features</h2>
+      </div>
+      <div class="features-grid">
+        ${features
+          .map(
+            (item, index) => `
+              <button class="engine-info-item-container feature-card feature-card-${index + 1}" type="button" data-feature-index="${index}" aria-haspopup="dialog">
+                <div class="engine-info-item-text">
+                  <span class="feature-number">0${index + 1}</span>
+                  <h3>${item.title}</h3>
+                  <p>${item.description}</p>
+                </div>
+                ${renderFeatureContent(item)}
+                <span class="feature-card-action">Learn more</span>
+              </button>
+            `,
+          )
+          .join('')}
+      </div>
+    </section>
+  `
+}
+
+function renderFeatureContent(item: FeatureItem): string {
+  return `
+    <div class="engine-info-item-content">
+      ${item.image ? `<img src="${assetFor(item.image)}" alt="${item.title}" />` : `<pre><code class="swift-code">${highlightSwiftCode(item.code ?? '')}</code></pre>`}
+    </div>
+  `
+}
+
+function renderFeatureModal(): string {
+  return `
+    <div class="feature-modal" role="dialog" aria-modal="true" aria-labelledby="feature-modal-title" hidden>
+      <div class="feature-modal-backdrop" data-modal-close></div>
+      <section class="feature-modal-panel">
+        <button class="feature-modal-close" type="button" aria-label="Close feature details" data-modal-close>×</button>
+        <div class="feature-modal-visual" id="feature-modal-visual"></div>
+        <p class="eyebrow" id="feature-modal-kicker">Feature</p>
+        <h2 id="feature-modal-title"></h2>
+        <p id="feature-modal-description"></p>
+      </section>
+    </div>
+  `
+}
+
+function renderFooter(): string {
+  return `
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-columns">
+          <section>
+            <h3>Ada Engine</h3>
+            <a href="https://github.com/AdaEngine/AdaEngine/releases">Download</a>
+            <a href="https://github.com/AdaEngine/AdaEngine">Source code</a>
+          </section>
+          <section>
+            <h3>Project</h3>
+            ${articles.length ? `<a href="${hrefFor('/blog')}">Blog</a>` : ''}
+            <a href="${hrefFor('/learn')}">Learn</a>
+            <a href="${hrefFor('/community')}">Community</a>
+          </section>
+          <section>
+            <h3>Foundation</h3>
+            <a href="${hrefFor('/donate')}">Donate</a>
+            <a href="https://github.com/AdaEngine/AdaEngine/blob/main/LICENSE">License</a>
+          </section>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2021-2025 Vladislav Prusakov and contributors. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  `
+}
+
+function renderLearnIcon(icon?: LearnCard['icon']): string {
+  if (!icon) return ''
+
+  const paths = {
+    book: '<path d="M7 5.5h8.5a2.5 2.5 0 0 1 2.5 2.5v11H9.5A2.5 2.5 0 0 0 7 21.5V5.5Z"/><path d="M7 5.5A2.5 2.5 0 0 1 9.5 3H18v16"/>',
+    play: '<circle cx="12" cy="12" r="9"/><path d="m10.5 8.5 5 3.5-5 3.5v-7Z"/>',
+    layout: '<rect x="4" y="5" width="16" height="14" rx="1.5"/><path d="M9 5v14"/><path d="M4 10h16"/>',
+  }
+
+  return `
+    <span class="learn-card-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+        ${paths[icon]}
+      </svg>
+    </span>
+  `
+}
+
+function renderLearnPage() {
+  const page = staticPages.learn
+
+  app.innerHTML = `
+    ${renderHeader()}
+    <main class="page-shell learn-page-shell">
+      <section class="container content-restriction learn-page">
+        <header class="learn-hero">
+          <h1>${page.title}</h1>
+          <p>${page.lead}</p>
+        </header>
+        ${learnSections
+          .map((section) => {
+            const sectionId = section.title.replace(/\W+/g, '-').toLowerCase()
+
+            return `
+              <section class="learn-section" aria-labelledby="${sectionId}">
+                <h2 id="${sectionId}">${section.title}</h2>
+                <div class="learn-grid">
+                  ${section.cards
+                    .map(
+                      (card) => `
+                        <a class="learn-card" href="${card.href}">
+                          ${renderLearnIcon(card.icon)}
+                          <h3>${card.title}</h3>
+                          <p>${card.body}</p>
+                        </a>
+                      `,
+                    )
+                    .join('')}
+                </div>
+              </section>
+            `
+          })
+          .join('')}
+      </section>
+    </main>
+    ${renderFooter()}
+  `
+}
+
+function renderStaticPage(pageName: StaticPageName) {
+  if (pageName === 'learn') {
+    renderLearnPage()
+    return
+  }
+
+  if (pageName === 'community') {
+    renderCommunityPage()
+    return
+  }
+
+  if (pageName === 'donate') {
+    renderDonationPage()
+    return
+  }
+}
+
+function renderDonationPage() {
+  app.innerHTML = `
+    ${renderHeader()}
+    <main class="page-shell donation-page-shell">
+      <section class="container content-restriction donation-page">
+        <header class="donation-hero">
+          <h1>Support AdaEngine</h1>
+          <p>AdaEngine is an independent open-source project. Your support helps us dedicate more time to development and tooling.</p>
+        </header>
+        <div class="donation-options" aria-label="Donation options">
+          ${donationOptions
+            .map(
+              (option) => `
+                <article class="donation-card donation-card-${option.tone}">
+                  <span class="donation-card-logo" aria-hidden="true">
+                    <img src="${assetFor(option.icon)}" alt="" loading="lazy" />
+                  </span>
+                  <div class="donation-card-brand">${option.title}</div>
+                  <h2>${option.subtitle}</h2>
+                  <p>${option.body}</p>
+                  <a class="donation-card-action" href="${option.href}" target="_blank" rel="noreferrer">${option.action}</a>
+                </article>
+              `,
+            )
+            .join('')}
+        </div>
+        <section class="donation-contribute" aria-labelledby="donation-contribute-title">
+          <h2 id="donation-contribute-title">Code Contributions</h2>
+          <p>
+            Can't support financially? Code contributions are equally valuable! Check out our
+            <a href="https://github.com/AdaEngine/AdaEngine/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22" target="_blank" rel="noreferrer">good first issues</a>
+            on GitHub to get started.
+          </p>
+        </section>
+      </section>
+    </main>
+    ${renderFooter()}
+  `
+}
+
+function renderCommunityPage() {
+  app.innerHTML = `
+    ${renderHeader()}
+    <main class="page-shell community-page-shell">
+      <section class="container content-restriction community-page">
+        <header class="community-hero">
+          <h1>Join the Community</h1>
+          <p>Connect with other developers, share your projects, and contribute to the engine.</p>
+        </header>
+        <div class="community-link-grid" aria-label="AdaEngine community links">
+          ${communityLinks
+            .map(
+              (link) => `
+                <a class="community-link-card" href="${link.href}" target="_blank" rel="noreferrer">
+                  <span class="community-link-icon ${link.iconClass ?? ''}">
+                    ${
+                      link.iconMarkup ??
+                      `<img src="${assetFor(link.icon ?? '')}" alt="" width="42" height="42" loading="lazy" />`
+                    }
+                  </span>
+                  <span class="community-link-copy">
+                    <strong>${link.title}</strong>
+                    <span>${link.subtitle}</span>
+                  </span>
+                </a>
+              `,
+            )
+            .join('')}
+        </div>
+      </section>
+    </main>
+    ${renderFooter()}
+  `
+}
+
+function renderHomePage() {
+  app.innerHTML = `
+    ${renderHeader()}
+    <main class="page-shell">
+      <div class="container content-restriction">
+        ${renderHero()}
+        ${renderLatestNews()}
+        ${renderFeatures()}
+      </div>
+      ${renderFeatureModal()}
+    </main>
+    ${renderFooter()}
+  `
+}
+
+function renderArticlePage(slug: string) {
+  const article = getArticleBySlug(slug)
+
+  if (!article) {
+    renderNotFound('Article not found', 'Check the address or return to the blog.')
+    return
+  }
+
+  app.innerHTML = `
+    ${renderHeader()}
+    <main class="page-shell article-page-shell">
+      <article class="container content-restriction safe-area-insets article-page">
+        <header class="article-hero">
+          <a class="article-back-link" href="${hrefFor('/blog')}">Back to News</a>
+          ${renderBlogTag(article.tags)}
+          <h1>${article.title}</h1>
+          <div class="article_info">
+            <span>By AdaEngine Team</span>
+            <span aria-hidden="true">•</span>
+            <time datetime="${article.date}">${formatDate(article.date)}</time>
+            <span aria-hidden="true">•</span>
+            <span>${article.readingTime} min read</span>
+          </div>
+          <p class="article-item-description">${article.description}</p>
+        </header>
+        <div class="article-content">${article.html}</div>
+      </article>
+    </main>
+    ${renderFooter()}
+  `
+}
+
+function renderNotFound(title = 'Page not found', description = 'This route does not exist yet.') {
+  app.innerHTML = `
+    ${renderHeader()}
+    <main class="page-shell">
+      <section class="container content-restriction safe-area-insets status-page">
+        <h1>${title}</h1>
+        <p>${description}</p>
+        <a class="header-buttons" href="${hrefFor('/')}">Home</a>
+      </section>
+    </main>
+    ${renderFooter()}
+  `
+}
+
+function renderRoute() {
+  const route = resolveRoute(window.location.pathname, import.meta.env.BASE_URL)
+
+  if (route.name === 'home') {
+    renderHomePage()
+    return
+  }
+
+  if (route.name === 'blog') {
+    renderBlogPage()
+    return
+  }
+
+  if (route.name === 'static-page') {
+    renderStaticPage(route.page)
+    return
+  }
+
+  if (route.name === 'article') {
+    renderArticlePage(route.slug)
+    return
+  }
+
+  renderNotFound()
+}
+
+function setupInteractions() {
+  const header = document.querySelector<HTMLElement>('.header')
+  const burger = document.querySelector<HTMLButtonElement>('.burger-container')
+
+  burger?.addEventListener('click', () => {
+    const isOpen = header?.classList.toggle('menu-opened') ?? false
+    burger.setAttribute('aria-expanded', String(isOpen))
+    burger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu')
+    document.body.classList.toggle('menu-opened', isOpen)
+  })
+
+  document.querySelectorAll('.navigation-item-link').forEach((link) => {
+    link.addEventListener('click', () => {
+      header?.classList.remove('menu-opened')
+      burger?.setAttribute('aria-expanded', 'false')
+      document.body.classList.remove('menu-opened')
+    })
+  })
+
+  const modal = document.querySelector<HTMLElement>('.feature-modal')
+  const modalTitle = document.querySelector<HTMLElement>('#feature-modal-title')
+  const modalDescription = document.querySelector<HTMLElement>('#feature-modal-description')
+  const modalKicker = document.querySelector<HTMLElement>('#feature-modal-kicker')
+  const modalVisual = document.querySelector<HTMLElement>('#feature-modal-visual')
+
+  const closeModal = () => {
+    if (!modal) return
+    modal.hidden = true
+    document.body.classList.remove('modal-opened')
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-feature-index]').forEach((card) => {
+    card.addEventListener('click', () => {
+      const index = Number(card.dataset.featureIndex)
+      const feature = features[index]
+      if (!feature || !modal || !modalTitle || !modalDescription || !modalKicker || !modalVisual) return
+      modalTitle.textContent = feature.title
+      modalDescription.textContent = featureDetails(feature)
+      modalKicker.textContent = `Feature 0${index + 1}`
+      modalVisual.innerHTML = feature.image
+        ? `<img src="${assetFor(feature.image)}" alt="${escapeHtml(feature.title)}" />`
+        : `<pre><code class="swift-code">${highlightSwiftCode(feature.code ?? '')}</code></pre>`
+      modal.hidden = false
+      document.body.classList.add('modal-opened')
+    })
+  })
+
+  document.querySelectorAll('[data-modal-close]').forEach((button) => button.addEventListener('click', closeModal))
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeModal()
+  })
+}
+
+renderRoute()
+setupInteractions()
+setupGitHubStars()
