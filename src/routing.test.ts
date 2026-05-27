@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { hrefFor, normalizeBasePath, normalizeRoutePath, resolveRoute } from './routing'
+import { hrefFor, normalizeBasePath, normalizeRoutePath, resolveRoute } from './routing.ts'
 
 assert.equal(normalizeBasePath('/adawebsite/'), '/adawebsite')
 assert.equal(normalizeBasePath('/'), '')
