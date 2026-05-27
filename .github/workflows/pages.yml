@@ -36,7 +36,7 @@ jobs:
           token: ${{ secrets.DEPLOY_ACCESS_TOKEN }}
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --include=dev
 
       - name: Configure Pages base path
         shell: bash
