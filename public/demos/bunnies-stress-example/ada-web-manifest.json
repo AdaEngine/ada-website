@@ -1,0 +1,6 @@
+{
+  "product": "BunniesStressExample",
+  "wasm": "BunniesStressExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

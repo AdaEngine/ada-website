@@ -10,4 +10,3 @@ node_modules/
 dist/
 .vite/
 AdaEngine/
-public/demos/

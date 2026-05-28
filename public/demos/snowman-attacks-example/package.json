@@ -1,0 +1,13 @@
+{
+  "name": "snowmanattacksexample-ada-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve": "vite --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@bjorn3/browser_wasi_shim": "^0.4.1",
+    "vite": "^5.0.0"
+  },
+  "devDependencies": {}
+}

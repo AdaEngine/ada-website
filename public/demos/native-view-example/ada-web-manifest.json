@@ -1,0 +1,6 @@
+{
+  "product": "NativeViewExample",
+  "wasm": "NativeViewExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

@@ -1,0 +1,6 @@
+{
+  "product": "SnowmanAttacksExample",
+  "wasm": "SnowmanAttacksExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

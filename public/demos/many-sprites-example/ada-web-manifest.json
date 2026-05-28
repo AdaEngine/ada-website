@@ -1,0 +1,6 @@
+{
+  "product": "ManySpritesExample",
+  "wasm": "ManySpritesExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

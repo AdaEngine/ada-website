@@ -1,0 +1,6 @@
+{
+  "product": "TransformEntChildrenExample",
+  "wasm": "TransformEntChildrenExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

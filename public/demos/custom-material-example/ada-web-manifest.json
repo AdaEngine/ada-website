@@ -1,0 +1,6 @@
+{
+  "product": "CustomMaterialExample",
+  "wasm": "CustomMaterialExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

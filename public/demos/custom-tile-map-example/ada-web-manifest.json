@@ -1,0 +1,6 @@
+{
+  "product": "CustomTileMapExample",
+  "wasm": "CustomTileMapExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

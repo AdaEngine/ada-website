@@ -1,0 +1,6 @@
+{
+  "product": "ButtonExample",
+  "wasm": "ButtonExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

@@ -1,0 +1,6 @@
+{
+  "product": "SceneViewExample",
+  "wasm": "SceneViewExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

@@ -1,0 +1,6 @@
+{
+  "product": "Text2dExample",
+  "wasm": "Text2dExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

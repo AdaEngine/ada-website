@@ -1,0 +1,6 @@
+{
+  "product": "GamepadExample",
+  "wasm": "GamepadExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

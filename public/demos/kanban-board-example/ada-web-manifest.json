@@ -1,0 +1,6 @@
+{
+  "product": "KanbanBoardExample",
+  "wasm": "KanbanBoardExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

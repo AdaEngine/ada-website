@@ -1,0 +1,6 @@
+{
+  "product": "LdtkTilemapExample",
+  "wasm": "LdtkTilemapExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

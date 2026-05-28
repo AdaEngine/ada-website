@@ -9,6 +9,12 @@ on:
     types:
       - adaengine-demos-updated
   workflow_dispatch:
+    inputs:
+      build_demos:
+        description: Rebuild AdaEngine demos instead of using committed public/demos
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -21,6 +27,7 @@ jobs:
   build:
     runs-on: macos-26
     env:
+      BUILD_DEMOS: ${{ (github.event_name == 'workflow_dispatch' && inputs.build_demos) && 'true' || 'false' }}
       SWIFT_WASM_SDK_ID: ${{ vars.SWIFT_WASM_SDK_ID || 'swift-6.3.2-RELEASE_wasm' }}
       SWIFT_WASM_SDK_URL: ${{ vars.SWIFT_WASM_SDK_URL || 'https://download.swift.org/swift-6.3.2-release/wasm-sdk/swift-6.3.2-RELEASE/swift-6.3.2-RELEASE_wasm.artifactbundle.tar.gz' }}
       SWIFT_WASM_SDK_CHECKSUM: ${{ vars.SWIFT_WASM_SDK_CHECKSUM || 'a61f0584c93283589f8b2f42db05c1f9a182b506c2957271402992655591dd7c' }}
@@ -34,6 +41,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Checkout AdaEngine
+        if: env.BUILD_DEMOS == 'true'
         uses: actions/checkout@v4
         with:
           repository: AdaEngine/AdaEngine
@@ -47,6 +55,7 @@ jobs:
           cache: npm
 
       - name: Install Swift WASM SDK
+        if: env.BUILD_DEMOS == 'true'
         run: |
           if ! swift sdk list | grep -qx "${SWIFT_WASM_SDK_ID}"; then
             swift sdk install "${SWIFT_WASM_SDK_URL}" --checksum "${SWIFT_WASM_SDK_CHECKSUM}"
@@ -64,7 +73,18 @@ jobs:
       - name: Test
         run: npm run test
 
-      - name: Build AdaEngine demos
+      - name: Use committed AdaEngine demos
+        if: env.BUILD_DEMOS != 'true'
+        run: |
+          if [ ! -f public/demos/manifest.json ]; then
+            echo "Expected committed demos at public/demos/manifest.json."
+            exit 1
+          fi
+
+          echo "Skipping AdaEngine demos build; using committed public/demos."
+
+      - name: Build AdaEngine demos (skippable)
+        if: env.BUILD_DEMOS == 'true'
         run: |
           if [ ! -f AdaEngine/scripts/build-website-demos.mjs ]; then
             echo "AdaEngine demos build script was not found; skipping demos."

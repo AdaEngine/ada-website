@@ -1,0 +1,6 @@
+{
+  "product": "UITestSceneExample",
+  "wasm": "UITestSceneExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

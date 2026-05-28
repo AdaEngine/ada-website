@@ -1,0 +1,6 @@
+{
+  "product": "ScriptableComponentExample",
+  "wasm": "ScriptableComponentExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

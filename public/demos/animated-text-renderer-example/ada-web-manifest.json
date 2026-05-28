@@ -1,0 +1,6 @@
+{
+  "product": "AnimatedTextRendererExample",
+  "wasm": "AnimatedTextRendererExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

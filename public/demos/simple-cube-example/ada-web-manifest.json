@@ -1,0 +1,6 @@
+{
+  "product": "SimpleCubeExample",
+  "wasm": "SimpleCubeExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

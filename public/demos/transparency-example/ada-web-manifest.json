@@ -1,0 +1,6 @@
+{
+  "product": "TransparencyExample",
+  "wasm": "TransparencyExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

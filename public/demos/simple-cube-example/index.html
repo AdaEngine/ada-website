@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SimpleCubeExample</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --ada-loader-background: radial-gradient(circle at 50% 35%, #f8fafc 0, #e7ecf5 42%, #cdd6e6 100%);
+      --ada-loader-card: rgba(255, 255, 255, 0.74);
+      --ada-loader-text: #111827;
+      --ada-loader-muted: #5b6473;
+      --ada-loader-track: rgba(17, 24, 39, 0.13);
+      --ada-loader-progress: linear-gradient(90deg, #1d4ed8, #7c3aed, #06b6d4);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ada-loader-background: radial-gradient(circle at 50% 35%, #242635 0, #12131b 48%, #07080d 100%);
+        --ada-loader-card: rgba(14, 16, 24, 0.72);
+        --ada-loader-text: #f8fafc;
+        --ada-loader-muted: #a9b0bf;
+        --ada-loader-track: rgba(255, 255, 255, 0.14);
+        --ada-loader-progress: linear-gradient(90deg, #60a5fa, #a78bfa, #22d3ee);
+      }
+    }
+    html, body, #ada-canvas-root {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #101014;
+    }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      outline: none;
+    }
+    #ada-canvas-root {
+      position: fixed;
+      inset: 0;
+    }
+    #ada-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483647;
+      display: grid;
+      place-items: center;
+      background: var(--ada-loader-background);
+      color: var(--ada-loader-text);
+      transition: opacity 260ms ease, visibility 260ms ease;
+    }
+    #ada-loader[data-state="hidden"] {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .ada-loader-card {
+      width: min(360px, calc(100vw - 48px));
+      padding: 32px 30px 28px;
+      border: 1px solid rgba(128, 140, 160, 0.2);
+      border-radius: 28px;
+      background: var(--ada-loader-card);
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.22);
+      text-align: center;
+      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
+    }
+    .ada-loader-logo {
+      width: 116px;
+      height: auto;
+      margin-bottom: 22px;
+      filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.18));
+    }
+    .ada-loader-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .ada-loader-status {
+      min-height: 20px;
+      margin: 8px 0 22px;
+      color: var(--ada-loader-muted);
+      font-size: 13px;
+      line-height: 20px;
+    }
+    .ada-loader-progress-track {
+      position: relative;
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--ada-loader-track);
+    }
+    .ada-loader-progress-bar {
+      width: 8%;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--ada-loader-progress);
+      box-shadow: 0 0 22px rgba(96, 165, 250, 0.45);
+      transition: width 180ms ease;
+    }
+    .ada-loader-progress-bar[data-indeterminate="true"] {
+      position: absolute;
+      width: 42%;
+      animation: ada-loader-slide 1.15s ease-in-out infinite;
+    }
+    .ada-loader-percent {
+      margin-top: 12px;
+      color: var(--ada-loader-muted);
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+    #ada-loader[data-state="error"] .ada-loader-progress-bar {
+      width: 100%;
+      background: linear-gradient(90deg, #ef4444, #f97316);
+      animation: none;
+    }
+    @keyframes ada-loader-slide {
+      0% { transform: translateX(-110%); }
+      50% { transform: translateX(45%); }
+      100% { transform: translateX(240%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #ada-loader, .ada-loader-progress-bar {
+        transition: none;
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="ada-canvas-root"></div>
+  <div id="ada-loader" role="status" aria-live="polite" aria-label="Loading SimpleCubeExample">
+    <div class="ada-loader-card">
+      <picture>
+        <source srcset="./loader-assets/ae_logo~dark.svg" media="(prefers-color-scheme: dark)">
+        <img class="ada-loader-logo" src="./loader-assets/ae_logo.svg" alt="AdaEngine">
+      </picture>
+      <h1 class="ada-loader-title">SimpleCubeExample</h1>
+      <div id="ada-loader-status" class="ada-loader-status">Preparing WebAssembly…</div>
+      <div class="ada-loader-progress-track" aria-hidden="true">
+        <div id="ada-loader-progress" class="ada-loader-progress-bar" data-indeterminate="true"></div>
+      </div>
+      <div id="ada-loader-percent" class="ada-loader-percent">0%</div>
+    </div>
+  </div>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

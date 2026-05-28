@@ -1,0 +1,6 @@
+{
+  "product": "Lighting2DExample",
+  "wasm": "Lighting2DExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

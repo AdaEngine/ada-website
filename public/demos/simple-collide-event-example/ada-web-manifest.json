@@ -1,0 +1,6 @@
+{
+  "product": "SimpleCollideEventExample",
+  "wasm": "SimpleCollideEventExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

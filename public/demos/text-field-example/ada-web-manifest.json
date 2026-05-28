@@ -1,0 +1,6 @@
+{
+  "product": "TextFieldExample",
+  "wasm": "TextFieldExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}
