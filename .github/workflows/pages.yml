@@ -24,8 +24,8 @@ jobs:
     runs-on: macos-26
     env:
       SWIFT_WASM_SDK_ID: ${{ vars.SWIFT_WASM_SDK_ID || 'swift-6.3.2-RELEASE_wasm' }}
-      SWIFT_WASM_SDK_URL: ${{ vars.SWIFT_WASM_SDK_URL }}
-      SWIFT_WASM_SDK_CHECKSUM: ${{ vars.SWIFT_WASM_SDK_CHECKSUM }}
+      SWIFT_WASM_SDK_URL: ${{ vars.SWIFT_WASM_SDK_URL || 'https://download.swift.org/swift-6.3.2-release/wasm-sdk/swift-6.3.2-RELEASE/swift-6.3.2-RELEASE_wasm.artifactbundle.tar.gz' }}
+      SWIFT_WASM_SDK_CHECKSUM: ${{ vars.SWIFT_WASM_SDK_CHECKSUM || 'a61f0584c93283589f8b2f42db05c1f9a182b506c2957271402992655591dd7c' }}
     steps:
       - name: Setup Xcode version
         uses: maxim-lobanov/setup-xcode@v1.6.0
@@ -50,16 +50,13 @@ jobs:
 
       - name: Install Swift WASM SDK
         run: |
-          if [ -n "${SWIFT_WASM_SDK_URL}" ]; then
-            if [ -n "${SWIFT_WASM_SDK_CHECKSUM}" ]; then
-              swift sdk install "${SWIFT_WASM_SDK_URL}" --checksum "${SWIFT_WASM_SDK_CHECKSUM}"
-            else
-              swift sdk install "${SWIFT_WASM_SDK_URL}"
-            fi
+          if ! swift sdk list | grep -qx "${SWIFT_WASM_SDK_ID}"; then
+            swift sdk install "${SWIFT_WASM_SDK_URL}" --checksum "${SWIFT_WASM_SDK_CHECKSUM}"
           fi
+
           swift sdk list
           if ! swift sdk list | grep -qx "${SWIFT_WASM_SDK_ID}"; then
-            echo "Swift WASM SDK '${SWIFT_WASM_SDK_ID}' is not installed. Set SWIFT_WASM_SDK_URL and optionally SWIFT_WASM_SDK_CHECKSUM repository variables."
+            echo "Swift WASM SDK '${SWIFT_WASM_SDK_ID}' is not installed after installation."
             exit 1
           fi
 
