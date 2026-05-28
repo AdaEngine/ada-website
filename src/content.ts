@@ -1,3 +1,5 @@
+import { highlightCode, languageClass } from './codeHighlight'
+
 export type ArticleFrontmatter = {
   title: string
   slug: string
@@ -168,49 +170,6 @@ function parseCodeFenceMeta(meta: string): { language: string; title: string } {
   return { language, title }
 }
 
-function highlightCode(value: string, language: string): string {
-  const normalized = language.toLowerCase()
-
-  if (!['swift', 'ts', 'typescript', 'js', 'javascript'].includes(normalized)) {
-    return escapeHtml(value)
-  }
-
-  const keywords =
-    normalized === 'swift'
-      ? 'actor|as|associatedtype|await|break|case|catch|class|continue|default|defer|do|else|enum|extension|false|for|func|guard|if|import|in|init|let|nil|private|protocol|public|return|self|some|static|struct|switch|throw|throws|true|try|var|while'
-      : 'async|await|break|case|catch|class|const|continue|default|else|export|false|for|from|function|if|import|in|interface|let|new|null|return|switch|throw|true|try|type|var|while'
-
-  const tokenPattern = new RegExp(
-    `(\"(?:\\\\.|[^\"\\\\])*\")|(//.*)|(@[A-Za-z_][\\w.]*)|(\\b(?:${keywords})\\b)|(\\b\\d+(?:\\.\\d+)?\\b)|(\\b[A-Z][A-Za-z0-9_]*\\b)`,
-    'g',
-  )
-
-  let cursor = 0
-  let html = ''
-
-  for (const match of value.matchAll(tokenPattern)) {
-    const index = match.index ?? 0
-    html += escapeHtml(value.slice(cursor, index))
-    const token = match[0]
-    const className = match[1]
-      ? 'syntax-string'
-      : match[2]
-        ? 'syntax-comment'
-        : match[3]
-          ? 'syntax-attribute'
-          : match[4]
-            ? 'syntax-keyword'
-            : match[5]
-              ? 'syntax-number'
-              : 'syntax-type'
-
-    html += `<span class="${className}">${escapeHtml(token)}</span>`
-    cursor = index + token.length
-  }
-
-  return `${html}${escapeHtml(value.slice(cursor))}`
-}
-
 function renderCodeBlock(code: string, language: string, title: string): string {
   const label = humanizeLanguage(language)
   const heading = title || label
@@ -221,7 +180,7 @@ function renderCodeBlock(code: string, language: string, title: string): string 
         <span>${escapeHtml(heading)}</span>
         <span>${escapeHtml(label)}</span>
       </figcaption>
-      <pre><code class="language-${escapeHtml(language || 'text')}">${highlightCode(code, language)}</code></pre>
+      <pre><code class="${languageClass(language)}">${highlightCode(code, language)}</code></pre>
     </figure>
   `
 }

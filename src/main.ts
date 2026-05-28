@@ -1,4 +1,5 @@
 import './style.css'
+import { highlightCode, languageClass, renderHighlightedCodeLines } from './codeHighlight'
 import { articles, getArticleBySlug } from './content'
 import { findDemoBySlug, groupDemosByTag, loadDemoSource, loadDemosManifest, type DemoEntry, type DemosManifest } from './demos'
 import { hrefFor as createHref, resolveRoute, type StaticPageName } from './routing'
@@ -13,14 +14,43 @@ function failMissingApp(): never {
 type FeatureItem = {
   title: string
   description: string
+  details: string
   code?: string
   image?: string
+}
+
+type ShowcaseItem = {
+  title: string
+  eyebrow: string
+  description: string
+  action: string
+  href: string
+  image: string
 }
 
 const siteTitle = 'AdaEngine'
 const fallbackArticleImage = 'images/main/tilemap.png'
 const blogArticleImages = ['images/main/tilemap.png', 'images/main/space_invaders.jpeg', 'images/main/duck_hunt.png']
 const githubRepository = 'AdaEngine/AdaEngine'
+
+const showcaseItems: ShowcaseItem[] = [
+  {
+    title: 'AdaEditor',
+    eyebrow: 'Editor',
+    description: 'A native scene editor and Swift-first workspace for building AdaEngine projects.',
+    action: 'Open AdaEditor',
+    href: 'https://github.com/AdaEngine/AdaEngine/tree/main/Editor',
+    image: 'images/main/ada-editor.png',
+  },
+  {
+    title: 'Sloppy Client',
+    eyebrow: 'Client',
+    description: 'A focused desktop client for project-oriented AI agent sessions and day-to-day work.',
+    action: 'Open Sloppy Client',
+    href: 'https://github.com/TeamSloppy/Sloppy/tree/main/Apps/Client',
+    image: 'images/main/sloppy-client.png',
+  },
+]
 
 type StaticPageContent = {
   title: string
@@ -222,32 +252,44 @@ const features: FeatureItem[] = [
   {
     title: 'Data Driven',
     description: 'AdaEngine build around custom Entity Component System. Simple to use, fast and cache-friendly for your game architecture.',
+    details:
+      'AdaEngine is built around a custom, data-oriented Entity Component System inspired by modern Swift APIs. Components keep game state small and explicit, while systems operate through typed queries, resources, schedules and macros such as @Component and @System. This makes gameplay code modular, cache-friendly and easier to scale from a tiny prototype to a full scene with input, animation, physics and rendering working together.',
     code: `@Component\nstruct Player: Entity { }\n\nstruct PlayerSystem: System {\n    func update(context: UpdateSceneContext) { }\n}`,
   },
   {
     title: '2D Renderer',
     description:
       'Supports real-time 2D rendering for your games and apps. Write custom shaders, materials and render pipelines.',
+    details:
+      'AdaEngine ships with a high-level 2D rendering stack for sprites, text, tilemaps, cameras and custom materials. The demos cover sprite animation, transparency, lighting, text rendering, WGSL experiments and stress scenes, while the renderer still leaves room for lower-level control when you need custom shaders or pipeline work. It is designed for Swift-first game code where drawing a scene should feel direct, but not boxed in.',
     image: 'images/icons/ic_duck.png',
   },
   {
     title: '2D Physics',
     description: 'AdaEngine supports Box2D v3 physics with parallel calculations, lightweight memory usage and fast simulation.',
+    details:
+      'The Physics2D plugin integrates Box2D with AdaEngine entities through components such as PhysicsBody2DComponent and Collision2DComponent. Simulation runs on the fixed-update schedule, then syncs transforms back into the scene so gameplay systems can react through the same ECS flow as the rest of the engine. It includes collision events, debug drawing support and world resources for direct access when a game needs deeper physics control.',
     image: 'images/icons/ic_box2d.svg',
   },
   {
     title: 'Render Graphs',
     description: 'Construct your own render pipeline using powerful render graphs.',
+    details:
+      'Rendering is organized around RenderGraph resources, nodes, slots, subgraphs and an executor that runs the graph each frame. Core 2D and 3D pipelines are assembled as graphs, and cameras can point at specific render subgraphs for flexible composition. Diagnostics can snapshot nodes, edges, subgraphs and frame records, which makes custom pipelines easier to reason about when you add post-processing, offscreen passes or specialized rendering stages.',
     image: 'images/icons/ic_render_graph.svg',
   },
   {
     title: 'Custom UI Engine',
     description: 'Create your own UI using a SwiftUI-like approach that fits naturally into AdaEngine scenes.',
+    details:
+      'AdaUI brings a SwiftUI-like declarative layer into AdaEngine with views, result builders, environment values, layout containers, gestures, animation, text fields, scroll views and navigation primitives. UI can live naturally beside game scenes, and the engine includes tooling such as a 3D AdaUI debug view for inspecting live UI trees. The goal is to make editor panels, HUDs and in-game interfaces feel native to the same Swift codebase as your gameplay.',
     code: `struct MainView: View {\n    @Environment(\\.scene) var scene\n\n    var body: some View {\n        Text("Hello, World!")\n    }\n}`,
   },
   {
     title: 'Free and Open Source',
     description: 'AdaEngine is 100% free for you. Licensed by MIT. Learn, modify or use without royalties or runtime fees.',
+    details:
+      'AdaEngine is MIT licensed and developed in the open, with source, tutorials, generated API documentation, demos and build guides available from the repository. You can study the engine internals, modify them for your project, ship without royalties or runtime fees, and contribute fixes, examples or documentation back to the community. The project is still evolving, so the roadmap is visible where the code actually lives.',
     image: 'images/icons/ic_opensource.svg',
   },
 ]
@@ -261,36 +303,8 @@ function escapeHtml(value: string): string {
     .replace(/'/g, '&#39;')
 }
 
-function highlightSwiftCode(value: string): string {
-  const keywords = new Set(['struct', 'class', 'func', 'var', 'let', 'some', 'override', 'import', 'return', 'for', 'in', 'mutating'])
-  const tokenPattern = /"[^"\\]*(?:\\.[^"\\]*)*"|@[A-Za-z_][\w.]*|\b[A-Za-z_][A-Za-z0-9_]*\b/g
-  let html = ''
-  let lastIndex = 0
-
-  value.replace(tokenPattern, (token, offset: number) => {
-    html += escapeHtml(value.slice(lastIndex, offset))
-
-    if (token.startsWith('"')) {
-      html += `<span class="syntax-string">${escapeHtml(token)}</span>`
-    } else if (token.startsWith('@')) {
-      html += `<span class="syntax-attribute">${escapeHtml(token)}</span>`
-    } else if (keywords.has(token)) {
-      html += `<span class="syntax-keyword">${escapeHtml(token)}</span>`
-    } else if (/^[A-Z]/.test(token)) {
-      html += `<span class="syntax-type">${escapeHtml(token)}</span>`
-    } else {
-      html += escapeHtml(token)
-    }
-
-    lastIndex = offset + token.length
-    return token
-  })
-
-  return html + escapeHtml(value.slice(lastIndex))
-}
-
 function featureDetails(item: FeatureItem): string {
-  return `${item.description} Designed for Swift-first workflows with a small, composable API surface and production-friendly defaults.`
+  return item.details
 }
 
 function formatDate(date: string): string {
@@ -399,6 +413,36 @@ function renderHero(): string {
         <picture class="ae-logo-header"><source srcset="${assetFor('images/ae_logo~dark.svg')}" media="(prefers-color-scheme: dark)" /><img src="${assetFor('images/ae_logo.svg')}" alt="" /></picture>
         <div class="hero-orbit hero-orbit-one"></div>
         <div class="hero-orbit hero-orbit-two"></div>
+      </div>
+    </section>
+  `
+}
+
+function renderShowcaseGallery(): string {
+  return `
+    <section class="showcase-gallery safe-area-insets" aria-labelledby="showcase-gallery-title">
+      <h2 class="showcase-gallery-title" id="showcase-gallery-title">Showcase</h2>
+      <div class="showcase-carousel" aria-roledescription="carousel" aria-label="Project screenshots">
+        ${showcaseItems
+          .map(
+            (item, index) => `
+              <article class="showcase-slide${index === 0 ? ' is-active' : ''}" aria-label="${escapeHtml(item.title)}" aria-hidden="${index === 0 ? 'false' : 'true'}">
+                <div class="showcase-slide-copy">
+                  <div class="showcase-carousel-dots" aria-label="Choose project">
+                    ${showcaseItems.map((dotItem, dotIndex) => `<button class="showcase-carousel-dot${dotIndex === index ? ' is-active' : ''}" type="button" data-showcase-index="${dotIndex}" aria-label="Show ${escapeHtml(dotItem.title)}" aria-current="${dotIndex === index ? 'true' : 'false'}"></button>`).join('')}
+                  </div>
+                  <span class="showcase-slide-kicker">${escapeHtml(item.eyebrow)}</span>
+                  <h3>${escapeHtml(item.title)}</h3>
+                  <p>${escapeHtml(item.description)}</p>
+                  <a class="showcase-slide-action" href="${item.href}" target="_blank" rel="noreferrer" tabindex="${index === 0 ? '0' : '-1'}">${escapeHtml(item.action)}</a>
+                </div>
+                <div class="showcase-slide-media">
+                  <img src="${assetFor(item.image)}" alt="${escapeHtml(item.title)} screenshot" loading="lazy" />
+                </div>
+              </article>
+            `,
+          )
+          .join('')}
       </div>
     </section>
   `
@@ -592,14 +636,18 @@ async function renderDemoPage(slug: string) {
         <section class="demo-source-section" aria-labelledby="demo-source-title">
           <div class="demo-source-heading">
             <h2 id="demo-source-title">Source</h2>
-            <a href="${sourceUrl}" target="_blank" rel="noreferrer">Open on GitHub</a>
+            <a class="demo-source-github-link" href="${sourceUrl}" target="_blank" rel="noreferrer">
+              <svg class="demo-source-github-icon" viewBox="0 0 438.549 438.549" aria-hidden="true" focusable="false"><path d="M409.132 114.573c-19.608-33.596-46.205-60.194-79.798-79.8C295.736 15.166 259.057 5.365 219.27 5.365c-39.78 0-76.47 9.804-110.062 29.408-33.596 19.605-60.192 46.204-79.8 79.8C9.803 148.168 0 184.853 0 224.63c0 47.78 13.94 90.745 41.827 128.906 27.884 38.164 63.906 64.572 108.063 79.227 5.14.954 8.945.283 11.42-1.996 2.474-2.282 3.71-5.14 3.71-8.562 0-.57-.05-5.708-.144-15.417-.098-9.71-.144-18.18-.144-25.406l-6.567 1.136c-4.187.767-9.47 1.092-15.846 1-6.375-.09-12.992-.757-19.843-2-6.854-1.23-13.23-4.085-19.13-8.558-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.9-9.233-8.992-14.56-4.093-5.33-8.232-8.944-12.42-10.847l-1.998-1.43c-1.332-.952-2.568-2.1-3.71-3.43-1.143-1.33-1.998-2.663-2.57-3.997-.57-1.335-.097-2.43 1.428-3.29 1.525-.858 4.28-1.275 8.28-1.275l5.708.853c3.807.763 8.516 3.042 14.133 6.85 5.615 3.807 10.23 8.755 13.847 14.843 4.38 7.807 9.657 13.755 15.846 17.848 6.184 4.093 12.42 6.136 18.7 6.136 6.28 0 11.703-.476 16.273-1.423 4.565-.95 8.848-2.382 12.847-4.284 1.713-12.758 6.377-22.56 13.988-29.41-10.847-1.14-20.6-2.857-29.263-5.14-8.658-2.286-17.605-5.996-26.835-11.14-9.235-5.137-16.896-11.516-22.985-19.126-6.09-7.614-11.088-17.61-14.987-29.98-3.9-12.373-5.852-26.647-5.852-42.825 0-23.035 7.52-42.637 22.557-58.817-7.044-17.318-6.38-36.732 1.997-58.24 5.52-1.715 13.706-.428 24.554 3.853 10.85 4.284 18.794 7.953 23.84 10.995 5.046 3.04 9.09 5.618 12.135 7.708 17.706-4.947 35.977-7.42 54.82-7.42s37.116 2.473 54.822 7.42l10.85-6.85c7.418-4.57 16.18-8.757 26.26-12.564 10.09-3.806 17.803-4.854 23.135-3.14 8.562 21.51 9.325 40.923 2.28 58.24 15.035 16.18 22.558 35.788 22.558 58.818 0 16.178-1.958 30.497-5.853 42.966-3.9 12.47-8.94 22.457-15.125 29.98-6.19 7.52-13.9 13.85-23.13 18.985-9.233 5.14-18.183 8.85-26.84 11.135-8.663 2.286-18.416 4.004-29.264 5.146 9.894 8.563 14.842 22.078 14.842 40.54v60.237c0 3.422 1.19 6.28 3.572 8.562 2.38 2.278 6.136 2.95 11.276 1.994 44.163-14.653 80.185-41.062 108.068-79.226 27.88-38.16 41.826-81.126 41.826-128.906-.01-39.77-9.818-76.454-29.414-110.05z"/></svg>
+              <span>Open on GitHub</span>
+              <svg class="demo-source-external-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
           </div>
           <figure class="article-code-block demo-source-code">
             <figcaption>
               <span>${escapeHtml(demo.sourcePath)}</span>
               <span>Swift</span>
             </figcaption>
-            <pre><code class="language-swift">${highlightSwiftCode(source)}</code></pre>
+            <pre class="code-with-line-numbers"><code class="${languageClass('swift')}">${renderHighlightedCodeLines(source, 'swift')}</code></pre>
           </figure>
         </section>
       </article>
@@ -639,7 +687,7 @@ function renderFeatures(): string {
 function renderFeatureContent(item: FeatureItem): string {
   return `
     <div class="engine-info-item-content">
-      ${item.image ? `<img src="${assetFor(item.image)}" alt="${item.title}" />` : `<pre><code class="swift-code">${highlightSwiftCode(item.code ?? '')}</code></pre>`}
+      ${item.image ? `<img src="${assetFor(item.image)}" alt="${item.title}" />` : `<pre><code class="swift-code ${languageClass('swift')}">${highlightCode(item.code ?? '', 'swift')}</code></pre>`}
     </div>
   `
 }
@@ -682,7 +730,7 @@ function renderFooter(): string {
           </section>
         </div>
         <div class="footer-bottom">
-          <p>© 2021-2025 Vladislav Prusakov and contributors. All rights reserved.</p>
+          <p>© 2021-2026 Vladislav Prusakov and contributors. All rights reserved.</p>
         </div>
       </div>
     </footer>
@@ -846,6 +894,7 @@ function renderHomePage() {
     <main class="page-shell">
       <div class="container content-restriction">
         ${renderHero()}
+        ${renderShowcaseGallery()}
         ${renderLatestNews()}
         ${renderFeatures()}
       </div>
@@ -940,19 +989,42 @@ async function renderRoute() {
 function setupInteractions() {
   const header = document.querySelector<HTMLElement>('.header')
   const burger = document.querySelector<HTMLButtonElement>('.burger-container')
+  let menuOpenTimer: number | undefined
+  let menuCloseTimer: number | undefined
 
-  burger?.addEventListener('click', () => {
-    const isOpen = header?.classList.toggle('menu-opened') ?? false
+  const setMenuOpen = (isOpen: boolean) => {
+    if (!header || !burger) return
+
+    window.clearTimeout(menuOpenTimer)
+    window.clearTimeout(menuCloseTimer)
+    header.classList.toggle('menu-opened', isOpen)
+    document.body.classList.toggle('menu-opened', isOpen)
     burger.setAttribute('aria-expanded', String(isOpen))
     burger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu')
-    document.body.classList.toggle('menu-opened', isOpen)
+
+    if (isOpen) {
+      header.classList.remove('menu-closing')
+      header.classList.add('menu-opening')
+      menuOpenTimer = window.setTimeout(() => {
+        header.classList.remove('menu-opening')
+      }, 620)
+      return
+    }
+
+    header.classList.remove('menu-opening')
+    header.classList.add('menu-closing')
+    menuCloseTimer = window.setTimeout(() => {
+      header.classList.remove('menu-closing')
+    }, 760)
+  }
+
+  burger?.addEventListener('click', () => {
+    setMenuOpen(!header?.classList.contains('menu-opened'))
   })
 
   document.querySelectorAll('.navigation-item-link').forEach((link) => {
     link.addEventListener('click', () => {
-      header?.classList.remove('menu-opened')
-      burger?.setAttribute('aria-expanded', 'false')
-      document.body.classList.remove('menu-opened')
+      setMenuOpen(false)
     })
   })
 
@@ -978,7 +1050,7 @@ function setupInteractions() {
       modalKicker.textContent = `Feature 0${index + 1}`
       modalVisual.innerHTML = feature.image
         ? `<img src="${assetFor(feature.image)}" alt="${escapeHtml(feature.title)}" />`
-        : `<pre><code class="swift-code">${highlightSwiftCode(feature.code ?? '')}</code></pre>`
+        : `<pre><code class="swift-code ${languageClass('swift')}">${highlightCode(feature.code ?? '', 'swift')}</code></pre>`
       modal.hidden = false
       document.body.classList.add('modal-opened')
     })
@@ -988,6 +1060,56 @@ function setupInteractions() {
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') closeModal()
   })
+
+  setupShowcaseCarousel()
+}
+
+function setupShowcaseCarousel() {
+  const carousel = document.querySelector<HTMLElement>('.showcase-carousel')
+  const slides = Array.from(document.querySelectorAll<HTMLElement>('.showcase-slide'))
+  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('.showcase-carousel-dot'))
+  if (!carousel || slides.length < 2) return
+
+  let activeIndex = 0
+  let timer: number | undefined
+
+  const setActiveSlide = (nextIndex: number) => {
+    activeIndex = (nextIndex + slides.length) % slides.length
+    slides.forEach((slide, index) => {
+      const isActive = index === activeIndex
+      slide.classList.toggle('is-active', isActive)
+      slide.setAttribute('aria-hidden', String(!isActive))
+      slide.querySelectorAll<HTMLAnchorElement>('a').forEach((link) => {
+        link.tabIndex = isActive ? 0 : -1
+      })
+    })
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('is-active', index === activeIndex)
+      dot.setAttribute('aria-current', index === activeIndex ? 'true' : 'false')
+    })
+  }
+
+  const start = () => {
+    window.clearInterval(timer)
+    timer = window.setInterval(() => {
+      setActiveSlide(activeIndex + 1)
+    }, 5000)
+  }
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      setActiveSlide(index)
+      start()
+    })
+  })
+
+  carousel.addEventListener('mouseenter', () => window.clearInterval(timer))
+  carousel.addEventListener('mouseleave', start)
+  carousel.addEventListener('focusin', () => window.clearInterval(timer))
+  carousel.addEventListener('focusout', start)
+
+  setActiveSlide(0)
+  start()
 }
 
 renderRoute()
