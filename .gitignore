@@ -8,5 +8,7 @@
 /Output
 node_modules/
 dist/
+!public/demos/**/browser-wasi-shim/dist/
+!public/demos/**/browser-wasi-shim/dist/**
 .vite/
 AdaEngine/
