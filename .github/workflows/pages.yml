@@ -66,6 +66,11 @@ jobs:
 
       - name: Build AdaEngine demos
         run: |
+          if [ ! -f AdaEngine/scripts/build-website-demos.mjs ]; then
+            echo "AdaEngine demos build script was not found; skipping demos."
+            exit 0
+          fi
+
           node AdaEngine/scripts/build-website-demos.mjs \
             --package-dir AdaEngine \
             --output public/demos \
