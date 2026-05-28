@@ -6,7 +6,7 @@ The site is built with Vite and deployed to GitHub Pages through `.github/workfl
 
 The workflow runs on pushes to `main` or `master`, installs dependencies with `npm ci`, runs `npm run test`, builds the static bundle with `npm run build`, and publishes `dist`.
 
-For project pages, the workflow sets `VITE_BASE_PATH` to `/<repository-name>/`. For user or organization pages ending in `.github.io`, it uses `/`.
+The production site is published at `https://adaengine.org/`, so the Vite base path defaults to `/`. Use `VITE_BASE_PATH` only for explicit non-root preview deployments.
 
 ## Markdown articles
 
