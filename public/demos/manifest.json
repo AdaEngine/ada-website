@@ -13,7 +13,7 @@
       "description": "A bunny stress test scene similar to bevymark.",
       "sourcePath": "Demos/2d/BunniesStressExample.swift",
       "source": "demos/bunnies-stress-example/source.swift",
-      "embed": "demos/bunnies-stress-example/index.html",
+      "embed": "demos/bunnies-stress-example/embed.html",
       "hasBuild": true
     },
     {
@@ -25,7 +25,7 @@
       "description": "A 2D AdaEngine demo built from CustomMaterialExample.",
       "sourcePath": "Demos/2d/CustomMaterialExample.swift",
       "source": "demos/custom-material-example/source.swift",
-      "embed": "demos/custom-material-example/index.html",
+      "embed": "demos/custom-material-example/embed.html",
       "hasBuild": true
     },
     {
@@ -37,7 +37,7 @@
       "description": "A 2D AdaEngine demo built from Lighting2DExample.",
       "sourcePath": "Demos/2d/Lighting2DExample.swift",
       "source": "demos/lighting2-dexample/source.swift",
-      "embed": "demos/lighting2-dexample/index.html",
+      "embed": "demos/lighting2-dexample/embed.html",
       "hasBuild": true
     },
     {
@@ -49,7 +49,7 @@
       "description": "System for rotating and translating the camera",
       "sourcePath": "Demos/2d/ManySpritesExample.swift",
       "source": "demos/many-sprites-example/source.swift",
-      "embed": "demos/many-sprites-example/index.html",
+      "embed": "demos/many-sprites-example/embed.html",
       "hasBuild": true
     },
     {
@@ -61,7 +61,7 @@
       "description": "A 2D AdaEngine demo built from SpriteExample.",
       "sourcePath": "Demos/2d/SpriteExample.swift",
       "source": "demos/sprite-example/source.swift",
-      "embed": "demos/sprite-example/index.html",
+      "embed": "demos/sprite-example/embed.html",
       "hasBuild": true
     },
     {
@@ -73,7 +73,7 @@
       "description": "A 2D AdaEngine demo built from Text2dExample.",
       "sourcePath": "Demos/2d/Text2dExample.swift",
       "source": "demos/text2d-example/source.swift",
-      "embed": "demos/text2d-example/index.html",
+      "embed": "demos/text2d-example/embed.html",
       "hasBuild": true
     },
     {
@@ -85,7 +85,7 @@
       "description": "A 2D AdaEngine demo built from TransformEntChildrenExample.",
       "sourcePath": "Demos/2d/TransformEntChildrenExample.swift",
       "source": "demos/transform-ent-children-example/source.swift",
-      "embed": "demos/transform-ent-children-example/index.html",
+      "embed": "demos/transform-ent-children-example/embed.html",
       "hasBuild": true
     },
     {
@@ -97,7 +97,7 @@
       "description": "A 2D AdaEngine demo built from TransparencyExample.",
       "sourcePath": "Demos/2d/TransparencyExample.swift",
       "source": "demos/transparency-example/source.swift",
-      "embed": "demos/transparency-example/index.html",
+      "embed": "demos/transparency-example/embed.html",
       "hasBuild": true
     },
     {
@@ -109,8 +109,8 @@
       "description": "A 2D AdaEngine demo built from WGSLExample.",
       "sourcePath": "Demos/2d/WGSLExample.swift",
       "source": "demos/wgslexample/source.swift",
-      "embed": "demos/wgslexample/index.html",
-      "hasBuild": true
+      "embed": "demos/wgslexample/embed.html",
+      "hasBuild": false
     },
     {
       "product": "SimpleCubeExample",
@@ -121,7 +121,7 @@
       "description": "A 3D AdaEngine demo built from SimpleCubeExample.",
       "sourcePath": "Demos/3d/SimpleCubeExample.swift",
       "source": "demos/simple-cube-example/source.swift",
-      "embed": "demos/simple-cube-example/index.html",
+      "embed": "demos/simple-cube-example/embed.html",
       "hasBuild": true
     },
     {
@@ -133,7 +133,7 @@
       "description": "short hand of sending event or use `sender.send(OnCollide...)`",
       "sourcePath": "Demos/Events/SimpleCollideEventExample.swift",
       "source": "demos/simple-collide-event-example/source.swift",
-      "embed": "demos/simple-collide-event-example/index.html",
+      "embed": "demos/simple-collide-event-example/embed.html",
       "hasBuild": true
     },
     {
@@ -145,7 +145,7 @@
       "description": "A Games AdaEngine demo built from SnowmanAttacksExample.",
       "sourcePath": "Demos/Games/SnowmanAttacksExample.swift",
       "source": "demos/snowman-attacks-example/source.swift",
-      "embed": "demos/snowman-attacks-example/index.html",
+      "embed": "demos/snowman-attacks-example/embed.html",
       "hasBuild": true
     },
     {
@@ -157,7 +157,7 @@
       "description": "A Input AdaEngine demo built from GamepadExample.",
       "sourcePath": "Demos/Input/GamepadExample.swift",
       "source": "demos/gamepad-example/source.swift",
-      "embed": "demos/gamepad-example/index.html",
+      "embed": "demos/gamepad-example/embed.html",
       "hasBuild": true
     },
     {
@@ -169,7 +169,7 @@
       "description": "A Scene AdaEngine demo built from CustomTileMapExample.",
       "sourcePath": "Demos/Scene/CustomTileMapExample.swift",
       "source": "demos/custom-tile-map-example/source.swift",
-      "embed": "demos/custom-tile-map-example/index.html",
+      "embed": "demos/custom-tile-map-example/embed.html",
       "hasBuild": true
     },
     {
@@ -181,7 +181,7 @@
       "description": "A Scene AdaEngine demo built from LdtkTilemapExample.",
       "sourcePath": "Demos/Scene/LdtkTilemapExample.swift",
       "source": "demos/ldtk-tilemap-example/source.swift",
-      "embed": "demos/ldtk-tilemap-example/index.html",
+      "embed": "demos/ldtk-tilemap-example/embed.html",
       "hasBuild": true
     },
     {
@@ -193,7 +193,7 @@
       "description": "A Scene AdaEngine demo built from LoadSceneExample.",
       "sourcePath": "Demos/Scene/LoadSceneExample.swift",
       "source": "demos/load-scene-example/source.swift",
-      "embed": "demos/load-scene-example/index.html",
+      "embed": "demos/load-scene-example/embed.html",
       "hasBuild": true
     },
     {
@@ -205,7 +205,7 @@
       "description": "A Scene AdaEngine demo built from ScriptableComponentExample.",
       "sourcePath": "Demos/Scene/ScriptableComponentExample.swift",
       "source": "demos/scriptable-component-example/source.swift",
-      "embed": "demos/scriptable-component-example/index.html",
+      "embed": "demos/scriptable-component-example/embed.html",
       "hasBuild": true
     },
     {
@@ -217,7 +217,7 @@
       "description": "A UI AdaEngine demo built from AnimatedTextRendererExample.",
       "sourcePath": "Demos/UI/AnimatedTextRendererExample.swift",
       "source": "demos/animated-text-renderer-example/source.swift",
-      "embed": "demos/animated-text-renderer-example/index.html",
+      "embed": "demos/animated-text-renderer-example/embed.html",
       "hasBuild": true
     },
     {
@@ -229,7 +229,7 @@
       "description": "A UI AdaEngine demo built from ButtonExample.",
       "sourcePath": "Demos/UI/ButtonExample.swift",
       "source": "demos/button-example/source.swift",
-      "embed": "demos/button-example/index.html",
+      "embed": "demos/button-example/embed.html",
       "hasBuild": true
     },
     {
@@ -241,7 +241,7 @@
       "description": "A UI AdaEngine demo built from KanbanBoardExample.",
       "sourcePath": "Demos/UI/KanbanBoardExample.swift",
       "source": "demos/kanban-board-example/source.swift",
-      "embed": "demos/kanban-board-example/index.html",
+      "embed": "demos/kanban-board-example/embed.html",
       "hasBuild": true
     },
     {
@@ -253,7 +253,7 @@
       "description": "A UI AdaEngine demo built from NativeViewExample.",
       "sourcePath": "Demos/UI/NativeViewExample.swift",
       "source": "demos/native-view-example/source.swift",
-      "embed": "demos/native-view-example/index.html",
+      "embed": "demos/native-view-example/embed.html",
       "hasBuild": true
     },
     {
@@ -265,7 +265,7 @@
       "description": "A UI AdaEngine demo built from SceneViewExample.",
       "sourcePath": "Demos/UI/SceneViewExample.swift",
       "source": "demos/scene-view-example/source.swift",
-      "embed": "demos/scene-view-example/index.html",
+      "embed": "demos/scene-view-example/embed.html",
       "hasBuild": true
     },
     {
@@ -277,7 +277,7 @@
       "description": "A UI AdaEngine demo built from TextFieldExample.",
       "sourcePath": "Demos/UI/TextFieldExample.swift",
       "source": "demos/text-field-example/source.swift",
-      "embed": "demos/text-field-example/index.html",
+      "embed": "demos/text-field-example/embed.html",
       "hasBuild": true
     },
     {
@@ -289,7 +289,7 @@
       "description": "A UI AdaEngine demo built from UITestSceneExample.",
       "sourcePath": "Demos/UI/UITestSceneExample.swift",
       "source": "demos/uitest-scene-example/source.swift",
-      "embed": "demos/uitest-scene-example/index.html",
+      "embed": "demos/uitest-scene-example/embed.html",
       "hasBuild": true
     }
   ]
