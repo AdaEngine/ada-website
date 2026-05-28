@@ -95,6 +95,7 @@ async function run() {
     updateLoader(68, "Loading resources…");
     const response = await fetch(new URL("./ada-resource-manifest.json", import.meta.url));
     const manifest = response.ok ? await response.json() : [];
+    installResourceFetchResolver(manifest);
     const root = new Map();
 
     let loadedResources = 0;
@@ -124,6 +125,43 @@ async function run() {
       new PreopenDirectory("/", rootEntries()),
       new PreopenDirectory(".", rootEntries()),
     ];
+  }
+
+  function installResourceFetchResolver(manifest) {
+    const originalFetch = globalThis.fetch?.bind(globalThis);
+    if (!originalFetch || globalThis.__adaResourceFetchResolverInstalled) return;
+
+    const resourceURLsByPath = new Map();
+    for (const entry of manifest) {
+      if (!entry || typeof entry.path !== "string" || typeof entry.url !== "string") continue;
+      const resourceURL = new URL(entry.url, import.meta.url).href;
+      const relativePath = entry.path.replace(/^\/+/, "");
+      resourceURLsByPath.set(entry.path, resourceURL);
+      resourceURLsByPath.set(relativePath, resourceURL);
+      resourceURLsByPath.set(`/${relativePath}`, resourceURL);
+      resourceURLsByPath.set(`./${relativePath}`, resourceURL);
+    }
+
+    const resolveResourceURL = (input) => {
+      const rawURL = typeof input === "string" || input instanceof URL ? String(input) : input?.url;
+      if (!rawURL) return null;
+      if (resourceURLsByPath.has(rawURL)) return resourceURLsByPath.get(rawURL);
+      const pathname = new URL(rawURL, import.meta.url).pathname.replace(/^\/+/, "");
+      if (resourceURLsByPath.has(pathname)) return resourceURLsByPath.get(pathname);
+      for (const [resourcePath, resourceURL] of resourceURLsByPath) {
+        if (pathname.endsWith(resourcePath.replace(/^\/+/, ""))) return resourceURL;
+      }
+      return null;
+    };
+
+    globalThis.fetch = (input, init) => {
+      const resourceURL = resolveResourceURL(input);
+      if (resourceURL) {
+        return originalFetch(resourceURL, init);
+      }
+      return originalFetch(input, init);
+    };
+    globalThis.__adaResourceFetchResolverInstalled = true;
   }
 
   const resourcePreopens = await makeResourcePreopenDirectories();
