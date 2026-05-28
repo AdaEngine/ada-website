@@ -91,7 +91,7 @@ async function run() {
   globalThis.__adaWebGPUAdapter = adapter;
   globalThis.__adaWebGPUDevice = device;
 
-  async function makeResourcePreopen() {
+  async function makeResourcePreopenDirectories() {
     updateLoader(68, "Loading resources…");
     const response = await fetch(new URL("./ada-resource-manifest.json", import.meta.url));
     const manifest = response.ok ? await response.json() : [];
@@ -119,19 +119,20 @@ async function run() {
     const materialize = (map) => new Directory(
       [...map.entries()].map(([name, value]) => [name, value instanceof Map ? materialize(value) : value])
     );
-    return new PreopenDirectory(
-      "/",
-      [...root.entries()].map(([name, value]) => [name, value instanceof Map ? materialize(value) : value])
-    );
+    const rootEntries = () => [...root.entries()].map(([name, value]) => [name, value instanceof Map ? materialize(value) : value]);
+    return [
+      new PreopenDirectory("/", rootEntries()),
+      new PreopenDirectory(".", rootEntries()),
+    ];
   }
 
-  const resourcePreopen = await makeResourcePreopen();
+  const resourcePreopens = await makeResourcePreopenDirectories();
   updateLoader(82, "Configuring WASI…");
   const wasi = new WASI(["UITestSceneExample.wasm"], [], [
     new OpenFile(new File([])),
     ConsoleStdout.lineBuffered((line) => console.log(line)),
     ConsoleStdout.lineBuffered((line) => console.warn(line)),
-    resourcePreopen,
+    ...resourcePreopens,
   ], { debug: false });
   const importObject = {
     wasi_snapshot_preview1: wasi.wasiImport,
