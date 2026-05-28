@@ -1,5 +1,6 @@
 import './style.css'
 import { articles, getArticleBySlug } from './content'
+import { findDemoBySlug, groupDemosByTag, loadDemoSource, loadDemosManifest, type DemoEntry, type DemosManifest } from './demos'
 import { hrefFor as createHref, resolveRoute, type StaticPageName } from './routing'
 
 const app = document.querySelector<HTMLDivElement>('#app') ?? failMissingApp()
@@ -338,10 +339,11 @@ async function setupGitHubStars() {
 
 function renderHeader(): string {
   const currentRoute = resolveRoute(window.location.pathname, import.meta.env.BASE_URL)
-  const activePage = currentRoute.name === 'static-page' ? currentRoute.page : currentRoute.name
+  const activePage = currentRoute.name === 'static-page' ? currentRoute.page : currentRoute.name === 'demo' ? 'demos' : currentRoute.name
   const navItems = [
     { label: 'Home', href: hrefFor('/'), active: activePage === 'home' },
     ...(articles.length ? [{ label: 'News', href: hrefFor('/blog'), active: activePage === 'blog' }] : []),
+    { label: 'Demos', href: hrefFor('/demos'), active: activePage === 'demos' },
     { label: 'Learn', href: hrefFor('/learn'), active: activePage === 'learn' },
     { label: 'Socials', href: hrefFor('/community'), active: activePage === 'community' },
     { label: 'Donate', href: hrefFor('/donate'), active: activePage === 'donate' },
@@ -494,6 +496,113 @@ function renderBlogPage() {
               </div>`
         }
       </section>
+    </main>
+    ${renderFooter()}
+  `
+}
+
+function renderDemosPage(manifest: DemosManifest) {
+  const groups = groupDemosByTag(manifest.demos)
+
+  app.innerHTML = `
+    ${renderHeader()}
+    <main class="page-shell demos-page-shell">
+      <section class="container content-restriction demos-page">
+        <header class="demos-hero">
+          <p class="eyebrow">Live WebAssembly examples</p>
+          <h1>AdaEngine Demos</h1>
+          <p>Explore browser builds generated from the Swift files in the AdaEngine repository. Each demo page includes the embedded build and the source that produced it.</p>
+        </header>
+        ${
+          groups.length
+            ? `<div class="demo-groups">
+                ${groups
+                  .map(
+                    (group) => `
+                      <section class="demo-group" aria-labelledby="demo-group-${escapeHtml(group.tag)}">
+                        <div class="demo-group-heading">
+                          <h2 id="demo-group-${escapeHtml(group.tag)}">${escapeHtml(group.title)}</h2>
+                          <span>${group.demos.length} ${group.demos.length === 1 ? 'demo' : 'demos'}</span>
+                        </div>
+                        <div class="demo-card-grid">
+                          ${group.demos.map(renderDemoCard).join('')}
+                        </div>
+                      </section>
+                    `,
+                  )
+                  .join('')}
+              </div>`
+            : `<div class="demo-empty">
+                <h2>No demos published yet</h2>
+                <p>The website will show demos after the AdaEngine export workflow publishes the first manifest.</p>
+              </div>`
+        }
+      </section>
+    </main>
+    ${renderFooter()}
+  `
+}
+
+function renderDemoCard(demo: DemoEntry): string {
+  return `
+    <a class="demo-card" href="${hrefFor(`/demos/${demo.slug}`)}">
+      <span class="demo-card-tag">${escapeHtml(demo.tagTitle)}</span>
+      <h3>${escapeHtml(demo.title)}</h3>
+      <p>${escapeHtml(demo.description)}</p>
+      <span class="demo-card-meta">${escapeHtml(demo.sourcePath)}</span>
+      ${demo.hasBuild ? '<span class="demo-card-action">Open demo</span>' : '<span class="demo-card-action demo-card-action-muted">Source only</span>'}
+    </a>
+  `
+}
+
+async function renderDemoPage(slug: string) {
+  const manifest = await loadDemosManifest()
+  const demo = findDemoBySlug(manifest, slug)
+
+  if (!demo) {
+    renderNotFound('Demo not found', 'Check the address or return to the demos page.')
+    return
+  }
+
+  const source = await loadDemoSource(demo)
+  const repositoryRef = manifest.commit ?? 'main'
+  const sourceUrl = `https://github.com/${manifest.repository}/blob/${repositoryRef}/${demo.sourcePath}`
+
+  app.innerHTML = `
+    ${renderHeader()}
+    <main class="page-shell demo-detail-shell">
+      <article class="container content-restriction demo-detail-page">
+        <header class="demo-detail-hero">
+          <a class="article-back-link" href="${hrefFor('/demos')}">Back to Demos</a>
+          <span class="demo-card-tag">${escapeHtml(demo.tagTitle)}</span>
+          <h1>${escapeHtml(demo.title)}</h1>
+          <p>${escapeHtml(demo.description)}</p>
+          <a class="demo-source-link" href="${sourceUrl}" target="_blank" rel="noreferrer">${escapeHtml(demo.sourcePath)}</a>
+        </header>
+        ${
+          demo.hasBuild
+            ? `<section class="demo-player" aria-label="${escapeHtml(demo.title)} embedded demo">
+                <iframe title="${escapeHtml(demo.title)}" src="${assetFor(demo.embed)}" allow="fullscreen; gamepad; keyboard-map; clipboard-read; clipboard-write; webgpu"></iframe>
+              </section>`
+            : `<section class="demo-player demo-player-empty">
+                <h2>Build artifact is not available</h2>
+                <p>This demo is listed in the manifest, but the WebAssembly export was not published.</p>
+              </section>`
+        }
+        <section class="demo-source-section" aria-labelledby="demo-source-title">
+          <div class="demo-source-heading">
+            <h2 id="demo-source-title">Source</h2>
+            <a href="${sourceUrl}" target="_blank" rel="noreferrer">Open on GitHub</a>
+          </div>
+          <figure class="article-code-block demo-source-code">
+            <figcaption>
+              <span>${escapeHtml(demo.sourcePath)}</span>
+              <span>Swift</span>
+            </figcaption>
+            <pre><code class="language-swift">${highlightSwiftCode(source)}</code></pre>
+          </figure>
+        </section>
+      </article>
     </main>
     ${renderFooter()}
   `
@@ -792,7 +901,7 @@ function renderNotFound(title = 'Page not found', description = 'This route does
   `
 }
 
-function renderRoute() {
+async function renderRoute() {
   const route = resolveRoute(window.location.pathname, import.meta.env.BASE_URL)
 
   if (route.name === 'home') {
@@ -802,6 +911,16 @@ function renderRoute() {
 
   if (route.name === 'blog') {
     renderBlogPage()
+    return
+  }
+
+  if (route.name === 'demos') {
+    renderDemosPage(await loadDemosManifest())
+    return
+  }
+
+  if (route.name === 'demo') {
+    await renderDemoPage(route.slug)
     return
   }
 
@@ -872,5 +991,12 @@ function setupInteractions() {
 }
 
 renderRoute()
-setupInteractions()
-setupGitHubStars()
+  .then(() => {
+    setupInteractions()
+    setupGitHubStars()
+  })
+  .catch((error) => {
+    console.error(error)
+    renderNotFound('Page failed to load', 'Refresh the page or try again in a moment.')
+    setupInteractions()
+  })

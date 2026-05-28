@@ -3,6 +3,8 @@ export type StaticPageName = 'learn' | 'community' | 'donate'
 export type Route =
   | { name: 'home' }
   | { name: 'blog' }
+  | { name: 'demos' }
+  | { name: 'demo'; slug: string }
   | { name: 'static-page'; page: StaticPageName }
   | { name: 'article'; slug: string }
   | { name: 'not-found'; path: string }
@@ -56,6 +58,16 @@ export function resolveRoute(pathname: string, baseUrl: string): Route {
 
   if (path === '/blog') {
     return { name: 'blog' }
+  }
+
+  if (path === '/demos') {
+    return { name: 'demos' }
+  }
+
+  const demoMatch = path.match(/^\/demos\/([^/]+)$/)
+
+  if (demoMatch) {
+    return { name: 'demo', slug: decodeURIComponent(demoMatch[1]) }
   }
 
   const staticPage = staticPages.find((page) => path === `/${page}`)
