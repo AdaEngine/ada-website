@@ -626,6 +626,14 @@ async function renderDemoPage(slug: string) {
         ${
           demo.hasBuild
             ? `<section class="demo-player" aria-label="${escapeHtml(demo.title)} embedded demo">
+                <button class="demo-player-fullscreen" type="button" aria-label="Open demo fullscreen" title="Open fullscreen" data-demo-fullscreen>
+                  <svg class="demo-player-fullscreen-enter-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <svg class="demo-player-fullscreen-exit-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
                 <iframe title="${escapeHtml(demo.title)}" src="${assetFor(demo.embed)}" allow="fullscreen; gamepad; keyboard-map; clipboard-read; clipboard-write; webgpu"></iframe>
               </section>`
             : `<section class="demo-player demo-player-empty">
@@ -1062,6 +1070,150 @@ function setupInteractions() {
   })
 
   setupShowcaseCarousel()
+  setupDemoFullscreen()
+  setupDemoAmbientLight()
+}
+
+function setupDemoFullscreen() {
+  const player = document.querySelector<HTMLElement>('.demo-player:not(.demo-player-empty)')
+  const button = player?.querySelector<HTMLButtonElement>('[data-demo-fullscreen]')
+  if (!player || !button) return
+
+  const fullscreenDocument = document as Document & {
+    webkitFullscreenElement?: Element | null
+    webkitFullscreenEnabled?: boolean
+    webkitExitFullscreen?: () => Promise<void> | void
+  }
+  const fullscreenPlayer = player as HTMLElement & {
+    webkitRequestFullscreen?: () => Promise<void> | void
+  }
+  const canUseFullscreen =
+    document.fullscreenEnabled ||
+    fullscreenDocument.webkitFullscreenEnabled ||
+    typeof player.requestFullscreen === 'function' ||
+    typeof fullscreenPlayer.webkitRequestFullscreen === 'function'
+
+  if (!canUseFullscreen) {
+    button.hidden = true
+    return
+  }
+
+  const fullscreenElement = () => document.fullscreenElement ?? fullscreenDocument.webkitFullscreenElement ?? null
+
+  const requestPlayerFullscreen = async () => {
+    if (typeof player.requestFullscreen === 'function') {
+      await player.requestFullscreen()
+      return
+    }
+
+    await fullscreenPlayer.webkitRequestFullscreen?.()
+  }
+
+  const exitPlayerFullscreen = async () => {
+    if (typeof document.exitFullscreen === 'function') {
+      await document.exitFullscreen()
+      return
+    }
+
+    await fullscreenDocument.webkitExitFullscreen?.()
+  }
+
+  const updateFullscreenState = () => {
+    const isFullscreen = fullscreenElement() === player
+    player.classList.toggle('is-fullscreen', isFullscreen)
+    button.setAttribute('aria-label', isFullscreen ? 'Exit demo fullscreen' : 'Open demo fullscreen')
+    button.title = isFullscreen ? 'Exit fullscreen' : 'Open fullscreen'
+  }
+
+  button.addEventListener('click', async () => {
+    try {
+      if (fullscreenElement() === player) {
+        await exitPlayerFullscreen()
+        return
+      }
+
+      await requestPlayerFullscreen()
+    } catch (error) {
+      console.error('Failed to toggle demo fullscreen', error)
+    }
+  })
+
+  document.addEventListener('fullscreenchange', updateFullscreenState)
+  document.addEventListener('webkitfullscreenchange', updateFullscreenState)
+  updateFullscreenState()
+}
+
+function setupDemoAmbientLight() {
+  const player = document.querySelector<HTMLElement>('.demo-player:not(.demo-player-empty)')
+  const iframe = player?.querySelector<HTMLIFrameElement>('iframe')
+  if (!player || !iframe) return
+
+  const sampler = document.createElement('canvas')
+  sampler.width = 1
+  sampler.height = 1
+  const context = sampler.getContext('2d', { willReadFrequently: true })
+  if (!context) return
+
+  let frameHandle = 0
+  let idleFrames = 0
+  let ambientColor = { red: 34, green: 211, blue: 238 }
+
+  const updateAmbientColor = (red: number, green: number, blue: number) => {
+    ambientColor = {
+      red: Math.round(ambientColor.red * 0.7 + red * 0.3),
+      green: Math.round(ambientColor.green * 0.7 + green * 0.3),
+      blue: Math.round(ambientColor.blue * 0.7 + blue * 0.3),
+    }
+    player.style.setProperty('--demo-ambient', `${ambientColor.red} ${ambientColor.green} ${ambientColor.blue}`)
+    player.classList.add('has-ambient-light')
+  }
+
+  const handleAmbientMessage = (event: MessageEvent) => {
+    if (event.origin !== window.location.origin) return
+
+    const data = event.data
+    if (!data || typeof data !== 'object' || data.type !== 'ada-demo-ambient') return
+    if (!Array.isArray(data.color) || data.color.length < 3) return
+
+    const [red, green, blue] = data.color.map(Number)
+    if (![red, green, blue].every(Number.isFinite)) return
+
+    updateAmbientColor(red, green, blue)
+  }
+
+  const sampleAmbient = () => {
+    try {
+      const canvas = iframe.contentDocument?.querySelector('canvas')
+      if (!canvas || canvas.width <= 0 || canvas.height <= 0) {
+        idleFrames += 1
+        frameHandle = window.setTimeout(sampleAmbient, idleFrames < 120 ? 250 : 1000)
+        return
+      }
+
+      const sampleX = Math.max(0, Math.floor(canvas.width * 0.5))
+      const sampleY = Math.max(0, Math.floor(canvas.height * 0.42))
+      context.clearRect(0, 0, 1, 1)
+      context.drawImage(canvas, sampleX, sampleY, 1, 1, 0, 0, 1, 1)
+
+      const [red, green, blue, alpha] = context.getImageData(0, 0, 1, 1).data
+      if (alpha > 0 && red + green + blue > 8) {
+        updateAmbientColor(red, green, blue)
+      }
+      idleFrames = 0
+      frameHandle = window.setTimeout(sampleAmbient, 450)
+    } catch {
+      idleFrames += 1
+      frameHandle = window.setTimeout(sampleAmbient, idleFrames < 12 ? 450 : 1200)
+    }
+  }
+
+  iframe.addEventListener('load', () => {
+    window.clearTimeout(frameHandle)
+    idleFrames = 0
+    frameHandle = window.setTimeout(sampleAmbient, 500)
+  })
+  window.addEventListener('message', handleAmbientMessage)
+  frameHandle = window.setTimeout(sampleAmbient, 500)
 }
 
 function setupShowcaseCarousel() {

@@ -1,0 +1,310 @@
+[
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Info.plist",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Info.plist"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/FullScreenShader.frag.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/FullScreenShader.frag.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/FullScreenShader.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/FullScreenShader.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/FullScreenShader.vert.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/FullScreenShader.vert.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/circle.frag.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/circle.frag.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/circle.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/circle.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/circle.vert.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/circle.vert.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/glass.frag.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/glass.frag.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/glass.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/glass.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/glass.vert.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/glass.vert.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/gradient.frag.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/gradient.frag.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/gradient.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/gradient.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/gradient.vert.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/gradient.vert.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/line.frag.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/line.frag.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/line.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/line.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/line.vert.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/line.vert.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/quad.frag.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/quad.frag.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/quad.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/quad.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaCorePipelines.resources\/Shaders\/quad.vert.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaCorePipelines.resources\/Shaders\/quad.vert.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaEngine.resources\/Images\/AdaEngineLogo.png",
+    "url" : ".\/resources\/AdaEngine_AdaEngine.resources\/Images\/AdaEngineLogo.png"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaEngine.resources\/Info.plist",
+    "url" : ".\/resources\/AdaEngine_AdaEngine.resources\/Info.plist"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Info.plist",
+    "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Info.plist"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/Materials\/circle_canvas_material.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/Materials\/circle_canvas_material.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/Materials\/color_canvas_material.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/Materials\/color_canvas_material.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/Public\/CanvasMaterial.frag",
+    "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/Public\/CanvasMaterial.frag"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/Public\/CanvasMaterial.vert",
+    "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/Public\/CanvasMaterial.vert"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/Public\/UIShaderMaterial.frag",
+    "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/Public\/UIShaderMaterial.frag"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/Public\/View.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/Public\/View.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/mesh2d\/mesh2d.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/mesh2d\/mesh2d.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/mesh2d\/mesh2d_functions.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/mesh2d\/mesh2d_functions.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/mesh2d\/mesh2d_uniform.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/mesh2d\/mesh2d_uniform.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/mesh2d\/mesh2d_vertex_output.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/mesh2d\/mesh2d_vertex_output.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaSprite.resources\/Assets\/light2d_composite.frag.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaSprite.resources\/Assets\/light2d_composite.frag.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaSprite.resources\/Assets\/light2d_composite.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaSprite.resources\/Assets\/light2d_composite.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaSprite.resources\/Assets\/light2d_composite.vert.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaSprite.resources\/Assets\/light2d_composite.vert.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaSprite.resources\/Assets\/light2d_directional.frag.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaSprite.resources\/Assets\/light2d_directional.frag.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaSprite.resources\/Assets\/light2d_directional.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaSprite.resources\/Assets\/light2d_directional.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaSprite.resources\/Assets\/light2d_directional.vert.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaSprite.resources\/Assets\/light2d_directional.vert.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaSprite.resources\/Assets\/light2d_point.frag.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaSprite.resources\/Assets\/light2d_point.frag.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaSprite.resources\/Assets\/light2d_point.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaSprite.resources\/Assets\/light2d_point.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaSprite.resources\/Assets\/light2d_point.vert.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaSprite.resources\/Assets\/light2d_point.vert.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaSprite.resources\/Assets\/sprite.frag.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaSprite.resources\/Assets\/sprite.frag.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaSprite.resources\/Assets\/sprite.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaSprite.resources\/Assets\/sprite.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaSprite.resources\/Assets\/sprite.vert.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaSprite.resources\/Assets\/sprite.vert.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaSprite.resources\/Info.plist",
+    "url" : ".\/resources\/AdaEngine_AdaSprite.resources\/Info.plist"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/LICENSE.txt",
+    "url" : ".\/resources\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/LICENSE.txt"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-Bold.ttf",
+    "url" : ".\/resources\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-Bold.ttf"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-BoldItalic.ttf",
+    "url" : ".\/resources\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-BoldItalic.ttf"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-ExtraBoldItalic.ttf",
+    "url" : ".\/resources\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-ExtraBoldItalic.ttf"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-Heavy.ttf",
+    "url" : ".\/resources\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-Heavy.ttf"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-Italic.ttf",
+    "url" : ".\/resources\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-Italic.ttf"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-Light.ttf",
+    "url" : ".\/resources\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-Light.ttf"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-LightItalic.ttf",
+    "url" : ".\/resources\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-LightItalic.ttf"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-Regular.ttf",
+    "url" : ".\/resources\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-Regular.ttf"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-Semibold.ttf",
+    "url" : ".\/resources\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-Semibold.ttf"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-SemiboldItalic.ttf",
+    "url" : ".\/resources\/AdaEngine_AdaText.resources\/Assets\/Fonts\/opensans\/OpenSans-SemiboldItalic.ttf"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaText.resources\/Assets\/text.frag.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaText.resources\/Assets\/text.frag.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaText.resources\/Assets\/text.glsl",
+    "url" : ".\/resources\/AdaEngine_AdaText.resources\/Assets\/text.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaText.resources\/Assets\/text.vert.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaText.resources\/Assets\/text.vert.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaText.resources\/Info.plist",
+    "url" : ".\/resources\/AdaEngine_AdaText.resources\/Info.plist"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Info.plist",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Info.plist"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/Subscene.ascn",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/Subscene.ascn"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/TestScene.ascn",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/TestScene.ascn"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/TestTileMap.ldtk",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/TestTileMap.ldtk"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/WindlessSlopes.wav",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/WindlessSlopes.wav"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/characters_packed.png",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/characters_packed.png"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/custom_material.frag.wgsl",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/custom_material.frag.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/custom_material.glsl",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/custom_material.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/custom_material_vertex.glsl",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/custom_material_vertex.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/custom_material_vertex.vert.wgsl",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/custom_material_vertex.vert.wgsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/dog.png",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/dog.png"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/explosion-1.wav",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/explosion-1.wav"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/explosion-2.wav",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/explosion-2.wav"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/explosion.png",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/explosion.png"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/laserShoot.wav",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/laserShoot.wav"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/tiles.png",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/tiles.png"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_SpriteExample.resources\/Resources\/tiles_packed.png",
+    "url" : ".\/resources\/AdaEngine_SpriteExample.resources\/Resources\/tiles_packed.png"
+  }
+]
