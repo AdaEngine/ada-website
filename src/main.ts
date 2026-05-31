@@ -634,7 +634,7 @@ async function renderDemoPage(slug: string) {
                     <path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </button>
-                <iframe title="${escapeHtml(demo.title)}" src="${assetFor(demo.embed)}" allow="fullscreen; gamepad; keyboard-map; clipboard-read; clipboard-write; webgpu"></iframe>
+                <iframe title="${escapeHtml(demo.title)}" src="${assetFor(demo.embed)}" allow="fullscreen; gamepad; keyboard-map; clipboard-read; clipboard-write; webgpu" allowfullscreen webkitallowfullscreen></iframe>
               </section>`
             : `<section class="demo-player demo-player-empty">
                 <h2>Build artifact is not available</h2>
@@ -1087,29 +1087,67 @@ function setupDemoFullscreen() {
   const fullscreenPlayer = player as HTMLElement & {
     webkitRequestFullscreen?: () => Promise<void> | void
   }
-  const canUseFullscreen =
+  const canUseNativeFullscreen =
     document.fullscreenEnabled ||
     fullscreenDocument.webkitFullscreenEnabled ||
     typeof player.requestFullscreen === 'function' ||
     typeof fullscreenPlayer.webkitRequestFullscreen === 'function'
 
-  if (!canUseFullscreen) {
-    button.hidden = true
-    return
+  const fullscreenElement = () => document.fullscreenElement ?? fullscreenDocument.webkitFullscreenElement ?? null
+  const isNativeFullscreen = () => fullscreenElement() === player
+  let isViewportFullscreen = false
+
+  const enterViewportFullscreen = () => {
+    isViewportFullscreen = true
+    player.classList.add('is-viewport-fullscreen')
+    document.body.classList.add('demo-viewport-fullscreen-open')
+    updateFullscreenState()
   }
 
-  const fullscreenElement = () => document.fullscreenElement ?? fullscreenDocument.webkitFullscreenElement ?? null
+  const exitViewportFullscreen = () => {
+    isViewportFullscreen = false
+    player.classList.remove('is-viewport-fullscreen')
+    document.body.classList.remove('demo-viewport-fullscreen-open')
+    updateFullscreenState()
+  }
 
-  const requestPlayerFullscreen = async () => {
-    if (typeof player.requestFullscreen === 'function') {
-      await player.requestFullscreen()
-      return
+  const requestNativeFullscreen = async () => {
+    if (!canUseNativeFullscreen) {
+      return false
     }
 
-    await fullscreenPlayer.webkitRequestFullscreen?.()
+    if (typeof player.requestFullscreen === 'function') {
+      await player.requestFullscreen()
+      return true
+    }
+
+    if (typeof fullscreenPlayer.webkitRequestFullscreen === 'function') {
+      await fullscreenPlayer.webkitRequestFullscreen()
+      return true
+    }
+
+    return false
+  }
+
+  const requestPlayerFullscreen = async () => {
+    try {
+      const requestedNativeFullscreen = await requestNativeFullscreen()
+      if (requestedNativeFullscreen) {
+        return
+      }
+    } catch (error) {
+      console.warn('Native fullscreen is unavailable, using viewport fullscreen fallback', error)
+    }
+
+    enterViewportFullscreen()
   }
 
   const exitPlayerFullscreen = async () => {
+    if (isViewportFullscreen) {
+      exitViewportFullscreen()
+      return
+    }
+
     if (typeof document.exitFullscreen === 'function') {
       await document.exitFullscreen()
       return
@@ -1119,7 +1157,7 @@ function setupDemoFullscreen() {
   }
 
   const updateFullscreenState = () => {
-    const isFullscreen = fullscreenElement() === player
+    const isFullscreen = isNativeFullscreen() || isViewportFullscreen
     player.classList.toggle('is-fullscreen', isFullscreen)
     button.setAttribute('aria-label', isFullscreen ? 'Exit demo fullscreen' : 'Open demo fullscreen')
     button.title = isFullscreen ? 'Exit fullscreen' : 'Open fullscreen'
@@ -1127,7 +1165,7 @@ function setupDemoFullscreen() {
 
   button.addEventListener('click', async () => {
     try {
-      if (fullscreenElement() === player) {
+      if (isNativeFullscreen() || isViewportFullscreen) {
         await exitPlayerFullscreen()
         return
       }
@@ -1140,6 +1178,11 @@ function setupDemoFullscreen() {
 
   document.addEventListener('fullscreenchange', updateFullscreenState)
   document.addEventListener('webkitfullscreenchange', updateFullscreenState)
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && isViewportFullscreen) {
+      exitViewportFullscreen()
+    }
+  })
   updateFullscreenState()
 }
 

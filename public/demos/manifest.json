@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-05-28T18:57:40.054Z",
+  "generatedAt": "2026-05-31T08:56:22.547Z",
   "repository": "AdaEngine/AdaEngine",
-  "commit": "ec01a517bea718051499200cf07380e36afaaa9e",
+  "commit": "3ec2af2e8d448a9b8ff394d66844d08396aa6ea8",
   "demos": [
     {
       "product": "BunniesStressExample",
@@ -110,7 +110,7 @@
       "sourcePath": "Demos/2d/WGSLExample.swift",
       "source": "demos/wgslexample/source.swift",
       "embed": "demos/wgslexample/embed.html",
-      "hasBuild": false
+      "hasBuild": true
     },
     {
       "product": "SimpleCubeExample",

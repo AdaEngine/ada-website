@@ -1,5 +1,9 @@
 import assert from 'node:assert/strict'
+import { readdirSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { hrefFor, normalizeBasePath, normalizeRoutePath, resolveRoute } from './routing.ts'
+
+const analyticsScript = '<script defer src="https://metrics.adaengine.org/script.js" data-website-id="560e03b9-085c-4df4-b9e8-2beb7e76b575"></script>'
 
 assert.equal(normalizeBasePath('/adawebsite/'), '/adawebsite')
 assert.equal(normalizeBasePath('/'), '')
@@ -36,3 +40,17 @@ assert.deepEqual(resolveRoute('/adawebsite/articles/release-notes', '/adawebsite
   slug: 'release-notes',
 })
 assert.deepEqual(resolveRoute('/adawebsite/missing', '/adawebsite/'), { name: 'not-found', path: '/missing' })
+
+assert.match(readFileSync('index.html', 'utf8'), new RegExp(analyticsScript.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))
+
+for (const demo of readdirSync('public/demos', { withFileTypes: true })) {
+  if (!demo.isDirectory()) continue
+
+  const embedPath = join('public/demos', demo.name, 'embed.html')
+  try {
+    assert.match(readFileSync(embedPath, 'utf8'), new RegExp(analyticsScript.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), embedPath)
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') continue
+    throw error
+  }
+}

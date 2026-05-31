@@ -1,0 +1,6 @@
+{
+  "product": "WGSLExample",
+  "wasm": "WGSLExample.wasm",
+  "canvasRoot": "ada-canvas-root",
+  "assets": "Assets"
+}

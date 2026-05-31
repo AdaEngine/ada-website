@@ -76,6 +76,10 @@ body {
   color: var(--fg);
   line-height: 1.6;
 }
+body.demo-viewport-fullscreen-open {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
 body::before {
   content: '';
   position: fixed;
@@ -1462,18 +1466,26 @@ pre code { display: block; background: rgba(7, 10, 18, .72); border: 1px solid r
 .demo-player.is-fullscreen {
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   min-height: 100vh;
+  min-height: 100dvh;
   aspect-ratio: auto;
   border: 0;
   border-radius: 0;
   background: #000;
 }
+.demo-player.is-viewport-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  box-shadow: none;
+}
 .demo-player.is-fullscreen::before {
   display: none;
 }
 .demo-player.is-fullscreen .demo-player-fullscreen {
-  top: 18px;
-  right: 18px;
+  top: calc(14px + env(safe-area-inset-top));
+  right: calc(14px + env(safe-area-inset-right));
   background:
     linear-gradient(145deg, rgba(255, 255, 255, .34), rgba(255, 255, 255, .12)),
     rgba(8, 12, 20, .42);
@@ -1752,9 +1764,41 @@ pre code { display: block; background: rgba(7, 10, 18, .72); border: 1px solid r
   .demo-group-heading { align-items: flex-start; flex-direction: column; gap: 6px; }
   .demo-card-grid { grid-template-columns: 1fr; }
   .demo-card { min-height: 0; padding: 22px; }
-  .demo-player { min-height: 320px; aspect-ratio: 1 / 1; }
+  .demo-player { min-height: 320px; aspect-ratio: 1 / 1; overflow: hidden; }
+  .demo-player::before {
+    inset: 0;
+    border-radius: inherit;
+    filter: blur(32px) saturate(1.24);
+  }
+  .demo-player-fullscreen {
+    top: 12px;
+    right: 12px;
+    width: 52px;
+    height: 52px;
+  }
+  .demo-player-fullscreen:hover,
+  .demo-player-fullscreen:focus-visible {
+    transform: translateY(-1px) scale(1.03);
+  }
+  .demo-player-fullscreen svg {
+    width: 22px;
+    height: 22px;
+  }
   .demo-source-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
   .demo-source-code figcaption { align-items: flex-start; flex-direction: column; justify-content: center; gap: 4px; min-height: 66px; }
+  .demo-source-code pre {
+    padding: 14px;
+  }
+  .demo-source-code code {
+    font-size: 12px;
+    line-height: 1.38;
+  }
+  .code-line {
+    column-gap: 18px;
+  }
+  .code-with-line-numbers code::before {
+    left: calc(3ch + 8px);
+  }
 }
 
 @media (prefers-color-scheme: dark) {

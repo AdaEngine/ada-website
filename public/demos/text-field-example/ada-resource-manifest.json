@@ -88,8 +88,16 @@
     "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Info.plist"
   },
   {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/Materials\/circle_canvas_material.frag.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/Materials\/circle_canvas_material.frag.wgsl"
+  },
+  {
     "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/Materials\/circle_canvas_material.glsl",
     "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/Materials\/circle_canvas_material.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/Materials\/color_canvas_material.frag.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/Materials\/color_canvas_material.frag.wgsl"
   },
   {
     "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/Materials\/color_canvas_material.glsl",
@@ -112,8 +120,16 @@
     "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/Public\/View.glsl"
   },
   {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/mesh2d\/mesh2d.frag.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/mesh2d\/mesh2d.frag.wgsl"
+  },
+  {
     "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/mesh2d\/mesh2d.glsl",
     "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/mesh2d\/mesh2d.glsl"
+  },
+  {
+    "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/mesh2d\/mesh2d.vert.wgsl",
+    "url" : ".\/resources\/AdaEngine_AdaRender.resources\/Shaders\/mesh2d\/mesh2d.vert.wgsl"
   },
   {
     "path" : "\/Users\/vlad-prusakov\/Developer\/AdaEngine\/.build-web-website-demos\/wasm32-unknown-wasip1\/release\/AdaEngine_AdaRender.resources\/Shaders\/mesh2d\/mesh2d_functions.glsl",
