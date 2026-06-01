@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { markdownToHtml } from './content.ts'
 import { hrefFor, normalizeBasePath, normalizeRoutePath, resolveRoute } from './routing.ts'
 import { absoluteSiteUrl, createRouteSeo, siteOrigin } from './seo.ts'
 
@@ -59,6 +60,35 @@ assert.deepEqual(createRouteSeo({ name: 'static-page', page: 'learn' }), {
   type: 'website',
 })
 
+const renderedArticle = markdownToHtml(`
+## What is AdaEngine?
+
+### Entity Component System
+
+### Entity Component System
+`)
+assert.match(renderedArticle.html, /<h2 id="what-is-adaengine">What is AdaEngine\?<\/h2>/)
+assert.match(renderedArticle.html, /<h3 id="entity-component-system">Entity Component System<\/h3>/)
+assert.match(renderedArticle.html, /<h3 id="entity-component-system-2">Entity Component System<\/h3>/)
+assert.deepEqual(renderedArticle.toc, [
+  { id: 'what-is-adaengine', title: 'What is AdaEngine?', level: 2 },
+  { id: 'entity-component-system', title: 'Entity Component System', level: 3 },
+  { id: 'entity-component-system-2', title: 'Entity Component System', level: 3 },
+])
+
+const renderedInlineMarkdown = markdownToHtml(
+  'For more control, use [`EmptyWindow`](https://adaengine.org/adaengine-docs/documentation/adaapp/emptywindow) and [`disable(_:)`](https://adaengine.org/adaengine-docs/documentation/adaengine/defaultplugins/disable(_:)).',
+)
+assert.match(
+  renderedInlineMarkdown.html,
+  /use <a href="https:\/\/adaengine\.org\/adaengine-docs\/documentation\/adaapp\/emptywindow" target="_blank" rel="noreferrer"><code>EmptyWindow<\/code><\/a>/,
+)
+assert.match(
+  renderedInlineMarkdown.html,
+  /<a href="https:\/\/adaengine\.org\/adaengine-docs\/documentation\/adaengine\/defaultplugins\/disable\(_:\)" target="_blank" rel="noreferrer"><code>disable\(_:\)<\/code><\/a>/,
+)
+assert.doesNotMatch(renderedInlineMarkdown.html, /&lt;code&gt;/)
+
 const robots = readFileSync('public/robots.txt', 'utf8')
 assert.match(robots, /User-agent: \*/)
 assert.match(robots, /Sitemap: https:\/\/adaengine\.org\/sitemap\.xml/)
@@ -72,6 +102,48 @@ const llms = readFileSync('public/llms.txt', 'utf8')
 assert.match(llms, /^# AdaEngine/m)
 assert.match(llms, /open-source Swift game engine/i)
 assert.match(llms, /https:\/\/github\.com\/AdaEngine\/AdaEngine/)
+
+const releaseArticleSource = readFileSync('src/content/articles/introducing-adaengine-0-1-0.md', 'utf8')
+assert.match(releaseArticleSource, /author: "SpectralDragon"/)
+
+const mainSource = readFileSync('src/main.ts', 'utf8')
+assert.doesNotMatch(mainSource, /AdaEngine Team/)
+assert.match(mainSource, /class="article-author-link"/)
+assert.match(mainSource, /rel="author noreferrer"/)
+assert.match(mainSource, /https:\/\/docs\.adaengine\.org\//)
+assert.match(mainSource, /https:\/\/docs\.adaengine\.org\/tutorials\/adaengine/)
+assert.match(mainSource, /https:\/\/docs\.adaengine\.org\/documentation\/adaecs\//)
+assert.match(mainSource, /https:\/\/docs\.adaengine\.org\/documentation\/adaphysics\//)
+assert.match(mainSource, /https:\/\/docs\.adaengine\.org\/documentation\/adaengine\//)
+assert.match(mainSource, /https:\/\/docs\.adaengine\.org\/documentation\/adarender\//)
+assert.match(mainSource, /https:\/\/docs\.adaengine\.org\/documentation\/adaaudio\//)
+
+const stylesheet = readFileSync('src/style.css', 'utf8')
+const mobileReaderSurface = stylesheet.match(/\.article-mobile-reader-nav::before \{[\s\S]*?\n  \}/)?.[0] ?? ''
+const mobileReaderSurfaceAnimation = stylesheet.match(/@keyframes articleMobileReaderSurfaceWobble \{[\s\S]*?\n  \}/)?.[0] ?? ''
+const mobileReaderClosingSurface = stylesheet.match(/\.article-mobile-reader-nav\.is-closing::before \{[\s\S]*?\n  \}/)?.[0] ?? ''
+const mobileReaderNavBlocks = Array.from(stylesheet.matchAll(/\.article-mobile-reader-nav \{[\s\S]*?\n  \}/g), ([block]) => block)
+const mobileReaderNav = mobileReaderNavBlocks.find((block) => block.includes('--reader-capsule-height')) ?? ''
+const mobileReaderButton = stylesheet.match(/\.article-mobile-reader-button \{[\s\S]*?\n  \}/)?.[0] ?? ''
+const mobileReaderProgress = stylesheet.match(/\.article-mobile-progress \{[\s\S]*?\n  \}/)?.[0] ?? ''
+const mobileReaderProgressFill = stylesheet.match(/\.article-mobile-progress span \{[\s\S]*?\n  \}/)?.[0] ?? ''
+const mobileTocSheetBlocks = Array.from(stylesheet.matchAll(/\.article-mobile-toc-sheet \{[\s\S]*?\n  \}/g), ([block]) => block)
+const mobileTocSheet = mobileTocSheetBlocks.find((block) => block.includes('max-height: none')) ?? ''
+assert.match(stylesheet, /--reader-capsule-radius: calc\(var\(--reader-capsule-height\) \/ 2\)/)
+assert.match(stylesheet, /--reader-edge-bleed: 2px/)
+assert.match(stylesheet, /--reader-surface-bg:/)
+assert.match(stylesheet, /--reader-progress-fill:/)
+assert.match(stylesheet, /--reader-content-delay: \.5s/)
+assert.match(mobileReaderNav, /height: calc\(var\(--reader-capsule-height\) \+ var\(--reader-edge-bleed\)\)/)
+assert.match(mobileReaderButton, /height: var\(--reader-capsule-height\)/)
+assert.match(mobileReaderSurface, /background: var\(--reader-surface-bg\)/)
+assert.doesNotMatch(mobileReaderSurface, /border-radius: 999px/)
+assert.doesNotMatch(mobileReaderSurface, /background: rgba\(13, 22, 38/)
+assert.doesNotMatch(mobileReaderSurfaceAnimation, /border-radius: 999px/)
+assert.match(mobileReaderClosingSurface, /animation: none/)
+assert.match(mobileReaderProgress, /background: transparent/)
+assert.match(mobileReaderProgressFill, /border-radius: inherit/)
+assert.match(mobileTocSheet, /transition: opacity \.16s ease var\(--reader-content-delay\)/)
 
 assert.match(readFileSync('index.html', 'utf8'), new RegExp(analyticsScript.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))
 

@@ -1,10 +1,17 @@
-import { highlightCode, languageClass } from './codeHighlight'
+import { highlightCode, languageClass } from './codeHighlight.ts'
+import authorEntries from '../Resources/authors.json' with { type: 'json' }
+
+export type ArticleAuthor = {
+  name: string
+  url?: string
+}
 
 export type ArticleFrontmatter = {
   title: string
   slug: string
   description: string
   date: string
+  author: ArticleAuthor
   tags?: string[]
   image?: string
   published?: boolean
@@ -16,13 +23,38 @@ export type Article = ArticleFrontmatter & {
   html: string
   excerpt: string
   readingTime: number
+  toc: ArticleHeading[]
 }
 
-const markdownModules = import.meta.glob('./content/articles/*.md', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>
+export type ArticleHeading = {
+  id: string
+  title: string
+  level: 2 | 3
+}
+
+type AuthorSocial = {
+  username?: string
+  social?: string
+  url?: string
+}
+
+type AuthorEntry = {
+  name: string
+  username?: string
+  url?: string
+  profileUrl?: string
+  socials?: AuthorSocial[]
+}
+
+const authors = authorEntries as AuthorEntry[]
+
+const markdownModules = import.meta.env
+  ? (import.meta.glob('./content/articles/*.md', {
+      eager: true,
+      query: '?raw',
+      import: 'default',
+    }) as Record<string, string>)
+  : {}
 
 function parseFrontmatter(raw: string): { frontmatter: Record<string, unknown>; body: string } {
   const normalized = raw.replace(/\r\n/g, '\n')
@@ -124,24 +156,116 @@ function isExternalUrl(value: string): boolean {
   return /^https?:\/\//.test(value)
 }
 
-function renderSafeLink(label: string, href: string): string {
-  const escapedLabel = escapeHtml(label)
+function normalizeAuthorKey(value: string): string {
+  return value.trim().replace(/^@/, '').toLowerCase()
+}
 
+function authorUrlFor(author: AuthorEntry): string | undefined {
+  if (typeof author.url === 'string') return author.url
+  if (typeof author.profileUrl === 'string') return author.profileUrl
+
+  const github = author.socials?.find((social) => social.social === 'github')
+  if (typeof github?.url === 'string') return github.url
+  if (typeof github?.username === 'string') return `https://github.com/${github.username.replace(/^@/, '')}`
+  if (typeof author.username === 'string') return `https://github.com/${author.username.replace(/^@/, '')}`
+
+  return undefined
+}
+
+function resolveAuthor(value: unknown, filePath: string): ArticleAuthor {
+  if (typeof value !== 'string' || !value.trim()) {
+    throw new Error(`Invalid article author in ${filePath}`)
+  }
+
+  const key = normalizeAuthorKey(value)
+  const author = authors.find((entry) => normalizeAuthorKey(entry.username ?? entry.name) === key || normalizeAuthorKey(entry.name) === key)
+
+  if (!author) {
+    if (isExternalUrl(value)) return { name: value, url: value }
+    return { name: value }
+  }
+
+  return {
+    name: author.name,
+    url: authorUrlFor(author),
+  }
+}
+
+function renderSafeLink(label: string, href: string): string {
   if (!/^(https?:\/\/|\/|\.\/|\.\.\/|[A-Za-z0-9/_-])/.test(href)) {
-    return escapedLabel
+    return renderInlineText(label)
   }
 
   const escapedHref = escapeHtml(href)
   const target = isExternalUrl(href) ? ' target="_blank" rel="noreferrer"' : ''
-  return `<a href="${escapedHref}"${target}>${escapedLabel}</a>`
+  return `<a href="${escapedHref}"${target}>${renderInlineText(label)}</a>`
 }
 
-function renderInlineMarkdown(text: string): string {
+function renderInlineText(text: string): string {
   return escapeHtml(text)
     .replace(/`([^`]+)`/g, '<code>$1</code>')
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_match, label: string, href: string) => renderSafeLink(label, href))
+}
+
+function findMarkdownLinkClose(text: string, startIndex: number): number {
+  let depth = 0
+
+  for (let index = startIndex; index < text.length; index += 1) {
+    const character = text[index]
+
+    if (character === '(') {
+      depth += 1
+      continue
+    }
+
+    if (character === ')') {
+      if (depth === 0) {
+        return index
+      }
+
+      depth -= 1
+    }
+  }
+
+  return -1
+}
+
+function renderInlineMarkdown(text: string): string {
+  let html = ''
+  let cursor = 0
+
+  while (cursor < text.length) {
+    const linkStart = text.indexOf('[', cursor)
+
+    if (linkStart === -1) {
+      html += renderInlineText(text.slice(cursor))
+      break
+    }
+
+    const labelEnd = text.indexOf(']', linkStart + 1)
+
+    if (labelEnd === -1 || text[labelEnd + 1] !== '(') {
+      html += renderInlineText(text.slice(cursor, linkStart + 1))
+      cursor = linkStart + 1
+      continue
+    }
+
+    const hrefStart = labelEnd + 2
+    const hrefEnd = findMarkdownLinkClose(text, hrefStart)
+
+    if (hrefEnd === -1) {
+      html += renderInlineText(text.slice(cursor, linkStart + 1))
+      cursor = linkStart + 1
+      continue
+    }
+
+    html += renderInlineText(text.slice(cursor, linkStart))
+    html += renderSafeLink(text.slice(linkStart + 1, labelEnd), text.slice(hrefStart, hrefEnd))
+    cursor = hrefEnd + 1
+  }
+
+  return html
 }
 
 function humanizeLanguage(language: string): string {
@@ -268,9 +392,25 @@ function renderAdmonition(type: string, title: string, lines: string[]): string 
   `
 }
 
-function markdownToHtml(markdown: string): string {
+function createHeadingId(title: string, usedIds: Map<string, number>): string {
+  const baseId =
+    title
+      .toLowerCase()
+      .replace(/`([^`]+)`/g, '$1')
+      .replace(/&[a-z]+;/gi, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'section'
+  const count = usedIds.get(baseId) ?? 0
+  usedIds.set(baseId, count + 1)
+
+  return count === 0 ? baseId : `${baseId}-${count + 1}`
+}
+
+export function markdownToHtml(markdown: string): { html: string; toc: ArticleHeading[] } {
   const lines = markdown.split('\n')
   const html: string[] = []
+  const toc: ArticleHeading[] = []
+  const usedHeadingIds = new Map<string, number>()
   let inList = false
   let inCodeBlock = false
   let codeLanguage = ''
@@ -378,12 +518,18 @@ function markdownToHtml(markdown: string): string {
     }
 
     if (trimmed.startsWith('### ')) {
-      html.push(`<h3>${renderInlineMarkdown(trimmed.slice(4))}</h3>`)
+      const title = trimmed.slice(4)
+      const id = createHeadingId(title, usedHeadingIds)
+      toc.push({ id, title, level: 3 })
+      html.push(`<h3 id="${escapeHtml(id)}">${renderInlineMarkdown(title)}</h3>`)
       continue
     }
 
     if (trimmed.startsWith('## ')) {
-      html.push(`<h2>${renderInlineMarkdown(trimmed.slice(3))}</h2>`)
+      const title = trimmed.slice(3)
+      const id = createHeadingId(title, usedHeadingIds)
+      toc.push({ id, title, level: 2 })
+      html.push(`<h2 id="${escapeHtml(id)}">${renderInlineMarkdown(title)}</h2>`)
       continue
     }
 
@@ -399,7 +545,7 @@ function markdownToHtml(markdown: string): string {
   flushCodeBlock()
   flushAdmonition()
 
-  return html.join('\n')
+  return { html: html.join('\n'), toc }
 }
 
 function stripMarkdown(markdown: string): string {
@@ -426,6 +572,7 @@ function assertFrontmatter(frontmatter: Record<string, unknown>, filePath: strin
   const slug = frontmatter.slug
   const description = frontmatter.description
   const date = frontmatter.date
+  const author = frontmatter.author
   const tags = frontmatter.tags
   const image = frontmatter.image
   const published = frontmatter.published
@@ -441,6 +588,7 @@ function assertFrontmatter(frontmatter: Record<string, unknown>, filePath: strin
     slug,
     description,
     date,
+    author: resolveAuthor(author, filePath),
     tags: Array.isArray(tags) ? tags.filter((tag): tag is string => typeof tag === 'string') : [],
     image: typeof image === 'string' ? image : undefined,
     published: typeof published === 'boolean' ? published : true,
@@ -453,12 +601,14 @@ export const articles: Article[] = Object.entries(markdownModules)
   .map(([filePath, raw]) => {
     const { frontmatter, body } = parseFrontmatter(raw)
     const meta = assertFrontmatter(frontmatter, filePath)
+    const rendered = markdownToHtml(body)
 
     return {
       ...meta,
       excerpt: createExcerpt(body),
-      html: markdownToHtml(body),
+      html: rendered.html,
       readingTime: calculateReadingTime(body),
+      toc: rendered.toc,
     }
   })
   .filter((article) => article.published && !article.draft)

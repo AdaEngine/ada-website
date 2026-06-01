@@ -1,6 +1,6 @@
 import './style.css'
 import { highlightCode, languageClass, renderHighlightedCodeLines } from './codeHighlight'
-import { articles, getArticleBySlug } from './content'
+import { articles, getArticleBySlug, type ArticleAuthor, type ArticleHeading } from './content'
 import { findDemoBySlug, groupDemosByTag, loadDemoSource, loadDemosManifest, type DemoEntry, type DemosManifest } from './demos'
 import { hrefFor as createHref, resolveRoute, type StaticPageName } from './routing'
 import { absoluteSiteUrl, createArticleSeo, createDemoSeo, createRouteSeo, createStructuredData, siteName, type SeoMetadata } from './seo'
@@ -97,7 +97,7 @@ const staticPages: Record<StaticPageName, StaticPageContent> = {
       {
         title: 'Documentation',
         body: 'Read guides, API notes and examples for the engine core, ECS, renderer, physics and UI systems.',
-        links: [{ label: 'Open documentation', href: 'https://github.com/AdaEngine/AdaEngine' }],
+        links: [{ label: 'Open documentation', href: 'https://docs.adaengine.org/' }],
       },
       {
         title: 'Examples',
@@ -150,21 +150,21 @@ const learnSections: Array<{ title: string; cards: LearnCard[] }> = [
     title: 'Getting Started',
     cards: [
       {
-        title: 'Quick Start Guide',
+        title: 'Get Started',
         body: 'Install the engine and create your first window in under 5 minutes.',
-        href: 'https://github.com/AdaEngine/AdaEngine',
+        href: 'https://docs.adaengine.org/tutorials/adaengine',
         icon: 'book',
       },
       {
-        title: 'ECS Fundamentals',
+        title: 'ECS',
         body: 'Understand the Entity-Component-System architecture that powers AdaEngine.',
-        href: 'https://github.com/AdaEngine/AdaEngine',
+        href: 'https://docs.adaengine.org/documentation/adaecs/',
         icon: 'play',
       },
       {
         title: '2D Physics Tutorial',
         body: 'Add rigid bodies, collision shapes, and handle physics callbacks.',
-        href: 'https://github.com/AdaEngine/AdaEngine',
+        href: 'https://docs.adaengine.org/documentation/adaphysics/',
         icon: 'layout',
       },
     ],
@@ -175,17 +175,17 @@ const learnSections: Array<{ title: string; cards: LearnCard[] }> = [
       {
         title: 'Core Framework',
         body: 'Math, Collections, and basic Engine systems.',
-        href: 'https://github.com/AdaEngine/AdaEngine',
+        href: 'https://docs.adaengine.org/documentation/adaengine/',
       },
       {
         title: 'Rendering Pipeline',
         body: 'Materials, Shaders, Render Graphs, and Metal integration.',
-        href: 'https://github.com/AdaEngine/AdaEngine',
+        href: 'https://docs.adaengine.org/documentation/adarender/',
       },
       {
         title: 'Audio System',
         body: 'Spatial audio, sound effects, and music streaming.',
-        href: 'https://github.com/AdaEngine/AdaEngine',
+        href: 'https://docs.adaengine.org/documentation/adaaudio/',
       },
     ],
   },
@@ -302,6 +302,10 @@ function escapeHtml(value: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;')
+}
+
+function isSafeAuthorUrl(value: string): boolean {
+  return /^https?:\/\//.test(value)
 }
 
 function featureDetails(item: FeatureItem): string {
@@ -535,7 +539,7 @@ function renderLatestNews(): string {
                       <p class="article-date">${formatDate(article.date)}</p>
                       ${renderTagList(article.tags)}
                       <h3>${article.title}</h3>
-                      <p>AdaEngine Team</p>
+                      <p>${escapeHtml(article.author.name)}</p>
                     </div>
                   </div>
                 </a>
@@ -988,24 +992,93 @@ function renderArticlePage(slug: string) {
   app.innerHTML = `
     ${renderHeader()}
     <main class="page-shell article-page-shell">
-      <article class="container content-restriction safe-area-insets article-page">
-        <header class="article-hero">
-          <a class="article-back-link" href="${hrefFor('/blog')}">Back to News</a>
-          ${renderBlogTag(article.tags)}
-          <h1>${article.title}</h1>
-          <div class="article_info">
-            <span>By AdaEngine Team</span>
-            <span aria-hidden="true">•</span>
-            <time datetime="${article.date}">${formatDate(article.date)}</time>
-            <span aria-hidden="true">•</span>
-            <span>${article.readingTime} min read</span>
-          </div>
-          <p class="article-item-description">${article.description}</p>
-        </header>
-        <div class="article-content">${article.html}</div>
-      </article>
+      <div class="container article-reading-layout">
+        <article class="safe-area-insets article-page">
+          <header class="article-hero">
+            <a class="article-back-link" href="${hrefFor('/blog')}">Back to News</a>
+            ${renderBlogTag(article.tags)}
+            <h1>${article.title}</h1>
+            <div class="article_info">
+              ${renderArticleAuthor(article.author)}
+              <span aria-hidden="true">•</span>
+              <time datetime="${article.date}">${formatDate(article.date)}</time>
+              <span aria-hidden="true">•</span>
+              <span>${article.readingTime} min read</span>
+            </div>
+            <p class="article-item-description">${article.description}</p>
+          </header>
+          <div class="article-content">${article.html}</div>
+        </article>
+        ${renderArticleReaderNavigation(article.toc)}
+      </div>
     </main>
     ${renderFooter()}
+  `
+}
+
+function renderArticleAuthor(author: ArticleAuthor): string {
+  const label = `By ${author.name}`
+
+  if (!author.url || !isSafeAuthorUrl(author.url)) {
+    return `<span>${escapeHtml(label)}</span>`
+  }
+
+  return `<a class="article-author-link" href="${escapeHtml(author.url)}" target="_blank" rel="author noreferrer">${escapeHtml(label)}</a>`
+}
+
+function renderArticleTocLinks(toc: ArticleHeading[], context: 'desktop' | 'mobile'): string {
+  return toc
+    .map(
+      (heading) => `
+        <a class="article-toc-link article-toc-link-level-${heading.level}" href="#${heading.id}" data-article-toc-link="${heading.id}" data-toc-context="${context}">
+          <span>${escapeHtml(heading.title)}</span>
+        </a>
+      `,
+    )
+    .join('')
+}
+
+function renderArticleReaderNavigation(toc: ArticleHeading[]): string {
+  if (!toc.length) return ''
+
+  const links = renderArticleTocLinks(toc, 'desktop')
+  const mobileLinks = renderArticleTocLinks(toc, 'mobile')
+  const firstHeading = toc[0]?.title ?? 'Start'
+
+  return `
+    <aside class="article-toc" aria-label="On this page">
+      <div class="article-toc-panel">
+        <p class="article-toc-title">On this page</p>
+        <div class="article-toc-progress" aria-hidden="true">
+          <span data-article-progress-fill></span>
+        </div>
+        <p class="article-toc-progress-label"><span data-article-progress-label>0%</span> read</p>
+        <nav class="article-toc-list">${links}</nav>
+      </div>
+    </aside>
+    <div class="article-mobile-reader-nav" data-mobile-reader-nav>
+      <button class="article-mobile-reader-button" type="button" data-mobile-toc-toggle aria-expanded="false" aria-controls="article-mobile-toc-sheet" aria-label="Open article sections">
+        <span class="article-mobile-progress" aria-hidden="true">
+          <span data-article-progress-fill></span>
+        </span>
+        <span class="article-mobile-reader-copy">
+          <span data-article-progress-label>0%</span>
+          <strong data-current-section>${escapeHtml(firstHeading)}</strong>
+        </span>
+        <span class="article-mobile-reader-action" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+      <div class="article-mobile-toc-sheet" id="article-mobile-toc-sheet" data-mobile-toc-sheet hidden>
+        <div class="article-mobile-toc-header">
+          <span>On this page</span>
+          <span><span data-article-progress-label>0%</span> read</span>
+        </div>
+        <nav class="article-mobile-toc-list">${mobileLinks}</nav>
+      </div>
+    </div>
   `
 }
 
@@ -1021,6 +1094,110 @@ function renderNotFound(title = 'Page not found', description = 'This route does
     </main>
     ${renderFooter()}
   `
+}
+
+function setupArticleReadingNavigation() {
+  const content = document.querySelector<HTMLElement>('.article-content')
+  const mobileNav = document.querySelector<HTMLElement>('[data-mobile-reader-nav]')
+  const mobileToggle = document.querySelector<HTMLButtonElement>('[data-mobile-toc-toggle]')
+  const mobileSheet = document.querySelector<HTMLElement>('[data-mobile-toc-sheet]')
+  const headings = Array.from(document.querySelectorAll<HTMLElement>('.article-content h2[id], .article-content h3[id]'))
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-article-toc-link]'))
+  const progressFills = Array.from(document.querySelectorAll<HTMLElement>('[data-article-progress-fill]'))
+  const progressLabels = Array.from(document.querySelectorAll<HTMLElement>('[data-article-progress-label]'))
+  const currentSectionLabels = Array.from(document.querySelectorAll<HTMLElement>('[data-current-section]'))
+
+  if (!content || !headings.length || !links.length) return
+
+  let mobileSheetCloseTimer: number | undefined
+
+  const setMobileSheetOpen = (isOpen: boolean) => {
+    if (!mobileToggle || !mobileSheet || !mobileNav) return
+
+    window.clearTimeout(mobileSheetCloseTimer)
+    mobileToggle.setAttribute('aria-expanded', String(isOpen))
+
+    if (isOpen) {
+      mobileSheet.hidden = false
+      mobileNav.classList.remove('is-closing')
+      mobileNav.classList.add('is-open')
+      return
+    }
+
+    mobileNav.classList.remove('is-open')
+    mobileNav.classList.add('is-closing')
+    mobileSheetCloseTimer = window.setTimeout(() => {
+      mobileSheet.hidden = true
+      mobileNav.classList.remove('is-closing')
+    }, 520)
+  }
+
+  const scrollToHeading = (headingId: string) => {
+    const heading = document.getElementById(headingId)
+    if (!heading) return
+
+    heading.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setMobileSheetOpen(false)
+  }
+
+  links.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      const headingId = link.dataset.articleTocLink
+      if (!headingId) return
+
+      event.preventDefault()
+      history.replaceState(null, '', `${window.location.pathname}${window.location.search}#${headingId}`)
+      scrollToHeading(headingId)
+    })
+  })
+
+  mobileToggle?.addEventListener('click', () => {
+    const isOpen = mobileToggle.getAttribute('aria-expanded') === 'true'
+    setMobileSheetOpen(!isOpen)
+  })
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') setMobileSheetOpen(false)
+  })
+
+  document.addEventListener('click', (event) => {
+    if (!mobileNav || !event.target) return
+    if (!mobileNav.contains(event.target as Node)) setMobileSheetOpen(false)
+  })
+
+  const updateReadingState = () => {
+    const viewportAnchor = window.scrollY + Math.min(180, window.innerHeight * 0.28)
+    const activeHeading =
+      headings
+        .slice()
+        .reverse()
+        .find((heading) => heading.getBoundingClientRect().top + window.scrollY <= viewportAnchor) ?? headings[0]
+    const activeId = activeHeading.id
+    const contentStart = content.offsetTop
+    const contentEnd = content.offsetTop + content.scrollHeight - window.innerHeight
+    const progress = contentEnd <= contentStart ? 1 : Math.min(1, Math.max(0, (window.scrollY - contentStart) / (contentEnd - contentStart)))
+    const progressText = `${Math.round(progress * 100)}%`
+    const activeTitle = activeHeading.textContent?.trim() || 'Start'
+
+    progressFills.forEach((fill) => {
+      fill.style.transform = `scaleX(${progress})`
+    })
+    progressLabels.forEach((label) => {
+      label.textContent = progressText
+    })
+    currentSectionLabels.forEach((label) => {
+      label.textContent = activeTitle
+    })
+    links.forEach((link) => {
+      const isActive = link.dataset.articleTocLink === activeId
+      link.classList.toggle('is-active', isActive)
+      link.setAttribute('aria-current', isActive ? 'true' : 'false')
+    })
+  }
+
+  window.addEventListener('scroll', updateReadingState, { passive: true })
+  window.addEventListener('resize', updateReadingState)
+  updateReadingState()
 }
 
 async function renderRoute() {
@@ -1138,6 +1315,7 @@ function setupInteractions() {
   setupShowcaseCarousel()
   setupDemoFullscreen()
   setupDemoAmbientLight()
+  setupArticleReadingNavigation()
 }
 
 function setupDemoFullscreen() {
