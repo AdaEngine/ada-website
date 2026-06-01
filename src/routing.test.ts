@@ -117,23 +117,31 @@ assert.match(mainSource, /https:\/\/docs\.adaengine\.org\/documentation\/adaphys
 assert.match(mainSource, /https:\/\/docs\.adaengine\.org\/documentation\/adaengine\//)
 assert.match(mainSource, /https:\/\/docs\.adaengine\.org\/documentation\/adarender\//)
 assert.match(mainSource, /https:\/\/docs\.adaengine\.org\/documentation\/adaaudio\//)
+assert.match(mainSource, /class="feature-modal-close demo-player-fullscreen"/)
+assert.doesNotMatch(mainSource, /data-modal-close>×<\/button>/)
 
 const stylesheet = readFileSync('src/style.css', 'utf8')
-const mobileReaderSurface = stylesheet.match(/\.article-mobile-reader-nav::before \{[\s\S]*?\n  \}/)?.[0] ?? ''
-const mobileReaderSurfaceAnimation = stylesheet.match(/@keyframes articleMobileReaderSurfaceWobble \{[\s\S]*?\n  \}/)?.[0] ?? ''
-const mobileReaderClosingSurface = stylesheet.match(/\.article-mobile-reader-nav\.is-closing::before \{[\s\S]*?\n  \}/)?.[0] ?? ''
-const mobileReaderNavBlocks = Array.from(stylesheet.matchAll(/\.article-mobile-reader-nav \{[\s\S]*?\n  \}/g), ([block]) => block)
+assert.match(stylesheet, /\.feature-modal-close \{[\s\S]*?top: -29px/)
+assert.match(stylesheet, /\.feature-modal-close \{[\s\S]*?right: -29px/)
+assert.match(stylesheet, /@media \(max-width: 803px\) \{[\s\S]*?\.feature-modal-close \{[\s\S]*?top: 12px/)
+assert.match(stylesheet, /@media \(max-width: 803px\) \{[\s\S]*?\.feature-modal-close \{[\s\S]*?right: 12px/)
+const mobileReaderSurface = stylesheet.match(/\.article-mobile-reader-nav::before \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
+const mobileReaderSurfaceAnimation = stylesheet.match(/@keyframes articleMobileReaderSurfaceWobble \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
+const mobileReaderClosingSurface = stylesheet.match(/\.article-mobile-reader-nav\.is-closing::before \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
+const mobileReaderNavBlocks = Array.from(stylesheet.matchAll(/\.article-mobile-reader-nav \{[\s\S]*?\n\s*\}/g), ([block]) => block)
 const mobileReaderNav = mobileReaderNavBlocks.find((block) => block.includes('--reader-capsule-height')) ?? ''
-const mobileReaderButton = stylesheet.match(/\.article-mobile-reader-button \{[\s\S]*?\n  \}/)?.[0] ?? ''
-const mobileReaderProgress = stylesheet.match(/\.article-mobile-progress \{[\s\S]*?\n  \}/)?.[0] ?? ''
-const mobileReaderProgressFill = stylesheet.match(/\.article-mobile-progress span \{[\s\S]*?\n  \}/)?.[0] ?? ''
-const mobileTocSheetBlocks = Array.from(stylesheet.matchAll(/\.article-mobile-toc-sheet \{[\s\S]*?\n  \}/g), ([block]) => block)
+const mobileReaderButton = stylesheet.match(/\.article-mobile-reader-button \{[\s\S]*?\n\s*\}/)?.[0] ?? ''
+const mobileReaderProgressBlocks = Array.from(stylesheet.matchAll(/\.article-mobile-progress \{[\s\S]*?\n\s*\}/g), ([block]) => block)
+const mobileReaderProgress = mobileReaderProgressBlocks.find((block) => block.includes('inset: 1px')) ?? ''
+const mobileReaderProgressFillBlocks = Array.from(stylesheet.matchAll(/\.article-mobile-progress span \{[\s\S]*?\n\s*\}/g), ([block]) => block)
+const mobileReaderProgressFill = mobileReaderProgressFillBlocks.find((block) => block.includes('--reader-progress-fill')) ?? ''
+const mobileTocSheetBlocks = Array.from(stylesheet.matchAll(/\.article-mobile-toc-sheet \{[\s\S]*?\n\s*\}/g), ([block]) => block)
 const mobileTocSheet = mobileTocSheetBlocks.find((block) => block.includes('max-height: none')) ?? ''
 assert.match(stylesheet, /--reader-capsule-radius: calc\(var\(--reader-capsule-height\) \/ 2\)/)
 assert.match(stylesheet, /--reader-edge-bleed: 2px/)
 assert.match(stylesheet, /--reader-surface-bg:/)
 assert.match(stylesheet, /--reader-progress-fill:/)
-assert.match(stylesheet, /--reader-content-delay: \.5s/)
+assert.match(stylesheet, /--reader-content-delay: 0?\.5s/)
 assert.match(mobileReaderNav, /height: calc\(var\(--reader-capsule-height\) \+ var\(--reader-edge-bleed\)\)/)
 assert.match(mobileReaderButton, /height: var\(--reader-capsule-height\)/)
 assert.match(mobileReaderSurface, /background: var\(--reader-surface-bg\)/)
@@ -143,7 +151,7 @@ assert.doesNotMatch(mobileReaderSurfaceAnimation, /border-radius: 999px/)
 assert.match(mobileReaderClosingSurface, /animation: none/)
 assert.match(mobileReaderProgress, /background: transparent/)
 assert.match(mobileReaderProgressFill, /border-radius: inherit/)
-assert.match(mobileTocSheet, /transition: opacity \.16s ease var\(--reader-content-delay\)/)
+assert.match(mobileTocSheet, /transition: opacity 0?\.16s ease var\(--reader-content-delay\)/)
 
 assert.match(readFileSync('index.html', 'utf8'), new RegExp(analyticsScript.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))
 

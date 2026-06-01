@@ -772,7 +772,11 @@ function renderFeatureModal(): string {
     <div class="feature-modal" role="dialog" aria-modal="true" aria-labelledby="feature-modal-title" hidden>
       <div class="feature-modal-backdrop" data-modal-close></div>
       <section class="feature-modal-panel">
-        <button class="feature-modal-close" type="button" aria-label="Close feature details" data-modal-close>×</button>
+        <button class="feature-modal-close demo-player-fullscreen" type="button" aria-label="Close feature details" title="Close" data-modal-close>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </button>
         <div class="feature-modal-visual" id="feature-modal-visual"></div>
         <p class="eyebrow" id="feature-modal-kicker">Feature</p>
         <h2 id="feature-modal-title"></h2>
