@@ -4,8 +4,11 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "geo": "node scripts/generate-geo-assets.mjs",
+    "prebuild": "npm run geo",
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "pretest": "npm run geo",
     "preview": "vite preview",
     "test": "node src/routing.test.ts"
   },

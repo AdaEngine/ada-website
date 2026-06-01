@@ -3,6 +3,7 @@ import { highlightCode, languageClass, renderHighlightedCodeLines } from './code
 import { articles, getArticleBySlug } from './content'
 import { findDemoBySlug, groupDemosByTag, loadDemoSource, loadDemosManifest, type DemoEntry, type DemosManifest } from './demos'
 import { hrefFor as createHref, resolveRoute, type StaticPageName } from './routing'
+import { absoluteSiteUrl, createArticleSeo, createDemoSeo, createRouteSeo, createStructuredData, siteName, type SeoMetadata } from './seo'
 
 const app = document.querySelector<HTMLDivElement>('#app') ?? failMissingApp()
 const baseUrl = import.meta.env.BASE_URL
@@ -325,6 +326,66 @@ function assetFor(path: string): string {
   return `${normalizedBase}${normalizedPath}`
 }
 
+function upsertMeta(attribute: 'name' | 'property', key: string, content: string) {
+  let element = document.head.querySelector<HTMLMetaElement>(`meta[${attribute}="${key}"]`)
+
+  if (!element) {
+    element = document.createElement('meta')
+    element.setAttribute(attribute, key)
+    document.head.appendChild(element)
+  }
+
+  element.content = content
+}
+
+function removeMeta(attribute: 'name' | 'property', key: string) {
+  document.head.querySelector<HTMLMetaElement>(`meta[${attribute}="${key}"]`)?.remove()
+}
+
+function applySeo(meta: SeoMetadata) {
+  const canonicalUrl = absoluteSiteUrl(meta.path)
+  let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]')
+
+  if (!canonical) {
+    canonical = document.createElement('link')
+    canonical.rel = 'canonical'
+    document.head.appendChild(canonical)
+  }
+
+  document.title = meta.title
+  canonical.href = canonicalUrl
+
+  upsertMeta('name', 'description', meta.description)
+  upsertMeta('property', 'og:site_name', siteName)
+  upsertMeta('property', 'og:title', meta.title)
+  upsertMeta('property', 'og:description', meta.description)
+  upsertMeta('property', 'og:type', meta.type)
+  upsertMeta('property', 'og:url', canonicalUrl)
+  upsertMeta('property', 'og:image', meta.image)
+  upsertMeta('name', 'twitter:card', 'summary_large_image')
+  upsertMeta('name', 'twitter:title', meta.title)
+  upsertMeta('name', 'twitter:description', meta.description)
+  upsertMeta('name', 'twitter:image', meta.image)
+
+  if (meta.robots) {
+    upsertMeta('name', 'robots', meta.robots)
+  } else {
+    removeMeta('name', 'robots')
+  }
+
+  for (const node of document.head.querySelectorAll('script[data-seo-structured-data]')) {
+    node.remove()
+  }
+
+  for (const item of createStructuredData(meta)) {
+    const script = document.createElement('script')
+    script.type = 'application/ld+json'
+    script.dataset.seoStructuredData = 'true'
+    script.textContent = JSON.stringify(item)
+    document.head.appendChild(script)
+  }
+}
+
 function formatStarCount(count: number): string {
   if (count < 1000) return String(count)
   if (count < 1_000_000) return `${(count / 1000).toFixed(count < 10_000 ? 1 : 0)}k`
@@ -607,6 +668,8 @@ async function renderDemoPage(slug: string) {
     renderNotFound('Demo not found', 'Check the address or return to the demos page.')
     return
   }
+
+  applySeo(createDemoSeo(demo))
 
   const source = await loadDemoSource(demo)
   const repositoryRef = manifest.commit ?? 'main'
@@ -920,6 +983,8 @@ function renderArticlePage(slug: string) {
     return
   }
 
+  applySeo(createArticleSeo(article))
+
   app.innerHTML = `
     ${renderHeader()}
     <main class="page-shell article-page-shell">
@@ -960,6 +1025,7 @@ function renderNotFound(title = 'Page not found', description = 'This route does
 
 async function renderRoute() {
   const route = resolveRoute(window.location.pathname, import.meta.env.BASE_URL)
+  applySeo(createRouteSeo(route))
 
   if (route.name === 'home') {
     renderHomePage()
