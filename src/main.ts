@@ -220,8 +220,8 @@ const communityLinks: CommunityLink[] = [
   },
   {
     title: 'X (Twitter)',
-    subtitle: 'Follow @AdaEngine',
-    href: 'https://x.com/AdaEngine',
+    subtitle: 'Follow @ada_engine',
+    href: 'https://x.com/ada_engine',
     iconClass: 'community-link-icon-x',
     iconMarkup:
       '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M28.4 20.6 43.1 4h-3.5L26.9 18.4 16.7 4H5l15.5 21.9L5 43.4h3.5L22 28.1l10.8 15.3h11.7L28.4 20.6Zm-4.8 5.4-1.6-2.2L9.6 6.5H15l10 14 1.6 2.2 13 18.2h-5.4L23.6 26Z"/></svg>',
@@ -800,7 +800,7 @@ function renderFooterSocialLinks(): string {
     <nav class="footer-social-links" aria-label="Social links">
       <a class="footer-social-link" href="https://github.com/AdaEngine/AdaEngine" target="_blank" rel="noreferrer" aria-label="AdaEngine on GitHub">${githubIcon}</a>
       <a class="footer-social-link" href="https://discord.gg/JkEPE7nwDu" target="_blank" rel="noreferrer" aria-label="AdaEngine on Discord">${discordIcon}</a>
-      <a class="footer-social-link" href="https://x.com/AdaEngine" target="_blank" rel="noreferrer" aria-label="AdaEngine on Twitter">${twitterIcon}</a>
+      <a class="footer-social-link" href="https://x.com/ada_engine" target="_blank" rel="noreferrer" aria-label="AdaEngine on Twitter">${twitterIcon}</a>
       <a class="footer-social-link" href="https://t.me/adaengine" target="_blank" rel="noreferrer" aria-label="AdaEngine on Telegram">${telegramIcon}</a>
     </nav>
   `
