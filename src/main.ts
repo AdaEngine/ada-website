@@ -201,7 +201,7 @@ const communityLinks: CommunityLink[] = [
   {
     title: 'Discord',
     subtitle: 'Live chat & support',
-    href: 'https://discord.gg/adaengine',
+    href: 'https://discord.gg/JkEPE7nwDu',
     icon: 'images/socials/discord.svg',
   },
   {

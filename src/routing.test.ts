@@ -141,6 +141,8 @@ assert.match(mainSource, /https:\/\/docs\.adaengine\.org\/documentation\/adaphys
 assert.match(mainSource, /https:\/\/docs\.adaengine\.org\/documentation\/adaengine\//)
 assert.match(mainSource, /https:\/\/docs\.adaengine\.org\/documentation\/adarender\//)
 assert.match(mainSource, /https:\/\/docs\.adaengine\.org\/documentation\/adaaudio\//)
+assert.match(mainSource, /https:\/\/discord\.gg\/JkEPE7nwDu/)
+assert.doesNotMatch(mainSource, /https:\/\/discord\.gg\/adaengine/)
 assert.match(mainSource, /class="feature-modal-close demo-player-fullscreen"/)
 assert.doesNotMatch(mainSource, /data-modal-close>×<\/button>/)
 assert.match(mainSource, /class="footer-social-links"/)
