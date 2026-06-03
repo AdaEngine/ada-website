@@ -76,6 +76,21 @@ assert.deepEqual(renderedArticle.toc, [
   { id: 'entity-component-system-2', title: 'Entity Component System', level: 3 },
 ])
 
+const renderedSwiftCodeBlock = markdownToHtml(`
+\`\`\`swift
+let engine = AdaEngine()
+\`\`\`
+`)
+assert.doesNotMatch(renderedSwiftCodeBlock.html, /<figcaption>\s*<span>Swift<\/span>\s*<span>Swift<\/span>\s*<\/figcaption>/)
+assert.match(renderedSwiftCodeBlock.html, /<figcaption>\s*<span><\/span>\s*<span>Swift<\/span>\s*<\/figcaption>/)
+
+const renderedTitledCodeBlock = markdownToHtml(`
+\`\`\`swift title="MovementSystem.swift"
+let engine = AdaEngine()
+\`\`\`
+`)
+assert.match(renderedTitledCodeBlock.html, /<figcaption>\s*<span>MovementSystem\.swift<\/span>\s*<span>Swift<\/span>\s*<\/figcaption>/)
+
 const renderedInlineMarkdown = markdownToHtml(
   'For more control, use [`EmptyWindow`](https://adaengine.org/adaengine-docs/documentation/adaapp/emptywindow) and [`disable(_:)`](https://adaengine.org/adaengine-docs/documentation/adaengine/defaultplugins/disable(_:)).',
 )

@@ -296,12 +296,11 @@ function parseCodeFenceMeta(meta: string): { language: string; title: string } {
 
 function renderCodeBlock(code: string, language: string, title: string): string {
   const label = humanizeLanguage(language)
-  const heading = title || label
 
   return `
     <figure class="article-code-block">
       <figcaption>
-        <span>${escapeHtml(heading)}</span>
+        <span>${escapeHtml(title)}</span>
         <span>${escapeHtml(label)}</span>
       </figcaption>
       <pre><code class="${languageClass(language)}">${highlightCode(code, language)}</code></pre>
