@@ -1037,18 +1037,58 @@ function renderArticlePage(slug: string) {
         ${renderArticleReaderNavigation(article.toc)}
       </div>
     </main>
+    ${renderArticleImageLightbox()}
     ${renderFooter()}
+  `
+}
+
+function renderArticleImageLightbox(): string {
+  return `
+    <div class="article-image-lightbox" role="dialog" aria-modal="true" aria-label="Fullscreen article image" hidden data-article-lightbox>
+      <button class="article-image-lightbox-backdrop" type="button" aria-label="Close fullscreen image" data-article-lightbox-close></button>
+      <figure class="article-image-lightbox-frame">
+        <button class="article-image-lightbox-close demo-player-fullscreen" type="button" aria-label="Close fullscreen image" title="Close" data-article-lightbox-close>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <img src="" alt="" data-article-lightbox-preview />
+        <figcaption data-article-lightbox-caption hidden></figcaption>
+      </figure>
+    </div>
   `
 }
 
 function renderArticleAuthor(author: ArticleAuthor): string {
   const label = `By ${author.name}`
+  const avatar = author.avatar
+    ? `<img class="article-author-avatar" src="${escapeHtml(authorAvatarAssetFor(author.avatar))}" alt="${escapeHtml(`${author.name} avatar`)}" loading="lazy" />`
+    : ''
+  const content = `
+    ${avatar}
+    <span class="article-author-label">${escapeHtml(label)}</span>
+  `
 
   if (!author.url || !isSafeAuthorUrl(author.url)) {
-    return `<span>${escapeHtml(label)}</span>`
+    return `<span class="article-author">${content}</span>`
   }
 
-  return `<a class="article-author-link" href="${escapeHtml(author.url)}" target="_blank" rel="author noreferrer">${escapeHtml(label)}</a>`
+  return `
+    <a class="article-author article-author-link" href="${escapeHtml(author.url)}" target="_blank" rel="author noreferrer">
+      ${content}
+      <svg class="article-author-arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M5 3.5h7.5V11M12.25 3.75 4 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  `
+}
+
+function authorAvatarAssetFor(path: string): string {
+  if (/^(https?:|data:|blob:|\/)/.test(path) || path.startsWith('images/')) {
+    return assetFor(path)
+  }
+
+  return assetFor(`images/${path}`)
 }
 
 function renderArticleTocLinks(toc: ArticleHeading[], context: 'desktop' | 'mobile'): string {
@@ -1135,6 +1175,7 @@ function setupArticleReadingNavigation() {
   if (!content || !headings.length || !links.length) return
 
   let mobileSheetCloseTimer: number | undefined
+  let lastActiveId: string | undefined
 
   const setMobileSheetOpen = (isOpen: boolean) => {
     if (!mobileToggle || !mobileSheet || !mobileNav) return
@@ -1163,6 +1204,28 @@ function setupArticleReadingNavigation() {
 
     heading.scrollIntoView({ behavior: 'smooth', block: 'start' })
     setMobileSheetOpen(false)
+  }
+
+  const scrollTocLinkIntoView = (link: HTMLElement) => {
+    const container = link.closest<HTMLElement>('.article-toc-list, .article-mobile-toc-list')
+    if (!container) return
+
+    const containerRect = container.getBoundingClientRect()
+    const linkRect = link.getBoundingClientRect()
+    const scrollPadding = 16
+    const isAboveView = linkRect.top < containerRect.top + scrollPadding
+    const isBelowView = linkRect.bottom > containerRect.bottom - scrollPadding
+
+    if (!isAboveView && !isBelowView) return
+
+    const scrollDelta = isAboveView
+      ? linkRect.top - containerRect.top - scrollPadding
+      : linkRect.bottom - containerRect.bottom + scrollPadding
+
+    container.scrollTo({
+      top: container.scrollTop + scrollDelta,
+      behavior: 'smooth',
+    })
   }
 
   links.forEach((link) => {
@@ -1203,6 +1266,9 @@ function setupArticleReadingNavigation() {
     const progress = contentEnd <= contentStart ? 1 : Math.min(1, Math.max(0, (window.scrollY - contentStart) / (contentEnd - contentStart)))
     const progressText = `${Math.round(progress * 100)}%`
     const activeTitle = activeHeading.textContent?.trim() || 'Start'
+    const didActiveSectionChange = activeId !== lastActiveId
+
+    lastActiveId = activeId
 
     progressFills.forEach((fill) => {
       fill.style.transform = `scaleX(${progress})`
@@ -1217,6 +1283,10 @@ function setupArticleReadingNavigation() {
       const isActive = link.dataset.articleTocLink === activeId
       link.classList.toggle('is-active', isActive)
       link.setAttribute('aria-current', isActive ? 'true' : 'false')
+
+      if (isActive && didActiveSectionChange) {
+        scrollTocLinkIntoView(link)
+      }
     })
   }
 
@@ -1341,6 +1411,58 @@ function setupInteractions() {
   setupDemoFullscreen()
   setupDemoAmbientLight()
   setupArticleReadingNavigation()
+  setupArticleImageLightbox()
+}
+
+function setupArticleImageLightbox() {
+  const lightbox = document.querySelector<HTMLElement>('[data-article-lightbox]')
+  const preview = lightbox?.querySelector<HTMLImageElement>('[data-article-lightbox-preview]')
+  const caption = lightbox?.querySelector<HTMLElement>('[data-article-lightbox-caption]')
+  const closeButton = lightbox?.querySelector<HTMLButtonElement>('.article-image-lightbox-close')
+  let previouslyFocused: Element | null = null
+
+  if (!lightbox || !preview || !caption) return
+
+  const closeLightbox = () => {
+    lightbox.hidden = true
+    preview.removeAttribute('src')
+    document.body.classList.remove('article-lightbox-open')
+
+    if (previouslyFocused instanceof HTMLElement) {
+      previouslyFocused.focus()
+    }
+  }
+
+  const openLightbox = (image: HTMLImageElement) => {
+    const figure = image.closest('figure')
+    const figureCaption = figure?.querySelector('figcaption')?.textContent?.trim() ?? ''
+
+    previouslyFocused = document.activeElement
+    preview.src = image.currentSrc || image.src
+    preview.alt = image.alt
+    caption.textContent = figureCaption
+    caption.hidden = !figureCaption
+    lightbox.hidden = false
+    document.body.classList.add('article-lightbox-open')
+    closeButton?.focus()
+  }
+
+  document.querySelectorAll<HTMLImageElement>('[data-article-lightbox-image]').forEach((image) => {
+    image.addEventListener('click', () => openLightbox(image))
+    image.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return
+      event.preventDefault()
+      openLightbox(image)
+    })
+  })
+
+  lightbox.querySelectorAll('[data-article-lightbox-close]').forEach((control) => {
+    control.addEventListener('click', closeLightbox)
+  })
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !lightbox.hidden) closeLightbox()
+  })
 }
 
 function setupDemoFullscreen() {

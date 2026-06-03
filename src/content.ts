@@ -4,6 +4,7 @@ import authorEntries from '../Resources/authors.json' with { type: 'json' }
 export type ArticleAuthor = {
   name: string
   url?: string
+  avatar?: string
 }
 
 export type ArticleFrontmatter = {
@@ -43,6 +44,7 @@ type AuthorEntry = {
   username?: string
   url?: string
   profileUrl?: string
+  avatar?: string
   socials?: AuthorSocial[]
 }
 
@@ -188,6 +190,7 @@ function resolveAuthor(value: unknown, filePath: string): ArticleAuthor {
   return {
     name: author.name,
     url: authorUrlFor(author),
+    avatar: typeof author.avatar === 'string' ? author.avatar : undefined,
   }
 }
 
@@ -325,7 +328,7 @@ function renderArticleMedia(line: string): string | null {
   const isVideo = Boolean(videoMatch) || /\.(mp4|webm|ogg|mov)$/i.test(rawSrc)
   const media = isVideo
     ? `<video controls playsinline preload="metadata" src="${escapeHtml(src)}">${escapeHtml(alt)}</video>`
-    : `<img src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" loading="lazy" />`
+    : `<img src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" loading="lazy" role="button" tabindex="0" aria-label="Open image fullscreen" data-article-lightbox-image />`
 
   return `
     <figure class="article-media ${isVideo ? 'article-media-video' : 'article-media-image'}">
