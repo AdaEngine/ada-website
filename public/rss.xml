@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>AdaEngine News</title>
+    <link>https://adaengine.org/blog</link>
+    <description>Read AdaEngine updates, release notes, engineering deep dives, and Swift game development articles from the project team.</description>
+    <language>en</language>
+    <lastBuildDate>Mon, 01 Jun 2026 10:36:00 GMT</lastBuildDate>
+    <item>
+      <title>Introducing AdaEngine 0.1.0</title>
+      <link>https://adaengine.org/articles/introducing-adaengine-0-1-0</link>
+      <guid isPermaLink="true">https://adaengine.org/articles/introducing-adaengine-0-1-0</guid>
+      <description>AdaEngine 0.1.0 is the first public milestone for a Swift-first, data-driven game engine and app framework.</description>
+      <pubDate>Mon, 01 Jun 2026 10:36:00 GMT</pubDate>
+      <author>SpectralDragon</author>
+      <category>release</category>
+    </item>
+  </channel>
+</rss>

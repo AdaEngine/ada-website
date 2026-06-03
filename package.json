@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "geo": "node scripts/generate-geo-assets.mjs",
-    "prebuild": "npm run geo",
+    "rss": "node scripts/generate-rss.mjs",
+    "prebuild": "npm run geo && npm run rss",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "pretest": "npm run geo",

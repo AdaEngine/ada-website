@@ -93,6 +93,15 @@ const robots = readFileSync('public/robots.txt', 'utf8')
 assert.match(robots, /User-agent: \*/)
 assert.match(robots, /Sitemap: https:\/\/adaengine\.org\/sitemap\.xml/)
 
+const rss = readFileSync('public/rss.xml', 'utf8')
+assert.match(rss, /<title>AdaEngine News<\/title>/)
+assert.match(rss, /<link>https:\/\/adaengine\.org\/blog<\/link>/)
+assert.match(rss, /<guid isPermaLink="true">https:\/\/adaengine\.org\/articles\/introducing-adaengine-0-1-0<\/guid>/)
+assert.match(rss, /<category>release<\/category>/)
+
+const indexHtml = readFileSync('index.html', 'utf8')
+assert.match(indexHtml, /<link rel="alternate" type="application\/rss\+xml" title="AdaEngine News" href="https:\/\/adaengine\.org\/rss\.xml" \/>/)
+
 const sitemap = readFileSync('public/sitemap.xml', 'utf8')
 assert.match(sitemap, /<loc>https:\/\/adaengine\.org\/<\/loc>/)
 assert.match(sitemap, /<loc>https:\/\/adaengine\.org\/learn<\/loc>/)
