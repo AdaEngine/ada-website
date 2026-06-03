@@ -147,6 +147,7 @@ assert.match(mainSource, /class="feature-modal-close demo-player-fullscreen"/)
 assert.doesNotMatch(mainSource, /data-modal-close>×<\/button>/)
 assert.match(mainSource, /class="footer-social-links"/)
 assert.match(mainSource, /aria-label="AdaEngine on GitHub"/)
+assert.match(mainSource, /aria-label="AdaEngine on Discord"/)
 assert.match(mainSource, /href="https:\/\/x\.com\/AdaEngine"/)
 assert.match(mainSource, /aria-label="AdaEngine on Telegram"/)
 
