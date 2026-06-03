@@ -91,6 +91,16 @@ let engine = AdaEngine()
 `)
 assert.match(renderedTitledCodeBlock.html, /<figcaption>\s*<span>MovementSystem\.swift<\/span>\s*<span>Swift<\/span>\s*<\/figcaption>/)
 
+const renderedYamlCodeBlock = markdownToHtml(`
+\`\`\`yaml
+version: 1.0.0
+scene: Scene
+\`\`\`
+`)
+assert.match(renderedYamlCodeBlock.html, /<figcaption>\s*<span><\/span>\s*<span>YAML<\/span>\s*<\/figcaption>/)
+assert.match(renderedYamlCodeBlock.html, /<code class="language-yaml">/)
+assert.match(renderedYamlCodeBlock.html, /<span class="hljs-attr">version:<\/span>/)
+
 const renderedInlineMarkdown = markdownToHtml(
   'For more control, use [`EmptyWindow`](https://adaengine.org/adaengine-docs/documentation/adaapp/emptywindow) and [`disable(_:)`](https://adaengine.org/adaengine-docs/documentation/adaengine/defaultplugins/disable(_:)).',
 )

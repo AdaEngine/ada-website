@@ -6,6 +6,7 @@ import markdown from 'highlight.js/lib/languages/markdown'
 import swift from 'highlight.js/lib/languages/swift'
 import typescript from 'highlight.js/lib/languages/typescript'
 import xml from 'highlight.js/lib/languages/xml'
+import yaml from 'highlight.js/lib/languages/yaml'
 
 hljs.registerLanguage('bash', bash)
 hljs.registerLanguage('javascript', javascript)
@@ -23,6 +24,7 @@ hljs.registerLanguage('swift', (hljsApi: Parameters<typeof swift>[0]) => {
 })
 hljs.registerLanguage('typescript', typescript)
 hljs.registerLanguage('xml', xml)
+hljs.registerLanguage('yaml', yaml)
 
 const languageAliases: Record<string, string> = {
   html: 'xml',
@@ -32,6 +34,7 @@ const languageAliases: Record<string, string> = {
   shell: 'bash',
   ts: 'typescript',
   txt: 'plaintext',
+  yml: 'yaml',
 }
 
 function normalizeLanguage(language: string): string {

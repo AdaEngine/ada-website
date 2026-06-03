@@ -281,6 +281,8 @@ function humanizeLanguage(language: string): string {
     swift: 'Swift',
     ts: 'TypeScript',
     typescript: 'TypeScript',
+    yaml: 'YAML',
+    yml: 'YAML',
   }
 
   return labels[normalized] ?? (language ? language[0].toUpperCase() + language.slice(1) : 'Code')
