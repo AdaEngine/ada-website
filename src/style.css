@@ -292,12 +292,12 @@ code {
 }
 .hero-section {
     position: relative;
-    min-height: calc(100vh - 74px);
+    min-height: auto;
     display: grid;
     grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
     gap: clamp(36px, 7vw, 96px);
     align-items: center;
-    padding-top: clamp(56px, 8vw, 112px);
+    padding-top: clamp(36px, 5vw, 72px);
     padding-bottom: clamp(46px, 7vw, 96px);
 }
 .hero-copy,
