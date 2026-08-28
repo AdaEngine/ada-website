@@ -1,5 +1,5 @@
 import './style.css'
-import { highlightCode, languageClass, renderHighlightedCodeLines } from './codeHighlight'
+import { languageClass, renderHighlightedCodeLines } from './codeHighlight'
 import { articles, getArticleBySlug, type ArticleAuthor, type ArticleHeading } from './content'
 import { findDemoBySlug, groupDemosByTag, loadDemoSource, loadDemosManifest, type DemoEntry, type DemosManifest } from './demos'
 import { hrefFor as createHref, resolveRoute, type StaticPageName } from './routing'
@@ -18,6 +18,7 @@ type FeatureItem = {
   details: string
   code?: string
   image?: string
+  gif?: string
 }
 
 type ShowcaseItem = {
@@ -256,6 +257,7 @@ const features: FeatureItem[] = [
     details:
       'AdaEngine is built around a custom, data-oriented Entity Component System inspired by modern Swift APIs. Components keep game state small and explicit, while systems operate through typed queries, resources, schedules and macros such as @Component and @System. This makes gameplay code modular, cache-friendly and easier to scale from a tiny prototype to a full scene with input, animation, physics and rendering working together.',
     code: `@Component\nstruct Player: Entity { }\n\nstruct PlayerSystem: System {\n    func update(context: UpdateSceneContext) { }\n}`,
+    gif: 'images/features/data-driven.gif',
   },
   {
     title: '2D Renderer',
@@ -264,6 +266,7 @@ const features: FeatureItem[] = [
     details:
       'AdaEngine ships with a high-level 2D rendering stack for sprites, text, tilemaps, cameras and custom materials. The demos cover sprite animation, transparency, lighting, text rendering, WGSL experiments and stress scenes, while the renderer still leaves room for lower-level control when you need custom shaders or pipeline work. It is designed for Swift-first game code where drawing a scene should feel direct, but not boxed in.',
     image: 'images/icons/ic_duck.png',
+    gif: 'images/features/2d-renderer.gif',
   },
   {
     title: '2D Physics',
@@ -271,6 +274,7 @@ const features: FeatureItem[] = [
     details:
       'The Physics2D plugin integrates Box2D with AdaEngine entities through components such as PhysicsBody2DComponent and Collision2DComponent. Simulation runs on the fixed-update schedule, then syncs transforms back into the scene so gameplay systems can react through the same ECS flow as the rest of the engine. It includes collision events, debug drawing support and world resources for direct access when a game needs deeper physics control.',
     image: 'images/icons/ic_box2d.svg',
+    gif: 'images/features/2d-physics.gif',
   },
   {
     title: 'Render Graphs',
@@ -278,6 +282,7 @@ const features: FeatureItem[] = [
     details:
       'Rendering is organized around RenderGraph resources, nodes, slots, subgraphs and an executor that runs the graph each frame. Core 2D and 3D pipelines are assembled as graphs, and cameras can point at specific render subgraphs for flexible composition. Diagnostics can snapshot nodes, edges, subgraphs and frame records, which makes custom pipelines easier to reason about when you add post-processing, offscreen passes or specialized rendering stages.',
     image: 'images/icons/ic_render_graph.svg',
+    gif: 'images/features/render-graphs.gif',
   },
   {
     title: 'Custom UI Engine',
@@ -285,6 +290,7 @@ const features: FeatureItem[] = [
     details:
       'AdaUI brings a SwiftUI-like declarative layer into AdaEngine with views, result builders, environment values, layout containers, gestures, animation, text fields, scroll views and navigation primitives. UI can live naturally beside game scenes, and the engine includes tooling such as a 3D AdaUI debug view for inspecting live UI trees. The goal is to make editor panels, HUDs and in-game interfaces feel native to the same Swift codebase as your gameplay.',
     code: `struct MainView: View {\n    @Environment(\\.scene) var scene\n\n    var body: some View {\n        Text("Hello, World!")\n    }\n}`,
+    gif: 'images/features/custom-ui.gif',
   },
   {
     title: 'Free and Open Source',
@@ -292,6 +298,28 @@ const features: FeatureItem[] = [
     details:
       'AdaEngine is MIT licensed and developed in the open, with source, tutorials, generated API documentation, demos and build guides available from the repository. You can study the engine internals, modify them for your project, ship without royalties or runtime fees, and contribute fixes, examples or documentation back to the community. The project is still evolving, so the roadmap is visible where the code actually lives.',
     image: 'images/icons/ic_opensource.svg',
+    gif: 'images/features/open-source.gif',
+  },
+  {
+    title: 'AdaScript',
+    description: 'Write gameplay scripts with AdaScript, powered by the Gravity language runtime and integrated with AdaEngine ECS.',
+    details:
+      'AdaScript brings the Gravity scripting runtime into AdaEngine for fast gameplay iteration. Scripts declare their component queries and use capability-scoped access to read or update reflected ECS fields, so scripted systems participate in the same scheduling and access rules as native Swift systems. Keep performance-critical code in Swift and move tuning, behaviours and gameplay logic into reloadable scripts.',
+    gif: 'images/features/adascript.gif',
+  },
+  {
+    title: '3D Rendering',
+    description: 'Build 3D scenes with cameras, materials, lighting, skyboxes and extensible render pipelines.',
+    details:
+      'AdaEngine’s 3D stack is built around the same render-graph architecture as its core renderer. Compose camera views, materials, meshes, lights, environment settings and skyboxes into a Swift-first scene, then extend the pipeline with your own passes and subgraphs when a project needs custom post-processing or rendering techniques.',
+    gif: 'images/features/3d-rendering.gif',
+  },
+  {
+    title: '3D Physics',
+    description: 'Simulate rigid bodies, collisions and constraints in 3D with the integrated Box3D physics engine.',
+    details:
+      'AdaEngine includes a Box3D-backed 3D physics path for rigid body simulation, collision queries and joint constraints. It is designed to work alongside AdaEngine entities and transforms, with a dedicated example target for validating 3D physics scenes. Box3D brings a C17 rigid-body simulation core while AdaEngine keeps the scene-facing API in Swift.',
+    gif: 'images/features/3d-physics.gif',
   },
 ]
 
@@ -474,7 +502,7 @@ function renderHero(): string {
           </a>
         </div>
       </div>
-      <div class="hero-visual" aria-hidden="true">
+      <div class="hero-visual" aria-hidden="true" data-hero-gif-src="${assetFor('images/main/adaengine-hero.gif')}">
         <picture class="ae-logo-header"><source srcset="${assetFor('images/ae_logo~dark.svg')}" media="(prefers-color-scheme: dark)" /><img src="${assetFor('images/ae_logo.svg')}" alt="" /></picture>
         <div class="hero-orbit hero-orbit-one"></div>
         <div class="hero-orbit hero-orbit-two"></div>
@@ -612,6 +640,16 @@ function renderBlogPage() {
 
 function renderDemosPage(manifest: DemosManifest) {
   const groups = groupDemosByTag(manifest.demos)
+  const categoryLinks = groups
+    .map(
+      (group) => `
+        <a class="article-toc-link demo-category-link" href="#demo-group-${escapeHtml(group.tag)}" data-demo-category-link="demo-group-${escapeHtml(group.tag)}">
+          <span>${escapeHtml(group.title)}</span>
+          <small>${group.demos.length}</small>
+        </a>
+      `,
+    )
+    .join('')
 
   app.innerHTML = `
     ${renderHeader()}
@@ -624,22 +662,30 @@ function renderDemosPage(manifest: DemosManifest) {
         </header>
         ${
           groups.length
-            ? `<div class="demo-groups">
-                ${groups
-                  .map(
-                    (group) => `
-                      <section class="demo-group" aria-labelledby="demo-group-${escapeHtml(group.tag)}">
-                        <div class="demo-group-heading">
-                          <h2 id="demo-group-${escapeHtml(group.tag)}">${escapeHtml(group.title)}</h2>
-                          <span>${group.demos.length} ${group.demos.length === 1 ? 'demo' : 'demos'}</span>
-                        </div>
-                        <div class="demo-card-grid">
-                          ${group.demos.map(renderDemoCard).join('')}
-                        </div>
-                      </section>
-                    `,
-                  )
-                  .join('')}
+            ? `<div class="demos-browse-layout">
+                <aside class="demo-category-nav" aria-label="Demo categories">
+                  <div class="article-toc-panel demo-category-panel">
+                    <p class="article-toc-title">Categories</p>
+                    <nav class="article-toc-list demo-category-list">${categoryLinks}</nav>
+                  </div>
+                </aside>
+                <div class="demo-groups">
+                  ${groups
+                    .map(
+                      (group) => `
+                        <section class="demo-group" aria-labelledby="demo-group-${escapeHtml(group.tag)}">
+                          <div class="demo-group-heading">
+                            <h2 id="demo-group-${escapeHtml(group.tag)}">${escapeHtml(group.title)}</h2>
+                            <span>${group.demos.length} ${group.demos.length === 1 ? 'demo' : 'demos'}</span>
+                          </div>
+                          <div class="demo-card-grid">
+                            ${group.demos.map(renderDemoCard).join('')}
+                          </div>
+                        </section>
+                      `,
+                    )
+                    .join('')}
+                </div>
               </div>`
             : `<div class="demo-empty">
                 <h2>No demos published yet</h2>
@@ -732,6 +778,8 @@ async function renderDemoPage(slug: string) {
 }
 
 function renderFeatures(): string {
+  const orderedFeatures = [...features.slice(-3), ...features.slice(0, -3)]
+
   return `
     <section id="features" class="features-container safe-area-insets">
       <div class="section-heading">
@@ -739,16 +787,16 @@ function renderFeatures(): string {
         <h2 class="section-title">Features</h2>
       </div>
       <div class="features-grid">
-        ${features
+        ${orderedFeatures
           .map(
             (item, index) => `
-              <button class="engine-info-item-container feature-card feature-card-${index + 1}" type="button" data-feature-index="${index}" aria-haspopup="dialog">
+              <button class="engine-info-item-container feature-card feature-card-${index + 1}" type="button" data-feature-index="${features.indexOf(item)}" data-feature-position="${index + 1}" aria-haspopup="dialog">
+                ${renderFeatureContent(item)}
                 <div class="engine-info-item-text">
                   <span class="feature-number">0${index + 1}</span>
                   <h3>${item.title}</h3>
                   <p>${item.description}</p>
                 </div>
-                ${renderFeatureContent(item)}
                 <span class="feature-card-action">Learn more</span>
               </button>
             `,
@@ -760,9 +808,14 @@ function renderFeatures(): string {
 }
 
 function renderFeatureContent(item: FeatureItem): string {
+  const gifPath = item.gif ? assetFor(item.gif) : ''
+
   return `
-    <div class="engine-info-item-content">
-      ${item.image ? `<img src="${assetFor(item.image)}" alt="${item.title}" />` : `<pre><code class="swift-code ${languageClass('swift')}">${highlightCode(item.code ?? '', 'swift')}</code></pre>`}
+    <div class="engine-info-item-content feature-media-slot"${gifPath ? ` data-gif-src="${gifPath}"` : ''}>
+      <span class="feature-media-placeholder" aria-hidden="true">
+        <span>GIF preview</span>
+        ${item.gif ? `<code>public/${item.gif}</code>` : ''}
+      </span>
     </div>
   `
 }
@@ -772,15 +825,19 @@ function renderFeatureModal(): string {
     <div class="feature-modal" role="dialog" aria-modal="true" aria-labelledby="feature-modal-title" hidden>
       <div class="feature-modal-backdrop" data-modal-close></div>
       <section class="feature-modal-panel">
-        <button class="feature-modal-close demo-player-fullscreen" type="button" aria-label="Close feature details" title="Close" data-modal-close>
+        <button class="feature-modal-close" type="button" aria-label="Close feature details" title="Close" data-modal-close>
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
           </svg>
         </button>
-        <div class="feature-modal-visual" id="feature-modal-visual"></div>
-        <p class="eyebrow" id="feature-modal-kicker">Feature</p>
-        <h2 id="feature-modal-title"></h2>
-        <p id="feature-modal-description"></p>
+        <div class="feature-modal-layout">
+          <div class="feature-modal-visual" id="feature-modal-visual"></div>
+          <div class="feature-modal-copy">
+            <p class="eyebrow" id="feature-modal-kicker">Feature</p>
+            <h2 id="feature-modal-title"></h2>
+            <p id="feature-modal-description"></p>
+          </div>
+        </div>
       </section>
     </div>
   `
@@ -809,12 +866,13 @@ function renderFooterSocialLinks(): string {
 function renderFooter(): string {
   return `
     <footer class="footer">
+      <div class="footer-dot-field" aria-hidden="true"></div>
       <div class="footer-container">
         <div class="footer-columns">
           <section>
             <h3>Ada Engine</h3>
-            <a href="https://github.com/AdaEngine/AdaEngine/releases">Download</a>
-            <a href="https://github.com/AdaEngine/AdaEngine">Source code</a>
+            <a href="https://github.com/AdaEngine/AdaEngine/releases">Download<span class="footer-external-mark" aria-hidden="true">↗</span></a>
+            <a href="https://github.com/AdaEngine/AdaEngine">Source code<span class="footer-external-mark" aria-hidden="true">↗</span></a>
           </section>
           <section>
             <h3>Project</h3>
@@ -825,13 +883,14 @@ function renderFooter(): string {
           <section>
             <h3>Foundation</h3>
             <a href="${hrefFor('/donate')}">Donate</a>
-            <a href="https://github.com/AdaEngine/AdaEngine/blob/main/LICENSE">License</a>
+            <a href="https://github.com/AdaEngine/AdaEngine/blob/main/LICENSE">License<span class="footer-external-mark" aria-hidden="true">↗</span></a>
           </section>
         </div>
         <div class="footer-bottom">
           <p>© 2021-2026 Vladislav Prusakov and contributors. All rights reserved.</p>
           ${renderFooterSocialLinks()}
         </div>
+        <div class="footer-blueprint-mark" aria-hidden="true">AdaEngine</div>
       </div>
     </footer>
   `
@@ -1295,6 +1354,78 @@ function setupArticleReadingNavigation() {
   updateReadingState()
 }
 
+function setupDemoCategoryNavigation() {
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-demo-category-link]'))
+  const sections = links
+    .map((link) => document.getElementById(link.dataset.demoCategoryLink ?? '')?.closest<HTMLElement>('.demo-group'))
+    .filter((section): section is HTMLElement => Boolean(section))
+
+  if (!links.length || !sections.length) return
+
+  let lastActiveHeadingId: string | undefined
+
+  const scrollCategoryLinkIntoView = (link: HTMLElement) => {
+    const list = link.closest<HTMLElement>('.demo-category-list')
+    if (!list || list.scrollWidth <= list.clientWidth) return
+
+    const listRect = list.getBoundingClientRect()
+    const linkRect = link.getBoundingClientRect()
+    const scrollPadding = 12
+    const isBeforeView = linkRect.left < listRect.left + scrollPadding
+    const isAfterView = linkRect.right > listRect.right - scrollPadding
+    if (!isBeforeView && !isAfterView) return
+
+    const scrollDelta = isBeforeView
+      ? linkRect.left - listRect.left - scrollPadding
+      : linkRect.right - listRect.right + scrollPadding
+
+    list.scrollTo({ left: list.scrollLeft + scrollDelta, behavior: 'smooth' })
+  }
+
+  const setActiveCategory = () => {
+    const viewportAnchor = window.scrollY + Math.min(180, window.innerHeight * 0.28)
+    const activeSection =
+      sections
+        .slice()
+        .reverse()
+        .find((section) => section.getBoundingClientRect().top + window.scrollY <= viewportAnchor) ?? sections[0]
+    const activeHeadingId = activeSection.querySelector<HTMLElement>('h2[id]')?.id
+    const didActiveCategoryChange = activeHeadingId !== lastActiveHeadingId
+
+    lastActiveHeadingId = activeHeadingId
+
+    links.forEach((link) => {
+      const isActive = link.dataset.demoCategoryLink === activeHeadingId
+      link.classList.toggle('is-active', isActive)
+      if (isActive) {
+        link.setAttribute('aria-current', 'location')
+      } else {
+        link.removeAttribute('aria-current')
+      }
+
+      if (isActive && didActiveCategoryChange) {
+        scrollCategoryLinkIntoView(link)
+      }
+    })
+  }
+
+  links.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      const headingId = link.dataset.demoCategoryLink
+      const heading = headingId ? document.getElementById(headingId) : null
+      if (!heading || !headingId) return
+
+      event.preventDefault()
+      history.replaceState(null, '', `${window.location.pathname}${window.location.search}#${headingId}`)
+      heading.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  })
+
+  window.addEventListener('scroll', setActiveCategory, { passive: true })
+  window.addEventListener('resize', setActiveCategory)
+  setActiveCategory()
+}
+
 async function renderRoute() {
   const route = resolveRoute(window.location.pathname, import.meta.env.BASE_URL)
   applySeo(createRouteSeo(route))
@@ -1374,6 +1505,8 @@ function setupInteractions() {
     })
   })
 
+  setupFeatureGifPreviews()
+
   const modal = document.querySelector<HTMLElement>('.feature-modal')
   const modalTitle = document.querySelector<HTMLElement>('#feature-modal-title')
   const modalDescription = document.querySelector<HTMLElement>('#feature-modal-description')
@@ -1393,10 +1526,9 @@ function setupInteractions() {
       if (!feature || !modal || !modalTitle || !modalDescription || !modalKicker || !modalVisual) return
       modalTitle.textContent = feature.title
       modalDescription.textContent = featureDetails(feature)
-      modalKicker.textContent = `Feature 0${index + 1}`
-      modalVisual.innerHTML = feature.image
-        ? `<img src="${assetFor(feature.image)}" alt="${escapeHtml(feature.title)}" />`
-        : `<pre><code class="swift-code ${languageClass('swift')}">${highlightCode(feature.code ?? '', 'swift')}</code></pre>`
+      modalKicker.textContent = `Feature ${String(Number(card.dataset.featurePosition) || index + 1).padStart(2, '0')}`
+      modalVisual.innerHTML = renderFeatureModalMedia(feature)
+      setupFeatureGifPreviews()
       modal.hidden = false
       document.body.classList.add('modal-opened')
     })
@@ -1408,10 +1540,85 @@ function setupInteractions() {
   })
 
   setupShowcaseCarousel()
+  setupHeroGifAmbientLight()
   setupDemoFullscreen()
   setupDemoAmbientLight()
+  setupDemoCategoryNavigation()
   setupArticleReadingNavigation()
   setupArticleImageLightbox()
+}
+
+function setupFeatureGifPreviews() {
+  document.querySelectorAll<HTMLElement>('[data-gif-src]').forEach((slot) => {
+    const source = slot.dataset.gifSrc
+    if (!source) return
+
+    const preview = new Image()
+    preview.onload = () => {
+      preview.className = 'feature-media-gif'
+      preview.alt = ''
+      preview.decoding = 'async'
+      slot.replaceChildren(preview)
+    }
+    preview.src = source
+  })
+}
+
+function setupHeroGifAmbientLight() {
+  const visual = document.querySelector<HTMLElement>('[data-hero-gif-src]')
+  const source = visual?.dataset.heroGifSrc
+  if (!visual || !source) return
+
+  const preview = new Image()
+  preview.onload = () => {
+    preview.className = 'hero-gif'
+    preview.alt = ''
+    preview.decoding = 'async'
+    visual.querySelector('.ae-logo-header')?.replaceWith(preview)
+
+    const sampler = document.createElement('canvas')
+    sampler.width = 1
+    sampler.height = 1
+    const context = sampler.getContext('2d', { willReadFrequently: true })
+    if (!context) return
+
+    let ambient = { red: 34, green: 148, blue: 255 }
+    const sampleAmbient = () => {
+      try {
+        context.clearRect(0, 0, 1, 1)
+        context.drawImage(preview, 0, 0, 1, 1)
+        const [red, green, blue, alpha] = context.getImageData(0, 0, 1, 1).data
+        if (alpha > 0 && red + green + blue > 8) {
+          ambient = {
+            red: Math.round(ambient.red * 0.7 + red * 0.3),
+            green: Math.round(ambient.green * 0.7 + green * 0.3),
+            blue: Math.round(ambient.blue * 0.7 + blue * 0.3),
+          }
+          visual.style.setProperty('--hero-ambient', `${ambient.red} ${ambient.green} ${ambient.blue}`)
+          visual.classList.add('has-ambient-light')
+        }
+      } catch {
+        // Keep the GIF usable even if the browser cannot sample its pixels.
+      }
+      window.setTimeout(sampleAmbient, 600)
+    }
+
+    sampleAmbient()
+  }
+  preview.src = source
+}
+
+function renderFeatureModalMedia(item: FeatureItem): string {
+  const gifPath = item.gif ? assetFor(item.gif) : ''
+
+  return `
+    <div class="feature-modal-media feature-media-slot"${gifPath ? ` data-gif-src="${gifPath}"` : ''}>
+      <span class="feature-media-placeholder" aria-hidden="true">
+        <span>GIF preview</span>
+        ${item.gif ? `<code>public/${item.gif}</code>` : ''}
+      </span>
+    </div>
+  `
 }
 
 function setupArticleImageLightbox() {
