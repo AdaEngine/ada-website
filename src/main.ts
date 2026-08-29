@@ -811,7 +811,8 @@ function renderFeatureContent(item: FeatureItem): string {
   const gifPath = item.gif ? assetFor(item.gif) : ''
 
   return `
-    <div class="engine-info-item-content feature-media-slot"${gifPath ? ` data-gif-src="${gifPath}"` : ''}>
+    <div class="engine-info-item-content feature-media-slot" data-feature-preview>
+      ${gifPath ? `<img class="feature-media-gif" src="${gifPath}" alt="" loading="lazy" decoding="async" />` : ''}
       <span class="feature-media-loader" aria-label="Loading animated feature preview">
         <span class="feature-media-spinner" aria-hidden="true"></span>
         <span>Loading preview</span>
@@ -826,6 +827,7 @@ function renderFeatureModal(): string {
       <div class="feature-modal-backdrop" data-modal-close></div>
       <section class="feature-modal-panel">
         <button class="feature-modal-close" type="button" aria-label="Close feature details" title="Close" data-modal-close>
+          <span class="feature-modal-close-label">Close</span>
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
           </svg>
@@ -1057,9 +1059,9 @@ function renderHomePage() {
         ${renderLatestNews()}
         ${renderFeatures()}
       </div>
-      ${renderFeatureModal()}
     </main>
     ${renderFooter()}
+    ${renderFeatureModal()}
   `
 }
 
@@ -1549,52 +1551,16 @@ function setupInteractions() {
 }
 
 function setupFeatureGifPreviews() {
-  const loadPreview = (slot: HTMLElement) => {
-    const source = slot.dataset.gifSrc
-    if (!source) return
+  document.querySelectorAll<HTMLElement>('[data-feature-preview]:not([data-preview-listeners-ready])').forEach((slot) => {
+    const preview = slot.querySelector<HTMLImageElement>('.feature-media-gif')
+    if (!preview) return
 
-    slot.classList.add('is-loading')
-    const preview = new Image()
-    preview.onload = () => {
-      preview.className = 'feature-media-gif'
-      preview.alt = ''
-      preview.decoding = 'async'
-      slot.replaceChildren(preview)
-      slot.classList.remove('is-loading')
-      slot.classList.add('is-loaded')
-    }
-    preview.onerror = () => {
-      slot.classList.remove('is-loading')
-      slot.classList.add('has-load-error')
-    }
-    preview.src = source
-  }
+    slot.dataset.previewListenersReady = 'true'
+    const markLoaded = () => slot.classList.add('is-loaded')
+    preview.addEventListener('load', markLoaded, { once: true })
+    preview.addEventListener('error', () => slot.classList.add('has-load-error'), { once: true })
 
-  const slots = Array.from(document.querySelectorAll<HTMLElement>('[data-gif-src]:not([data-gif-preview-ready)]'))
-  if (!slots.length) return
-
-  const observer = typeof IntersectionObserver === 'undefined'
-    ? null
-    : new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return
-            observer?.unobserve(entry.target)
-            loadPreview(entry.target as HTMLElement)
-          })
-        },
-        { rootMargin: '160px 0px' },
-      )
-
-  slots.forEach((slot) => {
-    slot.dataset.gifPreviewReady = 'true'
-    if (slot.closest('.feature-modal')) {
-      loadPreview(slot)
-    } else if (observer) {
-      observer.observe(slot)
-    } else {
-      loadPreview(slot)
-    }
+    if (preview.complete && preview.naturalWidth > 0) markLoaded()
   })
 }
 
@@ -1646,7 +1612,8 @@ function renderFeatureModalMedia(item: FeatureItem): string {
   const gifPath = item.gif ? assetFor(item.gif) : ''
 
   return `
-    <div class="feature-modal-media feature-media-slot"${gifPath ? ` data-gif-src="${gifPath}"` : ''}>
+    <div class="feature-modal-media feature-media-slot" data-feature-preview>
+      ${gifPath ? `<img class="feature-media-gif" src="${gifPath}" alt="" decoding="async" />` : ''}
       <span class="feature-media-loader" aria-label="Loading animated feature preview">
         <span class="feature-media-spinner" aria-hidden="true"></span>
         <span>Loading preview</span>
@@ -1939,13 +1906,17 @@ function setupShowcaseCarousel() {
   start()
 }
 
-renderRoute()
-  .then(() => {
-    setupInteractions()
-    setupGitHubStars()
-  })
+void renderRoute()
   .catch((error) => {
     console.error(error)
     renderNotFound('Page failed to load', 'Refresh the page or try again in a moment.')
-    setupInteractions()
+  })
+  .then(() => {
+    try {
+      setupInteractions()
+    } catch (error) {
+      console.error('Failed to initialize page interactions', error)
+    }
+
+    void setupGitHubStars()
   })
