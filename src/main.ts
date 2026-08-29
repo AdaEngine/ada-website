@@ -1050,12 +1050,15 @@ function renderCommunityPage() {
 }
 
 function renderHomePage() {
+  // Keep the showcase implementation ready for a later re-enable.
+  const showShowcase = false
+
   app.innerHTML = `
     ${renderHeader()}
     <main class="page-shell">
       <div class="container content-restriction">
         ${renderHero()}
-        ${renderShowcaseGallery()}
+        ${showShowcase ? renderShowcaseGallery() : ''}
         ${renderLatestNews()}
         ${renderFeatures()}
       </div>
