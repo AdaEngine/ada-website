@@ -812,9 +812,9 @@ function renderFeatureContent(item: FeatureItem): string {
 
   return `
     <div class="engine-info-item-content feature-media-slot"${gifPath ? ` data-gif-src="${gifPath}"` : ''}>
-      <span class="feature-media-placeholder" aria-hidden="true">
-        <span>GIF preview</span>
-        ${item.gif ? `<code>public/${item.gif}</code>` : ''}
+      <span class="feature-media-loader" aria-label="Loading animated feature preview">
+        <span class="feature-media-spinner" aria-hidden="true"></span>
+        <span>Loading preview</span>
       </span>
     </div>
   `
@@ -1527,10 +1527,10 @@ function setupInteractions() {
       modalTitle.textContent = feature.title
       modalDescription.textContent = featureDetails(feature)
       modalKicker.textContent = `Feature ${String(Number(card.dataset.featurePosition) || index + 1).padStart(2, '0')}`
-      modalVisual.innerHTML = renderFeatureModalMedia(feature)
-      setupFeatureGifPreviews()
       modal.hidden = false
       document.body.classList.add('modal-opened')
+      modalVisual.innerHTML = renderFeatureModalMedia(feature)
+      setupFeatureGifPreviews()
     })
   })
 
@@ -1549,18 +1549,52 @@ function setupInteractions() {
 }
 
 function setupFeatureGifPreviews() {
-  document.querySelectorAll<HTMLElement>('[data-gif-src]').forEach((slot) => {
+  const loadPreview = (slot: HTMLElement) => {
     const source = slot.dataset.gifSrc
     if (!source) return
 
+    slot.classList.add('is-loading')
     const preview = new Image()
     preview.onload = () => {
       preview.className = 'feature-media-gif'
       preview.alt = ''
       preview.decoding = 'async'
       slot.replaceChildren(preview)
+      slot.classList.remove('is-loading')
+      slot.classList.add('is-loaded')
+    }
+    preview.onerror = () => {
+      slot.classList.remove('is-loading')
+      slot.classList.add('has-load-error')
     }
     preview.src = source
+  }
+
+  const slots = Array.from(document.querySelectorAll<HTMLElement>('[data-gif-src]:not([data-gif-preview-ready)]'))
+  if (!slots.length) return
+
+  const observer = typeof IntersectionObserver === 'undefined'
+    ? null
+    : new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return
+            observer?.unobserve(entry.target)
+            loadPreview(entry.target as HTMLElement)
+          })
+        },
+        { rootMargin: '160px 0px' },
+      )
+
+  slots.forEach((slot) => {
+    slot.dataset.gifPreviewReady = 'true'
+    if (slot.closest('.feature-modal')) {
+      loadPreview(slot)
+    } else if (observer) {
+      observer.observe(slot)
+    } else {
+      loadPreview(slot)
+    }
   })
 }
 
@@ -1613,9 +1647,9 @@ function renderFeatureModalMedia(item: FeatureItem): string {
 
   return `
     <div class="feature-modal-media feature-media-slot"${gifPath ? ` data-gif-src="${gifPath}"` : ''}>
-      <span class="feature-media-placeholder" aria-hidden="true">
-        <span>GIF preview</span>
-        ${item.gif ? `<code>public/${item.gif}</code>` : ''}
+      <span class="feature-media-loader" aria-label="Loading animated feature preview">
+        <span class="feature-media-spinner" aria-hidden="true"></span>
+        <span>Loading preview</span>
       </span>
     </div>
   `

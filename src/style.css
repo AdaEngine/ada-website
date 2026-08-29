@@ -4396,7 +4396,7 @@ body.modal-opened {
     border-radius: 10px 10px 0 0;
     background: #080808;
 }
-.feature-media-placeholder {
+.feature-media-loader {
     display: grid;
     width: 100%;
     height: 100%;
@@ -4412,13 +4412,38 @@ body.modal-opened {
     font-size: 13px;
     text-align: center;
 }
-.feature-media-placeholder code {
-    max-width: 100%;
-    overflow: hidden;
-    color: color-mix(in oklab, var(--accent) 74%, white);
-    font-size: 11px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.feature-media-spinner {
+    width: 28px;
+    height: 28px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: feature-media-spin 0.8s linear infinite;
+}
+.feature-media-slot.is-loaded .feature-media-gif {
+    animation: feature-media-fade-in 0.18s ease-out;
+}
+.feature-media-slot.has-load-error .feature-media-loader {
+    color: var(--muted);
+}
+@keyframes feature-media-spin {
+    to {
+        transform: rotate(1turn);
+    }
+}
+@keyframes feature-media-fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .feature-media-spinner,
+    .feature-media-slot.is-loaded .feature-media-gif {
+        animation: none;
+    }
 }
 .engine-info-item-content.feature-media-slot > .feature-media-gif,
 .feature-modal-media > .feature-media-gif {
