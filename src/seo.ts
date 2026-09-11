@@ -63,6 +63,10 @@ export function createRouteSeo(route: Route): SeoMetadata {
     }
   }
 
+  if (route.name === 'download') {
+    return { title: 'Download AdaEngine — Mac, Windows, Linux and iOS', description: 'Download AdaEngine for your platform. Find desktop releases, source code and the iOS app on the App Store.', path: '/download', image: defaultSeoImage, type: 'website' }
+  }
+
   if (route.name === 'blog') {
     return {
       title: 'AdaEngine News - Swift Game Engine Updates',

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { assetsFor, parseRelease, selectDownloadRelease, appStoreURL } from './downloads.ts'
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { markdownToHtml } from './content.ts'
@@ -233,3 +234,21 @@ for (const demo of readdirSync('public/demos', { withFileTypes: true })) {
     throw error
   }
 }
+
+assert.deepEqual(resolveRoute('/download', '/'), { name: 'download' })
+assert.deepEqual(resolveRoute('/adawebsite/download/', '/adawebsite/'), { name: 'download' })
+assert.equal(createRouteSeo({ name: 'download' }).path, '/download')
+assert.equal(appStoreURL, 'https://apps.apple.com/app/id6809145006')
+const releaseFixture = (tag: string, names: string[]) => ({
+  tag_name: tag, html_url: `https://github.com/AdaEngine/AdaEngine/releases/tag/${tag}`, draft: false, prerelease: false,
+  assets: names.map(name => ({ name, browser_download_url: `https://github.com/AdaEngine/AdaEngine/releases/download/${tag}/${name}` })),
+})
+const installerRelease = releaseFixture('editor-v1.0-3', ['AdaEngine-1.0-3-macOS.zip', 'AdaEngine-windows.zip', 'AdaEngine-Linux.AppImage', 'AdaEngine-1.0-3-macOS.zip.sha256'])
+const selectedRelease = selectDownloadRelease([releaseFixture('2.0.0', []), installerRelease])
+assert.equal(selectedRelease.version, '1.0-3')
+assert.equal(assetsFor('macos', selectedRelease).length, 1)
+assert.equal(assetsFor('windows', selectedRelease).length, 1)
+assert.equal(assetsFor('linux', selectedRelease).length, 1)
+assert.equal(parseRelease({ ...installerRelease, prerelease: true }), undefined)
+assert.equal(parseRelease({ ...installerRelease, html_url: 'javascript:alert(1)' }), undefined)
+assert.equal(parseRelease({ ...installerRelease, assets: [{ name: 'bad.exe', browser_download_url: 'https://example.com/bad.exe' }] })?.assets.length, 0)

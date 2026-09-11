@@ -2,6 +2,7 @@ export type StaticPageName = 'learn' | 'community' | 'donate'
 
 export type Route =
   | { name: 'home' }
+  | { name: 'download' }
   | { name: 'blog' }
   | { name: 'demos' }
   | { name: 'demo'; slug: string }
@@ -54,6 +55,10 @@ export function resolveRoute(pathname: string, baseUrl: string): Route {
 
   if (path === '/') {
     return { name: 'home' }
+  }
+
+  if (path === '/download') {
+    return { name: 'download' }
   }
 
   if (path === '/blog') {

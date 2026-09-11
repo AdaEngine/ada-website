@@ -57,6 +57,7 @@ const articles = readArticles()
 
 const sitemapEntries = [
   entry('/', { changefreq: 'weekly', priority: '1.0' }),
+  entry('/download', { changefreq: 'weekly', priority: '0.9' }),
   entry('/learn', { changefreq: 'monthly', priority: '0.9' }),
   entry('/demos', { changefreq: 'weekly', priority: '0.9' }),
   entry('/community', { changefreq: 'monthly', priority: '0.6' }),

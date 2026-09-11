@@ -324,7 +324,7 @@ code {
 .ae-header-title {
     margin: 0 0 26px;
     max-width: 820px;
-    font-size: clamp(51px, calc(7.4vw - 5px), 99px);
+    font-size: clamp(42px, 4.8vw, 66px);
     line-height: 1;
     letter-spacing: 0;
     font-weight: 700;
@@ -2834,7 +2834,7 @@ pre code {
     .ae-header-title {
         margin-left: auto;
         margin-right: auto;
-        font-size: clamp(48px, 12.5vw, 88px);
+        font-size: clamp(40px, 7.5vw, 62px);
     }
     .hero-copy p,
     .hero-subtitle {
@@ -3357,7 +3357,7 @@ pre code {
         margin-top: 56px;
     }
     .ae-header-title {
-        font-size: clamp(42px, 14vw, 62px);
+        font-size: clamp(36px, 10vw, 48px);
     }
     .header-buttons-github {
         padding-left: 18px;
@@ -4532,3 +4532,29 @@ body.modal-opened {
 .footer {
     background: linear-gradient(125deg, #0a4bd8, #1646c6 52%, #075ce1);
 }
+
+/* Platform downloads share the home page's quiet, dark surfaces. */
+.download-version { font-size: .8em; opacity: .78; white-space: nowrap; }
+.download-button .navigation-item-link, .hero-actions > .header-buttons { display: inline-flex; align-items: center; gap: 9px; }
+.download-page { padding-top: clamp(46px, 7vw, 96px); padding-bottom: 96px; }
+.download-hero { max-width: 720px; margin: 0 auto 52px; text-align: center; }
+.download-hero h1 { margin: 0 0 18px; font-size: clamp(38px, 5vw, 64px); line-height: 1.08; letter-spacing: -.035em; }
+.download-hero > p:not(.hero-eyebrow) { color: var(--muted); font-size: 20px; margin: 0 0 20px; }
+.download-release { color: var(--accent); font-size: 14px; }
+.download-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.platform-download { display: flex; flex-direction: column; min-width: 0; padding: 30px 24px; border: 1px solid var(--border-subtle); border-radius: 24px; background: var(--surface, #111); }
+.platform-symbol { display: flex; align-items: center; height: 56px; font-size: 42px; font-weight: 500; color: var(--accent); }
+.platform-download h2 { margin: 24px 0 12px; font-size: 26px; }
+.platform-download p { color: var(--muted); font-size: 16px; line-height: 1.6; margin: 0 0 32px; }
+.platform-download-actions { margin-top: auto; display: flex; flex-direction: column; align-items: flex-start; gap: 15px; }
+.platform-download-actions .header-buttons { font-size: 14px; text-align: center; padding: 12px 18px; }
+.download-status { color: var(--muted); font-size: 14px; }
+.download-source-link { color: var(--accent); font-size: 14px; }
+.download-footnote { text-align: center; color: var(--muted); font-size: 14px; line-height: 1.6; margin: 30px auto 0; max-width: 600px; }
+@media (max-width: 1100px) { .download-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .download-grid { grid-template-columns: 1fr; } .platform-download { padding: 26px; } .download-hero { margin-bottom: 32px; } }
+
+.platform-symbol-image { width: 48px; height: 56px; background: var(--accent); -webkit-mask: var(--platform-icon) left center / contain no-repeat; mask: var(--platform-icon) left center / contain no-repeat; }
+.app-store-badge { display: inline-flex; border-radius: 6px; }
+.app-store-badge img { display: block; width: auto; height: 48px; max-width: 100%; }
+.app-store-badge:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
