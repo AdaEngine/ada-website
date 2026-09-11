@@ -1,9 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
-  <channel>
-    <title>AdaEngine for macOS</title>
-    <link>https://adaengine.org/download</link>
-    <description>Standalone macOS updates for AdaEngine.</description>
-    <language>en</language>
-  </channel>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>AdaEngine for macOS</title>
+        <link>https://adaengine.org/download</link>
+        <description>Standalone macOS updates for AdaEngine.</description>
+        <language>en</language>
+        <item>
+            <title>1.0</title>
+            <pubDate>Fri, 11 Sep 2026 22:33:44 +0300</pubDate>
+            <sparkle:version>1</sparkle:version>
+            <sparkle:shortVersionString>1.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[<h2>AdaEditor 1.0</h2>
+<p>Standalone edition for macOS 15 and later, for Apple silicon and Intel Macs.</p>
+<p>Signed with Developer ID and notarized by Apple. Includes Sparkle updates for the standalone edition.</p>
+]]></description>
+            <enclosure url="https://github.com/AdaEngine/AdaEngine/releases/download/editor-v1.0-1/AdaEngine-1.0-1-macOS.zip" length="33173423" type="application/octet-stream" sparkle:edSignature="NmlE8MTtK+6sB6oxo43Svwf1lPSqy2/69xeNUangxoUidNM/I929FdX9Spt2hS8athRpKr3tV/aRV3GoC4kpAw=="/>
+        </item>
+    </channel>
 </rss>

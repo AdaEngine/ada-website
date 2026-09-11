@@ -5,9 +5,12 @@ export type DownloadRelease = { version: string; url: string; assets: ReleaseAss
 export const appStoreURL = 'https://apps.apple.com/app/id6809145006'
 // Last verified public release. Keep links usable when the GitHub API is unavailable.
 export const fallbackRelease: DownloadRelease = {
-  version: '0.1.1',
-  url: 'https://github.com/AdaEngine/AdaEngine/releases/tag/0.1.1',
-  assets: [],
+  version: '1.0',
+  url: 'https://github.com/AdaEngine/AdaEngine/releases/tag/editor-v1.0-1',
+  assets: [{
+    name: 'AdaEngine-1.0-1-macOS.zip',
+    url: 'https://github.com/AdaEngine/AdaEngine/releases/download/editor-v1.0-1/AdaEngine-1.0-1-macOS.zip',
+  }],
 }
 
 function releaseURL(value: unknown): string | undefined {
@@ -24,7 +27,8 @@ export function parseRelease(value: unknown): DownloadRelease | undefined {
   const item = value as Record<string, unknown>
   const url = releaseURL(item.html_url)
   if (item.draft || item.prerelease || typeof item.tag_name !== 'string' || !url) return undefined
-  const version = item.tag_name.replace(/^(?:editor-)?v/, '')
+  const editorVersion = item.tag_name.match(/^editor-v(\d+\.\d+(?:\.\d+)?)-\d+$/)?.[1]
+  const version = editorVersion ?? item.tag_name.replace(/^(?:editor-)?v/, '')
   if (!/^\d+\.\d+(?:\.\d+)?(?:[-.][a-zA-Z0-9]+)*$/.test(version)) return undefined
   const assets: ReleaseAsset[] = []
   if (Array.isArray(item.assets)) {
@@ -57,7 +61,7 @@ export function selectDownloadRelease(data: unknown): DownloadRelease {
   const releases = data.map(parseRelease).filter((release): release is DownloadRelease => release !== undefined)
   // A source-only engine release must not hide an already published editor installer.
   return releases.find(release => (['macos', 'windows', 'linux'] as const).some(platform => assetsFor(platform, release).length > 0))
-    ?? releases[0] ?? fallbackRelease
+    ?? (fallbackRelease.assets.length ? fallbackRelease : releases[0] ?? fallbackRelease)
 }
 
 export async function loadDownloadRelease(): Promise<DownloadRelease> {

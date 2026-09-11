@@ -245,7 +245,7 @@ const releaseFixture = (tag: string, names: string[]) => ({
 })
 const installerRelease = releaseFixture('editor-v1.0-3', ['AdaEngine-1.0-3-macOS.zip', 'AdaEngine-windows.zip', 'AdaEngine-Linux.AppImage', 'AdaEngine-1.0-3-macOS.zip.sha256'])
 const selectedRelease = selectDownloadRelease([releaseFixture('2.0.0', []), installerRelease])
-assert.equal(selectedRelease.version, '1.0-3')
+assert.equal(selectedRelease.version, '1.0')
 assert.equal(assetsFor('macos', selectedRelease).length, 1)
 assert.equal(assetsFor('windows', selectedRelease).length, 1)
 assert.equal(assetsFor('linux', selectedRelease).length, 1)
