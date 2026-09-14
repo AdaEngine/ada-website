@@ -31,17 +31,17 @@ type ShowcaseItem = {
   image: string
 }
 
-const siteTitle = 'AdaEngine'
+const siteTitle = 'Ada'
 const fallbackArticleImage = 'images/main/tilemap.png'
 const blogArticleImages = ['images/main/tilemap.png', 'images/main/space_invaders.jpeg', 'images/main/duck_hunt.png']
 const githubRepository = 'AdaEngine/AdaEngine'
 
 const showcaseItems: ShowcaseItem[] = [
   {
-    title: 'AdaEditor',
+    title: 'Ada Editor',
     eyebrow: 'Editor',
-    description: 'A native scene editor and Swift-first workspace for building AdaEngine projects.',
-    action: 'Open AdaEditor',
+    description: 'A native scene editor and Swift-first workspace for building Ada projects.',
+    action: 'Open Ada Editor',
     href: 'https://github.com/AdaEngine/AdaEngine/tree/main/Editor',
     image: 'images/main/ada-editor.png',
   },
@@ -93,7 +93,7 @@ type DonationOption = {
 
 const staticPages: Record<StaticPageName, StaticPageContent> = {
   learn: {
-    title: 'Learn AdaEngine',
+    title: 'Learn Ada',
     lead: 'Master game development in Swift. From your first sprite to advanced Metal rendering techniques.',
     sections: [
       {
@@ -108,14 +108,14 @@ const staticPages: Record<StaticPageName, StaticPageContent> = {
       },
       {
         title: 'Features',
-        body: 'Return to the home page feature overview for a quick summary of what AdaEngine can do.',
+        body: 'Return to the home page feature overview for a quick summary of what Ada can do.',
         links: [{ label: 'View features', href: `${hrefFor('/')}#features` }],
       },
     ],
   },
   community: {
     title: 'Community',
-    lead: 'Join AdaEngine discussions, follow development and help the project grow together with other Swift developers.',
+    lead: 'Join Ada discussions, follow development and help the project grow together with other Swift developers.',
     sections: [
       {
         title: 'GitHub Discussions',
@@ -131,11 +131,11 @@ const staticPages: Record<StaticPageName, StaticPageContent> = {
   },
   donate: {
     title: 'Donate',
-    lead: 'AdaEngine is free and open source forever. Donations help support ongoing development, examples and documentation.',
+    lead: 'Ada is free and open source forever. Donations help support ongoing development, examples and documentation.',
     sections: [
       {
         title: 'Support the project',
-        body: 'If AdaEngine is useful to you, consider supporting development through the donation page.',
+        body: 'If Ada is useful to you, consider supporting development through the donation page.',
         links: [{ label: 'Donate on Boosty', href: 'https://boosty.to/adaengine' }],
       },
       {
@@ -159,7 +159,7 @@ const learnSections: Array<{ title: string; cards: LearnCard[] }> = [
       },
       {
         title: 'ECS',
-        body: 'Understand the Entity-Component-System architecture that powers AdaEngine.',
+        body: 'Understand the Entity-Component-System architecture that powers Ada.',
         href: 'https://docs.adaengine.org/documentation/adaecs/',
         icon: 'play',
       },
@@ -254,9 +254,9 @@ const donationOptions: DonationOption[] = [
 const features: FeatureItem[] = [
   {
     title: 'Data Driven',
-    description: 'AdaEngine build around custom Entity Component System. Simple to use, fast and cache-friendly for your game architecture.',
+    description: 'Ada build around custom Entity Component System. Simple to use, fast and cache-friendly for your game architecture.',
     details:
-      'AdaEngine is built around a custom, data-oriented Entity Component System inspired by modern Swift APIs. Components keep game state small and explicit, while systems operate through typed queries, resources, schedules and macros such as @Component and @System. This makes gameplay code modular, cache-friendly and easier to scale from a tiny prototype to a full scene with input, animation, physics and rendering working together.',
+      'Ada is built around a custom, data-oriented Entity Component System inspired by modern Swift APIs. Components keep game state small and explicit, while systems operate through typed queries, resources, schedules and macros such as @Component and @System. This makes gameplay code modular, cache-friendly and easier to scale from a tiny prototype to a full scene with input, animation, physics and rendering working together.',
     code: `@Component\nstruct Player: Entity { }\n\nstruct PlayerSystem: System {\n    func update(context: UpdateSceneContext) { }\n}`,
     gif: 'images/features/data-driven.gif',
   },
@@ -265,15 +265,15 @@ const features: FeatureItem[] = [
     description:
       'Supports real-time 2D rendering for your games and apps. Write custom shaders, materials and render pipelines.',
     details:
-      'AdaEngine ships with a high-level 2D rendering stack for sprites, text, tilemaps, cameras and custom materials. The demos cover sprite animation, transparency, lighting, text rendering, WGSL experiments and stress scenes, while the renderer still leaves room for lower-level control when you need custom shaders or pipeline work. It is designed for Swift-first game code where drawing a scene should feel direct, but not boxed in.',
+      'Ada ships with a high-level 2D rendering stack for sprites, text, tilemaps, cameras and custom materials. The demos cover sprite animation, transparency, lighting, text rendering, WGSL experiments and stress scenes, while the renderer still leaves room for lower-level control when you need custom shaders or pipeline work. It is designed for Swift-first game code where drawing a scene should feel direct, but not boxed in.',
     image: 'images/icons/ic_duck.png',
     gif: 'images/features/2d-renderer.gif',
   },
   {
     title: '2D Physics',
-    description: 'AdaEngine supports Box2D v3 physics with parallel calculations, lightweight memory usage and fast simulation.',
+    description: 'Ada supports Box2D v3 physics with parallel calculations, lightweight memory usage and fast simulation.',
     details:
-      'The Physics2D plugin integrates Box2D with AdaEngine entities through components such as PhysicsBody2DComponent and Collision2DComponent. Simulation runs on the fixed-update schedule, then syncs transforms back into the scene so gameplay systems can react through the same ECS flow as the rest of the engine. It includes collision events, debug drawing support and world resources for direct access when a game needs deeper physics control.',
+      'The Physics2D plugin integrates Box2D with Ada entities through components such as PhysicsBody2DComponent and Collision2DComponent. Simulation runs on the fixed-update schedule, then syncs transforms back into the scene so gameplay systems can react through the same ECS flow as the rest of the engine. It includes collision events, debug drawing support and world resources for direct access when a game needs deeper physics control.',
     image: 'images/icons/ic_box2d.svg',
     gif: 'images/features/2d-physics.gif',
   },
@@ -287,39 +287,39 @@ const features: FeatureItem[] = [
   },
   {
     title: 'Custom UI Engine',
-    description: 'Create your own UI using a SwiftUI-like approach that fits naturally into AdaEngine scenes.',
+    description: 'Create your own UI using a SwiftUI-like approach that fits naturally into Ada scenes.',
     details:
-      'AdaUI brings a SwiftUI-like declarative layer into AdaEngine with views, result builders, environment values, layout containers, gestures, animation, text fields, scroll views and navigation primitives. UI can live naturally beside game scenes, and the engine includes tooling such as a 3D AdaUI debug view for inspecting live UI trees. The goal is to make editor panels, HUDs and in-game interfaces feel native to the same Swift codebase as your gameplay.',
+      'AdaUI brings a SwiftUI-like declarative layer into Ada with views, result builders, environment values, layout containers, gestures, animation, text fields, scroll views and navigation primitives. UI can live naturally beside game scenes, and the engine includes tooling such as a 3D AdaUI debug view for inspecting live UI trees. The goal is to make editor panels, HUDs and in-game interfaces feel native to the same Swift codebase as your gameplay.',
     code: `struct MainView: View {\n    @Environment(\\.scene) var scene\n\n    var body: some View {\n        Text("Hello, World!")\n    }\n}`,
     gif: 'images/features/custom-ui.gif',
   },
   {
     title: 'Free and Open Source',
-    description: 'AdaEngine is 100% free for you. Licensed by MIT. Learn, modify or use without royalties or runtime fees.',
+    description: 'Ada is 100% free for you. Licensed by MIT. Learn, modify or use without royalties or runtime fees.',
     details:
-      'AdaEngine is MIT licensed and developed in the open, with source, tutorials, generated API documentation, demos and build guides available from the repository. You can study the engine internals, modify them for your project, ship without royalties or runtime fees, and contribute fixes, examples or documentation back to the community. The project is still evolving, so the roadmap is visible where the code actually lives.',
+      'Ada is MIT licensed and developed in the open, with source, tutorials, generated API documentation, demos and build guides available from the repository. You can study the engine internals, modify them for your project, ship without royalties or runtime fees, and contribute fixes, examples or documentation back to the community. The project is still evolving, so the roadmap is visible where the code actually lives.',
     image: 'images/icons/ic_opensource.svg',
     gif: 'images/features/open-source.gif',
   },
   {
     title: 'AdaScript',
-    description: 'Write gameplay scripts with AdaScript, powered by the Gravity language runtime and integrated with AdaEngine ECS.',
+    description: 'Write gameplay scripts with AdaScript, powered by the Gravity language runtime and integrated with Ada ECS.',
     details:
-      'AdaScript brings the Gravity scripting runtime into AdaEngine for fast gameplay iteration. Scripts declare their component queries and use capability-scoped access to read or update reflected ECS fields, so scripted systems participate in the same scheduling and access rules as native Swift systems. Keep performance-critical code in Swift and move tuning, behaviours and gameplay logic into reloadable scripts.',
+      'AdaScript brings the Gravity scripting runtime into Ada for fast gameplay iteration. Scripts declare their component queries and use capability-scoped access to read or update reflected ECS fields, so scripted systems participate in the same scheduling and access rules as native Swift systems. Keep performance-critical code in Swift and move tuning, behaviours and gameplay logic into reloadable scripts.',
     gif: 'images/features/adascript.gif',
   },
   {
     title: '3D Rendering',
     description: 'Build 3D scenes with cameras, materials, lighting, skyboxes and extensible render pipelines.',
     details:
-      'AdaEngine’s 3D stack is built around the same render-graph architecture as its core renderer. Compose camera views, materials, meshes, lights, environment settings and skyboxes into a Swift-first scene, then extend the pipeline with your own passes and subgraphs when a project needs custom post-processing or rendering techniques.',
+      'Ada’s 3D stack is built around the same render-graph architecture as its core renderer. Compose camera views, materials, meshes, lights, environment settings and skyboxes into a Swift-first scene, then extend the pipeline with your own passes and subgraphs when a project needs custom post-processing or rendering techniques.',
     gif: 'images/features/3d-rendering.gif',
   },
   {
     title: '3D Physics',
     description: 'Simulate rigid bodies, collisions and constraints in 3D with the integrated Box3D physics engine.',
     details:
-      'AdaEngine includes a Box3D-backed 3D physics path for rigid body simulation, collision queries and joint constraints. It is designed to work alongside AdaEngine entities and transforms, with a dedicated example target for validating 3D physics scenes. Box3D brings a C17 rigid-body simulation core while AdaEngine keeps the scene-facing API in Swift.',
+      'Ada includes a Box3D-backed 3D physics path for rigid body simulation, collision queries and joint constraints. It is designed to work alongside Ada entities and transforms, with a dedicated example target for validating 3D physics scenes. Box3D brings a C17 rigid-body simulation core while Ada keeps the scene-facing API in Swift.',
     gif: 'images/features/3d-physics.gif',
   },
 ]
@@ -461,10 +461,10 @@ function renderHeader(): string {
   return `
     <header class="header${isLearnPage ? ' header-learn' : ''}">
       <section class="container content-restriction header-container">
-        <a class="header-logo" href="${hrefFor('/')}" aria-label="AdaEngine home">
+        <a class="header-logo" href="${hrefFor('/')}" aria-label="Ada home">
           <picture class="header-logo-picture">
             <source srcset="${assetFor('images/ae_logo~dark.svg')}" media="(prefers-color-scheme: dark)" />
-            <img src="${assetFor('images/ae_logo.svg')}" alt="AdaEngine" />
+            <img src="${assetFor('images/ae_logo.svg')}" alt="Ada" />
           </picture>
           <h2>${siteTitle}</h2>
         </a>
@@ -491,7 +491,7 @@ function renderHero(): string {
         <p class="hero-subtitle">Build high-performance 2D and 3D games using modern Swift. Clean architecture, native feeling, and developer-first tooling.</p>
         <div class="hero-actions">
           <a class="header-buttons" href="${hrefFor('/download')}">Download <span class="download-version" data-download-version>v${fallbackRelease.version}</span></a>
-          <a class="header-buttons-github" href="https://github.com/${githubRepository}" aria-label="AdaEngine on GitHub">
+          <a class="header-buttons-github" href="https://github.com/${githubRepository}" aria-label="Ada on GitHub">
             <span class="github-button-label">
               <svg class="github-button-icon" viewBox="0 0 438.549 438.549" aria-hidden="true" focusable="false"><path d="M409.132 114.573c-19.608-33.596-46.205-60.194-79.798-79.8C295.736 15.166 259.057 5.365 219.27 5.365c-39.78 0-76.47 9.804-110.062 29.408-33.596 19.605-60.192 46.204-79.8 79.8C9.803 148.168 0 184.853 0 224.63c0 47.78 13.94 90.745 41.827 128.906 27.884 38.164 63.906 64.572 108.063 79.227 5.14.954 8.945.283 11.42-1.996 2.474-2.282 3.71-5.14 3.71-8.562 0-.57-.05-5.708-.144-15.417-.098-9.71-.144-18.18-.144-25.406l-6.567 1.136c-4.187.767-9.47 1.092-15.846 1-6.375-.09-12.992-.757-19.843-2-6.854-1.23-13.23-4.085-19.13-8.558-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.9-9.233-8.992-14.56-4.093-5.33-8.232-8.944-12.42-10.847l-1.998-1.43c-1.332-.952-2.568-2.1-3.71-3.43-1.143-1.33-1.998-2.663-2.57-3.997-.57-1.335-.097-2.43 1.428-3.29 1.525-.858 4.28-1.275 8.28-1.275l5.708.853c3.807.763 8.516 3.042 14.133 6.85 5.615 3.807 10.23 8.755 13.847 14.843 4.38 7.807 9.657 13.755 15.846 17.848 6.184 4.093 12.42 6.136 18.7 6.136 6.28 0 11.703-.476 16.273-1.423 4.565-.95 8.848-2.382 12.847-4.284 1.713-12.758 6.377-22.56 13.988-29.41-10.847-1.14-20.6-2.857-29.263-5.14-8.658-2.286-17.605-5.996-26.835-11.14-9.235-5.137-16.896-11.516-22.985-19.126-6.09-7.614-11.088-17.61-14.987-29.98-3.9-12.373-5.852-26.647-5.852-42.825 0-23.035 7.52-42.637 22.557-58.817-7.044-17.318-6.38-36.732 1.997-58.24 5.52-1.715 13.706-.428 24.554 3.853 10.85 4.284 18.794 7.953 23.84 10.995 5.046 3.04 9.09 5.618 12.135 7.708 17.706-4.947 35.977-7.42 54.82-7.42s37.116 2.473 54.822 7.42l10.85-6.85c7.418-4.57 16.18-8.757 26.26-12.564 10.09-3.806 17.803-4.854 23.135-3.14 8.562 21.51 9.325 40.923 2.28 58.24 15.035 16.18 22.558 35.788 22.558 58.818 0 16.178-1.958 30.497-5.853 42.966-3.9 12.47-8.94 22.457-15.125 29.98-6.19 7.52-13.9 13.85-23.13 18.985-9.233 5.14-18.183 8.85-26.84 11.135-8.663 2.286-18.416 4.004-29.264 5.146 9.894 8.563 14.842 22.078 14.842 40.54v60.237c0 3.422 1.19 6.28 3.572 8.562 2.38 2.278 6.136 2.95 11.276 1.994 44.163-14.653 80.185-41.062 108.068-79.226 27.88-38.16 41.826-81.126 41.826-128.906-.01-39.77-9.818-76.454-29.414-110.05z"/></svg>
               GitHub
@@ -601,7 +601,7 @@ function renderBlogPage() {
       <section class="container content-restriction blog-page">
         <header class="blog-page-hero">
           <h1>Engine News</h1>
-          <p>Updates, release notes, and engineering deep dives from the AdaEngine team.</p>
+          <p>Updates, release notes, and engineering deep dives from the Ada team.</p>
         </header>
         ${
           articles.length
@@ -630,7 +630,7 @@ function renderBlogPage() {
               </div>`
             : `<div class="blog-empty">
                 <h2>No articles yet</h2>
-                <p>Fresh AdaEngine updates will appear here soon.</p>
+                <p>Fresh Ada updates will appear here soon.</p>
               </div>`
         }
       </section>
@@ -658,8 +658,8 @@ function renderDemosPage(manifest: DemosManifest) {
       <section class="container content-restriction demos-page">
         <header class="demos-hero">
           <p class="eyebrow">Live WebAssembly examples</p>
-          <h1>AdaEngine Demos</h1>
-          <p>Explore browser builds generated from the Swift files in the AdaEngine repository. Each demo page includes the embedded build and the source that produced it.</p>
+          <h1>Ada Demos</h1>
+          <p>Explore browser builds generated from the Swift files in the Ada repository. Each demo page includes the embedded build and the source that produced it.</p>
         </header>
         ${
           groups.length
@@ -690,7 +690,7 @@ function renderDemosPage(manifest: DemosManifest) {
               </div>`
             : `<div class="demo-empty">
                 <h2>No demos published yet</h2>
-                <p>The website will show demos after the AdaEngine export workflow publishes the first manifest.</p>
+                <p>The website will show demos after the Ada export workflow publishes the first manifest.</p>
               </div>`
         }
       </section>
@@ -858,10 +858,10 @@ function renderFooterSocialLinks(): string {
 
   return `
     <nav class="footer-social-links" aria-label="Social links">
-      <a class="footer-social-link" href="https://github.com/AdaEngine/AdaEngine" target="_blank" rel="noreferrer" aria-label="AdaEngine on GitHub">${githubIcon}</a>
-      <a class="footer-social-link" href="https://discord.gg/JkEPE7nwDu" target="_blank" rel="noreferrer" aria-label="AdaEngine on Discord">${discordIcon}</a>
-      <a class="footer-social-link" href="https://x.com/ada_engine" target="_blank" rel="noreferrer" aria-label="AdaEngine on Twitter">${twitterIcon}</a>
-      <a class="footer-social-link" href="https://t.me/adaengine" target="_blank" rel="noreferrer" aria-label="AdaEngine on Telegram">${telegramIcon}</a>
+      <a class="footer-social-link" href="https://github.com/AdaEngine/AdaEngine" target="_blank" rel="noreferrer" aria-label="Ada on GitHub">${githubIcon}</a>
+      <a class="footer-social-link" href="https://discord.gg/JkEPE7nwDu" target="_blank" rel="noreferrer" aria-label="Ada on Discord">${discordIcon}</a>
+      <a class="footer-social-link" href="https://x.com/ada_engine" target="_blank" rel="noreferrer" aria-label="Ada on Twitter">${twitterIcon}</a>
+      <a class="footer-social-link" href="https://t.me/adaengine" target="_blank" rel="noreferrer" aria-label="Ada on Telegram">${telegramIcon}</a>
     </nav>
   `
 }
@@ -873,7 +873,7 @@ function renderFooter(): string {
       <div class="footer-container">
         <div class="footer-columns">
           <section>
-            <h3>Ada Engine</h3>
+            <h3>Ada</h3>
             <a href="${hrefFor('/download')}">Download</a>
             <a href="https://github.com/AdaEngine/AdaEngine">Source code<span class="footer-external-mark" aria-hidden="true">↗</span></a>
           </section>
@@ -893,7 +893,7 @@ function renderFooter(): string {
           <p>© 2021-2026 Vladislav Prusakov and contributors. All rights reserved.</p>
           ${renderFooterSocialLinks()}
         </div>
-        <div class="footer-blueprint-mark" aria-hidden="true">AdaEngine</div>
+        <div class="footer-blueprint-mark" aria-hidden="true">Ada</div>
       </div>
     </footer>
   `
@@ -981,8 +981,8 @@ function renderDonationPage() {
     <main class="page-shell donation-page-shell">
       <section class="container content-restriction donation-page">
         <header class="donation-hero">
-          <h1>Support AdaEngine</h1>
-          <p>AdaEngine is an independent open-source project. Your support helps us dedicate more time to development and tooling.</p>
+          <h1>Support Ada</h1>
+          <p>Ada is an independent open-source project. Your support helps us dedicate more time to development and tooling.</p>
         </header>
         <div class="donation-options" aria-label="Donation options">
           ${donationOptions
@@ -1024,7 +1024,7 @@ function renderCommunityPage() {
           <h1>Join the Community</h1>
           <p>Connect with other developers, share your projects, and contribute to the engine.</p>
         </header>
-        <div class="community-link-grid" aria-label="AdaEngine community links">
+        <div class="community-link-grid" aria-label="Ada community links">
           ${communityLinks
             .map(
               (link) => `
@@ -1435,7 +1435,7 @@ function setupDemoCategoryNavigation() {
 function renderDownloadCards(release: DownloadRelease): string {
   const platforms: Array<{ id: DesktopPlatform; title: string; description: string }> = [
     { id: 'macos', title: 'Mac', description: 'The native editor for your Mac. Build with AdaScript and Swift.' },
-    { id: 'windows', title: 'Windows', description: 'Create AdaEngine games on your Windows PC.' },
+    { id: 'windows', title: 'Windows', description: 'Create Ada games on your Windows PC.' },
     { id: 'linux', title: 'Linux', description: 'Build with the open-source engine on Linux.' },
   ]
   return platforms.map(({ id, title, description }) => {
@@ -1459,11 +1459,11 @@ function renderDownloadPage() {
   app.innerHTML = `${renderHeader()}
     <main class="page-shell download-page-shell"><section class="container content-restriction download-page">
       <header class="download-hero"><p class="hero-eyebrow">Make something of your own</p>
-        <h1>Download AdaEngine</h1><p>Choose your platform. Start building.</p>
+        <h1>Download Ada</h1><p>Choose your platform. Start building.</p>
         <a class="download-release" data-release-link href="${fallbackRelease.url}">Release notes · <span data-download-version>v${fallbackRelease.version}</span> ↗</a>
       </header>
       <div class="download-grid" data-download-cards>${renderDownloadCards(fallbackRelease)}</div>
-      <p class="download-footnote">AdaEngine is free and open source. Desktop downloads appear here as installers are released.</p>
+      <p class="download-footnote">Ada is free and open source. Desktop downloads appear here as installers are released.</p>
     </section></main>${renderFooter()}`
 }
 

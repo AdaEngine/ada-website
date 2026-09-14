@@ -47,32 +47,32 @@ assert.deepEqual(resolveRoute('/adawebsite/missing', '/adawebsite/'), { name: 'n
 assert.equal(siteOrigin, 'https://adaengine.org')
 assert.equal(absoluteSiteUrl('/learn'), 'https://adaengine.org/learn')
 assert.deepEqual(createRouteSeo({ name: 'home' }), {
-  title: 'AdaEngine - Open-Source Swift Game Engine',
-  description: 'AdaEngine is an open-source game engine for Swift developers, with ECS, 2D and 3D rendering, physics, UI, editor tooling, and WebAssembly demos.',
+  title: 'Ada - Open-Source Swift Game Engine',
+  description: 'Ada is an open-source game engine for Swift developers, with ECS, 2D and 3D rendering, physics, UI, editor tooling, and WebAssembly demos.',
   path: '/',
   image: 'https://adaengine.org/images/main/tilemap.png',
   type: 'website',
 })
 assert.deepEqual(createRouteSeo({ name: 'static-page', page: 'learn' }), {
-  title: 'Learn AdaEngine - Swift Game Engine Tutorials and Examples',
-  description: 'Learn AdaEngine with Swift game development guides, ECS fundamentals, rendering notes, physics examples, and links to source code.',
+  title: 'Learn Ada - Swift Game Engine Tutorials and Examples',
+  description: 'Learn Ada with Swift game development guides, ECS fundamentals, rendering notes, physics examples, and links to source code.',
   path: '/learn',
   image: 'https://adaengine.org/images/main/tilemap.png',
   type: 'website',
 })
 
 const renderedArticle = markdownToHtml(`
-## What is AdaEngine?
+## What is Ada?
 
 ### Entity Component System
 
 ### Entity Component System
 `)
-assert.match(renderedArticle.html, /<h2 id="what-is-adaengine">What is AdaEngine\?<\/h2>/)
+assert.match(renderedArticle.html, /<h2 id="what-is-ada">What is Ada\?<\/h2>/)
 assert.match(renderedArticle.html, /<h3 id="entity-component-system">Entity Component System<\/h3>/)
 assert.match(renderedArticle.html, /<h3 id="entity-component-system-2">Entity Component System<\/h3>/)
 assert.deepEqual(renderedArticle.toc, [
-  { id: 'what-is-adaengine', title: 'What is AdaEngine?', level: 2 },
+  { id: 'what-is-ada', title: 'What is Ada?', level: 2 },
   { id: 'entity-component-system', title: 'Entity Component System', level: 3 },
   { id: 'entity-component-system-2', title: 'Entity Component System', level: 3 },
 ])
@@ -120,13 +120,13 @@ assert.match(robots, /User-agent: \*/)
 assert.match(robots, /Sitemap: https:\/\/adaengine\.org\/sitemap\.xml/)
 
 const rss = readFileSync('public/rss.xml', 'utf8')
-assert.match(rss, /<title>AdaEngine News<\/title>/)
+assert.match(rss, /<title>Ada News<\/title>/)
 assert.match(rss, /<link>https:\/\/adaengine\.org\/blog<\/link>/)
 assert.match(rss, /<guid isPermaLink="true">https:\/\/adaengine\.org\/articles\/introducing-adaengine-0-1-0<\/guid>/)
 assert.match(rss, /<category>release<\/category>/)
 
 const indexHtml = readFileSync('index.html', 'utf8')
-assert.match(indexHtml, /<link rel="alternate" type="application\/rss\+xml" title="AdaEngine News" href="https:\/\/adaengine\.org\/rss\.xml" \/>/)
+assert.match(indexHtml, /<link rel="alternate" type="application\/rss\+xml" title="Ada News" href="https:\/\/adaengine\.org\/rss\.xml" \/>/)
 
 const sitemap = readFileSync('public/sitemap.xml', 'utf8')
 assert.match(sitemap, /<loc>https:\/\/adaengine\.org\/<\/loc>/)
@@ -134,7 +134,7 @@ assert.match(sitemap, /<loc>https:\/\/adaengine\.org\/learn<\/loc>/)
 assert.match(sitemap, /<loc>https:\/\/adaengine\.org\/demos\/sprite-example<\/loc>/)
 
 const llms = readFileSync('public/llms.txt', 'utf8')
-assert.match(llms, /^# AdaEngine/m)
+assert.match(llms, /^# Ada/m)
 assert.match(llms, /open-source Swift game engine/i)
 assert.match(llms, /https:\/\/github\.com\/AdaEngine\/AdaEngine/)
 
@@ -168,13 +168,13 @@ assert.doesNotMatch(mainSource, /https:\/\/discord\.gg\/adaengine/)
 assert.match(mainSource, /class="feature-modal-close" type="button" aria-label="Close feature details"/)
 assert.doesNotMatch(mainSource, /data-modal-close>×<\/button>/)
 assert.match(mainSource, /class="footer-social-links"/)
-assert.match(mainSource, /aria-label="AdaEngine on GitHub"/)
-assert.match(mainSource, /aria-label="AdaEngine on Discord"/)
+assert.match(mainSource, /aria-label="Ada on GitHub"/)
+assert.match(mainSource, /aria-label="Ada on Discord"/)
 assert.match(mainSource, /Follow @ada_engine/)
 assert.match(mainSource, /href="https:\/\/x\.com\/ada_engine"/)
 assert.doesNotMatch(mainSource, /https:\/\/x\.com\/AdaEngine/)
 assert.doesNotMatch(mainSource, /Follow @AdaEngine/)
-assert.match(mainSource, /aria-label="AdaEngine on Telegram"/)
+assert.match(mainSource, /aria-label="Ada on Telegram"/)
 assert.match(mainSource, /Loading animated feature preview/)
 assert.match(mainSource, /class="feature-media-gif" src="\$\{gifPath\}" alt="" loading="lazy" decoding="async"/)
 assert.match(mainSource, /data-feature-preview/)

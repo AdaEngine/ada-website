@@ -12,30 +12,30 @@ export type SeoMetadata = {
 }
 
 export const siteOrigin = 'https://adaengine.org'
-export const siteName = 'AdaEngine'
+export const siteName = 'Ada'
 export const defaultSeoImage = `${siteOrigin}/images/main/tilemap.png`
 
 const staticPageSeo: Record<StaticPageName, SeoMetadata> = {
   learn: {
-    title: 'Learn AdaEngine - Swift Game Engine Tutorials and Examples',
+    title: 'Learn Ada - Swift Game Engine Tutorials and Examples',
     description:
-      'Learn AdaEngine with Swift game development guides, ECS fundamentals, rendering notes, physics examples, and links to source code.',
+      'Learn Ada with Swift game development guides, ECS fundamentals, rendering notes, physics examples, and links to source code.',
     path: '/learn',
     image: defaultSeoImage,
     type: 'website',
   },
   community: {
-    title: 'AdaEngine Community - Swift Game Development Contributors',
+    title: 'Ada Community - Swift Game Development Contributors',
     description:
-      'Join the AdaEngine community, follow development, discuss Swift game engine ideas, and contribute to the open-source project.',
+      'Join the Ada community, follow development, discuss Swift game engine ideas, and contribute to the open-source project.',
     path: '/community',
     image: defaultSeoImage,
     type: 'website',
   },
   donate: {
-    title: 'Support AdaEngine - Open-Source Swift Game Engine',
+    title: 'Support Ada - Open-Source Swift Game Engine',
     description:
-      'Support AdaEngine development through donations, code contributions, examples, bug reports, and documentation improvements.',
+      'Support Ada development through donations, code contributions, examples, bug reports, and documentation improvements.',
     path: '/donate',
     image: defaultSeoImage,
     type: 'website',
@@ -54,9 +54,9 @@ export function absoluteSiteUrl(path: string): string {
 export function createRouteSeo(route: Route): SeoMetadata {
   if (route.name === 'home') {
     return {
-      title: 'AdaEngine - Open-Source Swift Game Engine',
+      title: 'Ada - Open-Source Swift Game Engine',
       description:
-        'AdaEngine is an open-source game engine for Swift developers, with ECS, 2D and 3D rendering, physics, UI, editor tooling, and WebAssembly demos.',
+        'Ada is an open-source game engine for Swift developers, with ECS, 2D and 3D rendering, physics, UI, editor tooling, and WebAssembly demos.',
       path: '/',
       image: defaultSeoImage,
       type: 'website',
@@ -64,14 +64,14 @@ export function createRouteSeo(route: Route): SeoMetadata {
   }
 
   if (route.name === 'download') {
-    return { title: 'Download AdaEngine — Mac, Windows, Linux and iOS', description: 'Download AdaEngine for your platform. Find desktop releases, source code and the iOS app on the App Store.', path: '/download', image: defaultSeoImage, type: 'website' }
+    return { title: 'Download Ada — Mac, Windows, Linux and iOS', description: 'Download Ada for your platform. Find desktop releases, source code and the iOS app on the App Store.', path: '/download', image: defaultSeoImage, type: 'website' }
   }
 
   if (route.name === 'blog') {
     return {
-      title: 'AdaEngine News - Swift Game Engine Updates',
+      title: 'Ada News - Swift Game Engine Updates',
       description:
-        'Read AdaEngine updates, release notes, engineering deep dives, and Swift game development articles from the project team.',
+        'Read Ada updates, release notes, engineering deep dives, and Swift game development articles from the project team.',
       path: '/blog',
       image: defaultSeoImage,
       type: 'website',
@@ -80,9 +80,9 @@ export function createRouteSeo(route: Route): SeoMetadata {
 
   if (route.name === 'demos') {
     return {
-      title: 'AdaEngine Demos - Swift WebAssembly Game Examples',
+      title: 'Ada Demos - Swift WebAssembly Game Examples',
       description:
-        'Explore AdaEngine WebAssembly demos built from Swift source files, including 2D rendering, UI, physics, and scene examples.',
+        'Explore Ada WebAssembly demos built from Swift source files, including 2D rendering, UI, physics, and scene examples.',
       path: '/demos',
       image: defaultSeoImage,
       type: 'website',
@@ -95,8 +95,8 @@ export function createRouteSeo(route: Route): SeoMetadata {
 
   if (route.name === 'demo') {
     return {
-      title: 'AdaEngine Demo - Swift WebAssembly Example',
-      description: 'This AdaEngine demo page lists a Swift WebAssembly example when the demo is available.',
+      title: 'Ada Demo - Swift WebAssembly Example',
+      description: 'This Ada demo page lists a Swift WebAssembly example when the demo is available.',
       path: `/demos/${route.slug}`,
       image: defaultSeoImage,
       type: 'website',
@@ -106,8 +106,8 @@ export function createRouteSeo(route: Route): SeoMetadata {
 
   if (route.name === 'article') {
     return {
-      title: 'AdaEngine Article',
-      description: 'This AdaEngine article page is available when the requested article has been published.',
+      title: 'Ada Article',
+      description: 'This Ada article page is available when the requested article has been published.',
       path: `/articles/${route.slug}`,
       image: defaultSeoImage,
       type: 'article',
@@ -116,8 +116,8 @@ export function createRouteSeo(route: Route): SeoMetadata {
   }
 
   return {
-    title: 'Page Not Found - AdaEngine',
-    description: 'This AdaEngine page could not be found. Return to the open-source Swift game engine homepage.',
+    title: 'Page Not Found - Ada',
+    description: 'This Ada page could not be found. Return to the open-source Swift game engine homepage.',
     path: route.name === 'not-found' ? route.path : '/',
     image: defaultSeoImage,
     type: 'website',
@@ -127,7 +127,7 @@ export function createRouteSeo(route: Route): SeoMetadata {
 
 export function createArticleSeo(article: Article): SeoMetadata {
   return {
-    title: `${article.title} - AdaEngine News`,
+    title: `${article.title} - Ada News`,
     description: article.description,
     path: `/articles/${article.slug}`,
     image: absoluteSiteUrl(article.image ?? 'images/main/tilemap.png'),
@@ -137,8 +137,8 @@ export function createArticleSeo(article: Article): SeoMetadata {
 
 export function createDemoSeo(demo: DemoEntry): SeoMetadata {
   return {
-    title: `${demo.title} - AdaEngine WebAssembly Demo`,
-    description: `${demo.description} View the Swift source and run the WebAssembly build for this AdaEngine demo.`,
+    title: `${demo.title} - Ada WebAssembly Demo`,
+    description: `${demo.description} View the Swift source and run the WebAssembly build for this Ada demo.`,
     path: `/demos/${demo.slug}`,
     image: defaultSeoImage,
     type: 'website',
@@ -154,7 +154,7 @@ export function createStructuredData(meta: SeoMetadata): Array<Record<string, un
     name: siteName,
     url: siteOrigin,
     description:
-      'AdaEngine is an open-source Swift game engine for 2D and 3D games, ECS architecture, rendering, physics, UI, and demos.',
+      'Ada is an open-source Swift game engine for 2D and 3D games, ECS architecture, rendering, physics, UI, and demos.',
   }
 
   if (meta.path === '/') {

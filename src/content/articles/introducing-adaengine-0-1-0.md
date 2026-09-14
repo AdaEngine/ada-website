@@ -1,7 +1,7 @@
 ---
-title: "Introducing AdaEngine 0.1.0"
+title: "Introducing Ada 0.1.0"
 slug: "introducing-adaengine-0-1-0"
-description: "AdaEngine 0.1.0 is the first public milestone for a Swift-first, data-driven game engine and app framework."
+description: "Ada 0.1.0 is the first public milestone for a Swift-first, data-driven game engine and app framework."
 date: "2026-06-1 13:36"
 author: "SpectralDragon"
 tags:
@@ -11,36 +11,36 @@ published: true
 featured: true
 ---
 
-# Introducing AdaEngine 0.1.0
+# Introducing Ada 0.1.0
 
-![AdaEditor workspace](images/main/ada-editor.png "AdaEditor workspace with Swift source, scene preview, SwiftPM commands, and the output console.")
+![Ada Editor workspace](images/main/ada-editor.png "Ada Editor workspace with Swift source, scene preview, SwiftPM commands, and the output console.")
 
-After a long road, I am excited to introduce **AdaEngine 0.1.0**: a free and open source game engine and app framework written in Swift.
+After a long road, I am excited to introduce **Ada 0.1.0**: a free and open source game engine and app framework written in Swift.
 
-AdaEngine is built around a simple idea: Swift should be a great language for making games, interactive apps, tools, and creative software — not only apps for Apple platforms. Swift is expressive, safe, fast, and comfortable to write. AdaEngine tries to bring those strengths into game development with a modular engine, a data-driven architecture, and APIs that feel natural to Swift developers.
+Ada is built around a simple idea: Swift should be a great language for making games, interactive apps, tools, and creative software — not only apps for Apple platforms. Swift is expressive, safe, fast, and comfortable to write. Ada tries to bring those strengths into game development with a modular engine, a data-driven architecture, and APIs that feel natural to Swift developers.
 
-AdaEngine is available on GitHub under the [MIT license](https://github.com/AdaEngine/AdaEngine). This first release is still early, but it is already a real milestone: the engine can open windows, run an ECS-driven game loop, render sprites and UI, load assets and scenes, play audio, handle input, run physics, and build examples across the engine modules.
+Ada is available on GitHub under the [MIT license](https://github.com/AdaEngine/AdaEngine). This first release is still early, but it is already a real milestone: the engine can open windows, run an ECS-driven game loop, render sprites and UI, load assets and scenes, play audio, handle input, run physics, and build examples across the engine modules.
 
 :::warning Early release
-AdaEngine 0.1.0 is an early release. APIs will change, some features are incomplete, documentation is still growing, and you should expect rough edges. I do not recommend using it for serious production projects yet unless you are comfortable with instability and want to help shape the engine.
+Ada 0.1.0 is an early release. APIs will change, some features are incomplete, documentation is still growing, and you should expect rough edges. I do not recommend using it for serious production projects yet unless you are comfortable with instability and want to help shape the engine.
 :::
 
 If that sounds exciting, you can jump straight into the [tutorials](https://adaengine.org/adaengine-docs/tutorials/adaengine/) or explore the [GitHub repository](https://github.com/AdaEngine/AdaEngine).
 
 :::info
-This article includes links to AdaEngine documentation and source code where possible. The docs are generated from the codebase, so they will continue improving together with the engine.
+This article includes links to Ada documentation and source code where possible. The docs are generated from the codebase, so they will continue improving together with the engine.
 :::
 
-## What is AdaEngine?
+## What is Ada?
 
-AdaEngine is a data-driven game engine and app framework for Swift. Its core design goals are:
+Ada is a data-driven game engine and app framework for Swift. Its core design goals are:
 
 - **Simple**: easy to learn for newcomers, but still flexible enough for experienced users.
 - **Modular**: most engine features are delivered as plugins, so you can choose what your app needs.
-- **Data-driven**: the heart of AdaEngine is an Entity Component System.
+- **Data-driven**: the heart of Ada is an Entity Component System.
 - **Fast iteration**: the engine is designed for quick builds and quick feedback.
 - **Capable**: the first focus is a complete 2D workflow, with 3D support already present and planned to grow.
-- **Cross-platform by design**: AdaEngine currently targets Apple platforms and is actively moving toward broader support including Windows, Linux, Android, and WebAssembly/WebGPU.
+- **Cross-platform by design**: Ada currently targets Apple platforms and is actively moving toward broader support including Windows, Linux, Android, and WebAssembly/WebGPU.
 
 The current feature set includes:
 
@@ -62,7 +62,7 @@ The current feature set includes:
 
 ## A Swift-native app entry point
 
-AdaEngine apps start with an API that should feel familiar if you have used SwiftUI:
+Ada apps start with an API that should feel familiar if you have used SwiftUI:
 
 ```swift
 import AdaEngine
@@ -101,7 +101,7 @@ struct AdaApp: App {
 
 ## Entity Component System
 
-AdaEngine's heart is its ECS framework. It is inspired by engines and frameworks such as Bevy and RealityKit, but it is designed to feel natural in Swift.
+Ada's heart is its ECS framework. It is inspired by engines and frameworks such as Bevy and RealityKit, but it is designed to feel natural in Swift.
 
 In an Entity Component System:
 
@@ -164,7 +164,7 @@ struct AdaApp: App {
 }
 ```
 
-The `@System` macro generates the concrete system type for you. You write the logic as a Swift function; AdaEngine turns it into a registered ECS system.
+The `@System` macro generates the concrete system type for you. You write the logic as a Swift function; Ada turns it into a registered ECS system.
 
 ### Queries
 
@@ -294,7 +294,7 @@ struct MovementSystem {
 
 ### Schedulers
 
-Systems run in schedulers. AdaEngine includes common stages such as startup, pre-update, update, fixed update, and others:
+Systems run in schedulers. Ada includes common stages such as startup, pre-update, update, fixed update, and others:
 
 ```swift
 world
@@ -333,7 +333,7 @@ world.spawn(
 
 ### Scriptable objects
 
-If you prefer a Unity-like workflow for some gameplay code, AdaEngine provides [`ScriptableObject`](https://adaengine.org/adaengine-docs/documentation/adascene/scriptableobject) and [`ScriptableComponents`](https://adaengine.org/adaengine-docs/documentation/adascene/scriptablecomponents):
+If you prefer a Unity-like workflow for some gameplay code, Ada provides [`ScriptableObject`](https://adaengine.org/adaengine-docs/documentation/adascene/scriptableobject) and [`ScriptableComponents`](https://adaengine.org/adaengine-docs/documentation/adascene/scriptablecomponents):
 
 ```swift
 final class Player: ScriptableObject {
@@ -357,9 +357,9 @@ This gives you a familiar object-style escape hatch while the engine remains ECS
 
 ## AdaUI
 
-AdaEngine includes a UI framework called AdaUI. It is inspired by SwiftUI and is designed for both games and editor-like tools.
+Ada includes a UI framework called AdaUI. It is inspired by SwiftUI and is designed for both games and editor-like tools.
 
-SwiftUI proved how productive declarative UI can be. AdaUI brings a similar style into the engine, so UI code can be written directly in Swift and rendered inside an AdaEngine scene.
+SwiftUI proved how productive declarative UI can be. AdaUI brings a similar style into the engine, so UI code can be written directly in Swift and rendered inside an Ada scene.
 
 ![AdaUI and SwiftUI layout diff for a media card stack](images/main/adaui_example_1.jpg "AdaUI and SwiftUI layout comparison for a media review card stack.")
 
@@ -515,17 +515,17 @@ struct UserAvatarView: View {
 }
 ```
 
-AdaUI is especially important for the future of AdaEngine because the editor is planned to be built on top of the same UI system that games can use.
+AdaUI is especially important for the future of Ada because the editor is planned to be built on top of the same UI system that games can use.
 
-![AdaEditor UI](images/main/ada-editor.png "The editor is planned around the same AdaUI foundations available to games and tools.")
+![Ada Editor UI](images/main/ada-editor.png "The editor is planned around the same AdaUI foundations available to games and tools.")
 
 ## 2D features
 
-AdaEngine 0.1.0 is focused on building a strong 2D foundation.
+Ada 0.1.0 is focused on building a strong 2D foundation.
 
 ### Sprites
 
-Sprites are a core building block for many 2D games. AdaEngine can render sprites from [`Texture2D`](https://adaengine.org/adaengine-docs/documentation/adarender/texture2d) and other texture resources:
+Sprites are a core building block for many 2D games. Ada can render sprites from [`Texture2D`](https://adaengine.org/adaengine-docs/documentation/adarender/texture2d) and other texture resources:
 
 ```swift
 let texture = try await AssetsManager.load(Texture2D.self, at: "@res://sprite.png")
@@ -553,19 +553,19 @@ world.spawn {
 }
 ```
 
-If sprite size is not specified, AdaEngine can infer it from the texture.
+If sprite size is not specified, Ada can infer it from the texture.
 
 ### Tilemaps
 
-AdaEngine includes a dedicated `AdaTilemap` module. The built-in demos include both custom tilemap examples and LDtk-based tilemap loading. This makes it possible to build levels visually and then load them into an ECS world.
+Ada includes a dedicated `AdaTilemap` module. The built-in demos include both custom tilemap examples and LDtk-based tilemap loading. This makes it possible to build levels visually and then load them into an ECS world.
 
 The goal is to support practical 2D workflows: draw levels in an editor, load them as data, attach physics, and iterate quickly.
 
-![Tilemap demo](images/main/tilemap.png "A tilemap scene rendered by AdaEngine.")
+![Tilemap demo](images/main/tilemap.png "A tilemap scene rendered by Ada.")
 
 ### 2D physics
 
-AdaEngine includes `AdaPhysics`, backed by Box2D. You can attach collision components to entities and receive collision events through the event system.
+Ada includes `AdaPhysics`, backed by Box2D. You can attach collision components to entities and receive collision events through the event system.
 
 Physics is integrated into the ECS world, so gameplay code can combine transforms, sprites, collision components, and systems in the same data-driven model.
 
@@ -640,7 +640,7 @@ The spawned scene can attach its entities and resources under a parent entity.
 
 ### Hot reloading scenes
 
-Scene hot reloading is one of the most important iteration features. When a scene file changes, AdaEngine can apply those changes to a running scene without requiring a restart or a full rebuild. This makes level editing and gameplay tuning much faster.
+Scene hot reloading is one of the most important iteration features. When a scene file changes, Ada can apply those changes to a running scene without requiring a restart or a full rebuild. This makes level editing and gameplay tuning much faster.
 
 :::info
 Hot reload is an early feature, but the direction is clear: edit data, see the result immediately, and stay focused on the game instead of the build loop.
@@ -650,7 +650,7 @@ Hot reload is an early feature, but the direction is clear: edit data, see the r
 
 Games and apps need to communicate constantly: collisions begin, buttons are pressed, UI opens, enemies spawn, players connect, and systems need to react.
 
-AdaEngine supports both global event-style messaging and ECS frame events.
+Ada supports both global event-style messaging and ECS frame events.
 
 ### EventManager
 
@@ -671,7 +671,7 @@ EventManager.default.sendEvent(SomeEvent())
 
 ### ECS events
 
-For ECS-native workflows, AdaEngine provides `Events` and `EventSender`:
+For ECS-native workflows, Ada provides `Events` and `EventSender`:
 
 ```swift
 @System
@@ -704,7 +704,7 @@ let texture: AssetHandle<Texture2D> = try await AssetsManager.load(
 )
 ```
 
-The `@res://` prefix points to your app resource directory. By default, AdaEngine looks for an `Assets` or `Resources` folder in your target. You can also set the resource directory manually.
+The `@res://` prefix points to your app resource directory. By default, Ada looks for an `Assets` or `Resources` folder in your target. You can also set the resource directory manually.
 
 To load from a specific bundle:
 
@@ -750,7 +750,7 @@ This makes the asset available to the same loading pipeline as built-in textures
 
 ## Audio
 
-AdaEngine includes an `AdaAudio` module backed by miniaudio. You can load an audio resource and play it from an entity:
+Ada includes an `AdaAudio` module backed by miniaudio. You can load an audio resource and play it from an entity:
 
 ```swift
 let backgroundSound = try await AssetsManager.load(
@@ -771,7 +771,7 @@ Audio can be attached to entities, which opens the door for spatial sound and ga
 
 ## Rendering
 
-Rendering in AdaEngine is split into modules and plugins. The current codebase includes:
+Rendering in Ada is split into modules and plugins. The current codebase includes:
 
 - `AdaRender` for render abstractions, cameras, materials, meshes, textures, render pipelines, and render graphs.
 - `AdaSprite` for 2D sprite rendering.
@@ -786,7 +786,7 @@ Render graphs are an important part of the future direction. They make rendering
 
 ## Platforms and tooling
 
-AdaEngine is a Swift Package using Swift 6.2. The package currently declares Apple platform targets such as macOS 15, iOS 18, tvOS 18, and visionOS 2. It also contains conditional compilation and platform backends for Linux, Windows, Android, WASI/WebAssembly, Metal, WebGPU, X11, and browser runtimes.
+Ada is a Swift Package using Swift 6.2. The package currently declares Apple platform targets such as macOS 15, iOS 18, tvOS 18, and visionOS 2. It also contains conditional compilation and platform backends for Linux, Windows, Android, WASI/WebAssembly, Metal, WebGPU, X11, and browser runtimes.
 
 Not every platform is equally mature yet. Apple platforms are the most ready today, while Windows, Linux, Android, and Web are part of the active cross-platform direction.
 
@@ -819,25 +819,25 @@ The repository includes examples under [`Demos`](https://github.com/AdaEngine/Ad
 
 Examples are important because they show what the engine can already do and also act as practical tests for engine workflows.
 
-![Duck Hunt demo](images/main/duck_hunt.png "A small Duck Hunt style demo running with AdaEngine.")
+![Duck Hunt demo](images/main/duck_hunt.png "A small Duck Hunt style demo running with Ada.")
 
-![Space Invaders demo](images/main/space_invaders.jpeg "A Space Invaders style demo from the AdaEngine examples.")
+![Space Invaders demo](images/main/space_invaders.jpeg "A Space Invaders style demo from the Ada examples.")
 
-## Why I built AdaEngine
+## Why I built Ada
 
 Making games was my childhood dream. I started learning Java because I wanted to make Minecraft mods. Later I became an iOS engineer, but the dream of building games never disappeared.
 
-I spent a lot of free time learning Godot, exploring the game development community, and trying to understand how engines work internally. I started with a small Metal project, kept experimenting, and after years of work reached this milestone: the first AdaEngine release.
+I spent a lot of free time learning Godot, exploring the game development community, and trying to understand how engines work internally. I started with a small Metal project, kept experimenting, and after years of work reached this milestone: the first Ada release.
 
 I love open source. I love Swift. I have built many open source Swift projects, and I wanted to see what would happen if Swift was used not only for apps, but also for a full game engine.
 
 Swift has a lot to offer: value types, protocol-oriented design, macros, structured concurrency, memory safety, strong tooling, and a syntax that is pleasant to write. The biggest problem is not the language — it is the idea that Swift belongs only to macOS and iOS development.
 
-I do not believe that is true. Swift can be more than that. AdaEngine is my attempt to help prove it.
+I do not believe that is true. Swift can be more than that. Ada is my attempt to help prove it.
 
 ## What's next?
 
-AdaEngine 0.1.0 is a beginning, not a finish line. The next phase is about expanding the engine, polishing the experience, and growing the community.
+Ada 0.1.0 is a beginning, not a finish line. The next phase is about expanding the engine, polishing the experience, and growing the community.
 
 ### More platforms
 
@@ -849,7 +849,7 @@ The next important platform work includes WebAssembly/WebGPU, Linux, Android, an
 
 Game developers want to prototype faster and write less boilerplate. AdaUI gives us the foundation to build an editor with the same UI framework that games can use.
 
-Building the AdaEditor in AdaUI is an important goal: it will improve the UI framework, validate the engine tooling, and make AdaEngine more approachable for users who prefer visual workflows.
+Building the Ada Editor in AdaUI is an important goal: it will improve the UI framework, validate the engine tooling, and make Ada more approachable for users who prefer visual workflows.
 
 ### 3D rendering and polish
 
@@ -859,15 +859,15 @@ The engine also needs polish across many systems: asset workflows, hot reloading
 
 ### Documentation and tutorials
 
-The API is still unstable and documentation is sparse in places. In the near future, AdaEngine needs more tutorials, better guides, and more examples that show complete workflows from project setup to finished game mechanics.
+The API is still unstable and documentation is sparse in places. In the near future, Ada needs more tutorials, better guides, and more examples that show complete workflows from project setup to finished game mechanics.
 
 Good documentation is not optional. It is part of the engine.
 
-## Join AdaEngine
+## Join Ada
 
-If any of this sounds interesting, please check out [AdaEngine on GitHub](https://github.com/AdaEngine/AdaEngine), read the [tutorial series](https://adaengine.org/adaengine-docs/tutorials/adaengine/), explore the examples, and join the discussion.
+If any of this sounds interesting, please check out [Ada on GitHub](https://github.com/AdaEngine/AdaEngine), read the [tutorial series](https://adaengine.org/adaengine-docs/tutorials/adaengine/), explore the examples, and join the discussion.
 
-AdaEngine is currently built by volunteers. If you want to help build a Swift game engine — with code, documentation, examples, testing, design feedback, or ideas — you are very welcome.
+Ada is currently built by volunteers. If you want to help build a Swift game engine — with code, documentation, examples, testing, design feedback, or ideas — you are very welcome.
 
 This is only version 0.1.0, but it is the start of something I have wanted to build for a long time.
 

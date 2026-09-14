@@ -7,7 +7,7 @@ const siteOrigin = 'https://adaengine.org'
 const articlesDir = join(root, 'src/content/articles')
 const feedPath = join(root, 'public/rss.xml')
 const channelDescription =
-  'Read AdaEngine updates, release notes, engineering deep dives, and Swift game development articles from the project team.'
+  'Read Ada updates, release notes, engineering deep dives, and Swift game development articles from the project team.'
 
 function parseFrontmatterValue(value) {
   if (value === 'true') return true
@@ -129,7 +129,7 @@ writeFileSync(
   `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>AdaEngine News</title>
+    <title>Ada News</title>
     <link>${siteOrigin}/blog</link>
     <description>${escapeXml(channelDescription)}</description>
     <language>en</language>
