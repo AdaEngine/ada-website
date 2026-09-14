@@ -1,0 +1,50 @@
+name: Deploy feedback redirect
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - feedback/**
+      - .github/workflows/feedback.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: feedback-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare redirect
+        run: |
+          mkdir feedback-dist
+          cp feedback/index.html feedback-dist/index.html
+          cp feedback/index.html feedback-dist/404.html
+          touch feedback-dist/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: feedback-dist
+
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

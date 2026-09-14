@@ -350,6 +350,8 @@ function formatDate(date: string): string {
 }
 
 function hrefFor(path: string): string {
+  const mainSite = import.meta.env.VITE_MAIN_SITE_URL as string | undefined
+  if (mainSite && !/^\/(cloud|games|legal)(\/|$)/.test(path)) return new URL(path, mainSite).href
   return createHref(path, baseUrl)
 }
 
@@ -454,6 +456,7 @@ function renderHeader(): string {
     { label: 'Demos', href: hrefFor('/demos'), active: activePage === 'demos' },
     { label: 'Learn', href: hrefFor('/learn'), active: activePage === 'learn' },
     { label: 'Socials', href: hrefFor('/community'), active: activePage === 'community' },
+    { label: 'Cloud', href: hrefFor('/cloud'), active: /^\/(cloud|games|legal)(\/|$)/.test(window.location.pathname) },
     { label: 'Donate', href: hrefFor('/donate'), active: activePage === 'donate' },
   ]
   const isLearnPage = activePage === 'learn'
@@ -1476,6 +1479,11 @@ async function refreshDownloads() {
 }
 
 async function renderRoute() {
+  if (/^\/(cloud|games|legal)(\/|$)/.test(window.location.pathname)) {
+    const { renderCloud } = await import('./cloud')
+    await renderCloud(app, renderHeader, setupHeaderNavigation)
+    return
+  }
   const route = resolveRoute(window.location.pathname, import.meta.env.BASE_URL)
   applySeo(createRouteSeo(route))
 
@@ -1517,9 +1525,11 @@ async function renderRoute() {
   renderNotFound()
 }
 
-function setupInteractions() {
+function setupHeaderNavigation() {
   const header = document.querySelector<HTMLElement>('.header')
   const burger = document.querySelector<HTMLButtonElement>('.burger-container')
+  if (!header || header.dataset.navigationReady === 'true') return
+  header.dataset.navigationReady = 'true'
   let menuOpenTimer: number | undefined
   let menuCloseTimer: number | undefined
 
@@ -1559,6 +1569,10 @@ function setupInteractions() {
     })
   })
 
+}
+
+function setupInteractions() {
+  setupHeaderNavigation()
   setupFeatureGifPreviews()
 
   const modal = document.querySelector<HTMLElement>('.feature-modal')
