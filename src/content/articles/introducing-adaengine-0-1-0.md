@@ -25,7 +25,7 @@ Ada is available on GitHub under the [MIT license](https://github.com/AdaEngine/
 Ada 0.1.0 is an early release. APIs will change, some features are incomplete, documentation is still growing, and you should expect rough edges. I do not recommend using it for serious production projects yet unless you are comfortable with instability and want to help shape the engine.
 :::
 
-If that sounds exciting, you can jump straight into the [tutorials](https://adaengine.org/adaengine-docs/tutorials/adaengine/) or explore the [GitHub repository](https://github.com/AdaEngine/AdaEngine).
+If that sounds exciting, you can jump straight into the [tutorials](https://docs.adaengine.org/tutorials/adaengine/) or explore the [GitHub repository](https://github.com/AdaEngine/AdaEngine).
 
 :::info
 This article includes links to Ada documentation and source code where possible. The docs are generated from the codebase, so they will continue improving together with the engine.
@@ -81,7 +81,7 @@ That is enough to create a window and install the default engine plugins.
 
 The core philosophy is customization through plugins. Rendering, audio, input, events, UI, physics, scenes, sprites, and other features are added to an application through plugin composition. You can start with sensible defaults or build a smaller runtime by selecting only the parts you need.
 
-For more control, use [`EmptyWindow`](https://adaengine.org/adaengine-docs/documentation/adaapp/emptywindow) and add plugins manually:
+For more control, use [`EmptyWindow`](https://docs.adaengine.org/documentation/adaapp/emptywindow) and add plugins manually:
 
 ```swift
 import AdaEngine
@@ -97,7 +97,7 @@ struct AdaApp: App {
 }
 ```
 
-[`DefaultPlugins`](https://adaengine.org/adaengine-docs/documentation/adaengine/defaultplugins/) is the bundle most users should start with. When you need a lighter runtime, you can disable parts of the bundle with [`disable(_:)`](https://adaengine.org/adaengine-docs/documentation/adaengine/defaultplugins/disable(_:)).
+[`DefaultPlugins`](https://docs.adaengine.org/documentation/adaengine/defaultplugins/) is the bundle most users should start with. When you need a lighter runtime, you can disable parts of the bundle with [`disable(_:)`](https://docs.adaengine.org/documentation/adaengine/defaultplugins/disable(_:)).
 
 ## Entity Component System
 
@@ -243,7 +243,7 @@ func Movement(
 
 ### Commands
 
-When a system needs to spawn or delete entities, or insert components, it can use [`Commands`](https://adaengine.org/adaengine-docs/documentation/adaecs/commands). Commands are collected and then applied after the system finishes, which keeps system execution safe.
+When a system needs to spawn or delete entities, or insert components, it can use [`Commands`](https://docs.adaengine.org/documentation/adaecs/commands). Commands are collected and then applied after the system finishes, which keeps system execution safe.
 
 ```swift
 @System
@@ -257,7 +257,7 @@ func GameStartup(_ commands: Commands) {
 
 ### Local values
 
-Systems can keep local state with [`Local`](https://adaengine.org/adaengine-docs/documentation/adaecs/local):
+Systems can keep local state with [`Local`](https://docs.adaengine.org/documentation/adaecs/local):
 
 ```swift
 @System
@@ -271,7 +271,7 @@ func UpdateData(isUpdated: Local<Bool> = false) {
 
 ### Struct systems
 
-For more control, AdaECS also supports struct-based systems with [`@PlainSystem`](https://adaengine.org/adaengine-docs/documentation/adaecs/plainsystem(dependencies:)):
+For more control, AdaECS also supports struct-based systems with [`@PlainSystem`](https://docs.adaengine.org/documentation/adaecs/plainsystem(dependencies:)):
 
 ```swift
 @PlainSystem(dependencies: [
@@ -333,7 +333,7 @@ world.spawn(
 
 ### Scriptable objects
 
-If you prefer a Unity-like workflow for some gameplay code, Ada provides [`ScriptableObject`](https://adaengine.org/adaengine-docs/documentation/adascene/scriptableobject) and [`ScriptableComponents`](https://adaengine.org/adaengine-docs/documentation/adascene/scriptablecomponents):
+If you prefer a Unity-like workflow for some gameplay code, Ada provides [`ScriptableObject`](https://docs.adaengine.org/documentation/adascene/scriptableobject) and [`ScriptableComponents`](https://docs.adaengine.org/documentation/adascene/scriptablecomponents):
 
 ```swift
 final class Player: ScriptableObject {
@@ -367,7 +367,7 @@ SwiftUI proved how productive declarative UI can be. AdaUI brings a similar styl
 
 ### Views
 
-A view implements the [`View`](https://adaengine.org/adaengine-docs/documentation/adaui/view) protocol:
+A view implements the [`View`](https://docs.adaengine.org/documentation/adaui/view) protocol:
 
 ```swift
 struct GameOverView: View {
@@ -476,7 +476,7 @@ struct SubView: View {
 
 ### Attaching UI to an entity
 
-To show a view in the world, attach it with [`UIComponent`](https://adaengine.org/adaengine-docs/documentation/adaui/uicomponent):
+To show a view in the world, attach it with [`UIComponent`](https://docs.adaengine.org/documentation/adaui/uicomponent):
 
 ```swift
 let gameOverView = GameOverView()
@@ -525,7 +525,7 @@ Ada 0.1.0 is focused on building a strong 2D foundation.
 
 ### Sprites
 
-Sprites are a core building block for many 2D games. Ada can render sprites from [`Texture2D`](https://adaengine.org/adaengine-docs/documentation/adarender/texture2d) and other texture resources:
+Sprites are a core building block for many 2D games. Ada can render sprites from [`Texture2D`](https://docs.adaengine.org/documentation/adarender/texture2d) and other texture resources:
 
 ```swift
 let texture = try await AssetsManager.load(Texture2D.self, at: "@res://sprite.png")
@@ -728,7 +728,7 @@ let texture: AssetHandle<Texture2D> = try await AssetsManager.load(
 
 ### Adding a new asset type
 
-You can add support for custom assets by implementing the [`Asset`](https://adaengine.org/adaengine-docs/documentation/adaassets/asset) protocol:
+You can add support for custom assets by implementing the [`Asset`](https://docs.adaengine.org/documentation/adaassets/asset) protocol:
 
 ```swift
 struct MyAsset: Asset {
@@ -865,7 +865,7 @@ Good documentation is not optional. It is part of the engine.
 
 ## Join Ada
 
-If any of this sounds interesting, please check out [Ada on GitHub](https://github.com/AdaEngine/AdaEngine), read the [tutorial series](https://adaengine.org/adaengine-docs/tutorials/adaengine/), explore the examples, and join the discussion.
+If any of this sounds interesting, please check out [Ada on GitHub](https://github.com/AdaEngine/AdaEngine), read the [tutorial series](https://docs.adaengine.org/tutorials/adaengine/), explore the examples, and join the discussion.
 
 Ada is currently built by volunteers. If you want to help build a Swift game engine — with code, documentation, examples, testing, design feedback, or ideas — you are very welcome.
 

@@ -28,7 +28,11 @@ function readArticles() {
       const published = frontmatter.match(/^published:\s*false/m)
       const draft = frontmatter.match(/^draft:\s*true/m)
 
-      return slug && !published && !draft ? { slug, date } : null
+      if (!slug || published || draft) return null
+      if (!/^[a-z0-9-]+$/.test(slug)) throw new Error(`Invalid article slug: ${slug}`)
+      const parsedDate = new Date(date)
+      if (!date || Number.isNaN(parsedDate.getTime())) throw new Error(`Invalid article date: ${date}`)
+      return { slug, date: parsedDate.toISOString().slice(0, 10) }
     })
     .filter(Boolean)
 }
@@ -36,10 +40,7 @@ function readArticles() {
 function entry(path, options = {}) {
   const loc = `${siteOrigin}${path === '/' ? '/' : path}`
   const lastmod = options.lastmod ? `\n    <lastmod>${options.lastmod}</lastmod>` : ''
-  const changefreq = options.changefreq ? `\n    <changefreq>${options.changefreq}</changefreq>` : ''
-  const priority = options.priority ? `\n    <priority>${options.priority}</priority>` : ''
-
-  return `  <url>\n    <loc>${loc}</loc>${lastmod}${changefreq}${priority}\n  </url>`
+  return `  <url>\n    <loc>${loc}</loc>${lastmod}\n  </url>`
 }
 
 function writeIfChanged(path, content) {
@@ -56,14 +57,15 @@ const demoLastmod = manifest.generatedAt ? manifest.generatedAt.slice(0, 10) : u
 const articles = readArticles()
 
 const sitemapEntries = [
-  entry('/', { changefreq: 'weekly', priority: '1.0' }),
-  entry('/download', { changefreq: 'weekly', priority: '0.9' }),
-  entry('/learn', { changefreq: 'monthly', priority: '0.9' }),
-  entry('/demos', { changefreq: 'weekly', priority: '0.9' }),
-  entry('/community', { changefreq: 'monthly', priority: '0.6' }),
-  entry('/donate', { changefreq: 'monthly', priority: '0.5' }),
-  ...articles.map((article) => entry(`/articles/${article.slug}`, { lastmod: article.date, changefreq: 'monthly', priority: '0.7' })),
-  ...(manifest.demos ?? []).map((demo) => entry(`/demos/${demo.slug}`, { lastmod: demoLastmod, changefreq: 'monthly', priority: '0.7' })),
+  entry('/'),
+  entry('/download'),
+  entry('/learn'),
+  entry('/blog'),
+  entry('/demos'),
+  entry('/community'),
+  entry('/donate'),
+  ...articles.map((article) => entry(`/articles/${article.slug}`, { lastmod: article.date })),
+  ...(manifest.demos ?? []).map((demo) => entry(`/demos/${demo.slug}`, { lastmod: demoLastmod })),
 ]
 
 writeIfChanged(
