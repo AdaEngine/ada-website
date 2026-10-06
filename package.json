@@ -12,7 +12,8 @@
     "pretest": "npm run geo",
     "preview": "vite preview",
     "test": "node src/routing.test.ts",
-    "postbuild": "node scripts/generate-static-pages.mjs"
+    "postbuild": "node scripts/generate-static-pages.mjs",
+    "build:store": "tsc -b && vite build --config vite.store.config.ts"
   },
   "devDependencies": {
     "typescript": "^5.8.3",

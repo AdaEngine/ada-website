@@ -59,6 +59,7 @@ const articles = readArticles()
 const sitemapEntries = [
   entry('/'),
   entry('/download'),
+  entry('/studio'),
   entry('/learn'),
   entry('/blog'),
   entry('/demos'),

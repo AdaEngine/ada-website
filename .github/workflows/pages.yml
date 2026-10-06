@@ -27,7 +27,7 @@ jobs:
   build:
     runs-on: macos-26
     env:
-      BUILD_DEMOS: ${{ (github.event_name == 'workflow_dispatch' && inputs.build_demos) && 'true' || 'false' }}
+      BUILD_DEMOS: ${{ ((github.event_name == 'workflow_dispatch' && inputs.build_demos) || github.event_name == 'repository_dispatch') && 'true' || 'false' }}
       SWIFT_WASM_SDK_ID: ${{ vars.SWIFT_WASM_SDK_ID || 'swift-6.3.2-RELEASE_wasm' }}
       SWIFT_WASM_SDK_URL: ${{ vars.SWIFT_WASM_SDK_URL || 'https://download.swift.org/swift-6.3.2-release/wasm-sdk/swift-6.3.2-RELEASE/swift-6.3.2-RELEASE_wasm.artifactbundle.tar.gz' }}
       SWIFT_WASM_SDK_CHECKSUM: ${{ vars.SWIFT_WASM_SDK_CHECKSUM || 'a61f0584c93283589f8b2f42db05c1f9a182b506c2957271402992655591dd7c' }}
@@ -45,8 +45,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: AdaEngine/AdaEngine
-          ref: ${{ github.event.client_payload.ref || 'main' }}
+          ref: ${{ github.event.client_payload.engine_ref || github.event.client_payload.ref || 'main' }}
           path: AdaEngine
+
+      - name: Checkout AdaExamples
+        if: env.BUILD_DEMOS == 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: AdaEngine/AdaExamples
+          ref: ${{ github.event.client_payload.examples_ref || 'main' }}
+          path: AdaExamples
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -86,13 +94,13 @@ jobs:
       - name: Build AdaEngine demos (skippable)
         if: env.BUILD_DEMOS == 'true'
         run: |
-          if [ ! -f AdaEngine/scripts/build-website-demos.mjs ]; then
-            echo "AdaEngine demos build script was not found; skipping demos."
-            exit 0
+          if [ ! -f AdaExamples/scripts/build-website-demos.mjs ]; then
+            echo "AdaExamples website demo builder was not found."
+            exit 1
           fi
 
-          node AdaEngine/scripts/build-website-demos.mjs \
-            --package-dir AdaEngine \
+          node AdaExamples/scripts/build-website-demos.mjs \
+            --package-dir AdaExamples/Examples/EngineDemos \
             --output public/demos \
             --swift-sdk "${SWIFT_WASM_SDK_ID}"
 

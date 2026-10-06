@@ -1,4 +1,5 @@
 import './style.css'
+import { renderStudioContent } from './studio'
 import { appStoreURL, assetsFor, assetLabel, fallbackRelease, loadDownloadRelease, type DownloadRelease, type DesktopPlatform } from './downloads'
 import { languageClass, renderHighlightedCodeLines } from './codeHighlight'
 import { articles, getArticleBySlug, type ArticleAuthor, type ArticleHeading } from './content'
@@ -350,8 +351,11 @@ function formatDate(date: string): string {
 }
 
 function hrefFor(path: string): string {
-  const mainSite = import.meta.env.VITE_MAIN_SITE_URL as string | undefined
-  if (mainSite && !/^\/(cloud|games|legal)(\/|$)/.test(path)) return new URL(path, mainSite).href
+  if (/^store(?:-test)?\./.test(window.location.hostname) && /^\/cloud(\/|$)/.test(path)) {
+    return new URL(path, window.location.hostname.startsWith('store-test.') ? 'https://cloud-test.adaengine.org' : 'https://cloud.adaengine.org').href
+  }
+  const mainSite = (import.meta.env.VITE_MAIN_SITE_URL as string | undefined) ?? (/^store(?:-test)?\./.test(window.location.hostname) ? 'https://adaengine.org' : undefined)
+  if (mainSite && !/^\/(cloud|games|legal|store)(\/|$)/.test(path)) return new URL(path, mainSite).href
   return createHref(path, baseUrl)
 }
 
@@ -449,15 +453,18 @@ async function setupGitHubStars() {
 
 function renderHeader(): string {
   const currentRoute = resolveRoute(window.location.pathname, import.meta.env.BASE_URL)
-  const activePage = currentRoute.name === 'static-page' ? currentRoute.page : currentRoute.name === 'demo' ? 'demos' : currentRoute.name
+  const isStoreView = /^\/store(\/|$)/.test(window.location.pathname) || (/^store(?:-test)?\./.test(window.location.hostname) && window.location.pathname === '/')
+  const activePage = isStoreView ? 'store' : currentRoute.name === 'static-page' ? currentRoute.page : currentRoute.name === 'demo' ? 'demos' : currentRoute.name
   const navItems = [
     { label: 'Home', href: hrefFor('/'), active: activePage === 'home' },
+    { label: 'Studio', href: hrefFor('/studio'), active: activePage === 'studio' },
     ...(articles.length ? [{ label: 'News', href: hrefFor('/blog'), active: activePage === 'blog' }] : []),
     { label: 'Demos', href: hrefFor('/demos'), active: activePage === 'demos' },
     { label: 'Learn', href: hrefFor('/learn'), active: activePage === 'learn' },
-    { label: 'Socials', href: hrefFor('/community'), active: activePage === 'community' },
-    { label: 'Cloud', href: hrefFor('/cloud'), active: /^\/(cloud|games|legal)(\/|$)/.test(window.location.pathname) },
-    { label: 'Donate', href: hrefFor('/donate'), active: activePage === 'donate' },
+    { label: 'Socials', href: hrefFor('/community'), active: activePage === 'community', secondary: true },
+    { label: 'Store', href: isStoreView ? hrefFor('/store') : 'https://store.adaengine.org', active: isStoreView, secondary: true },
+    { label: 'Cloud', href: hrefFor('/cloud'), active: /^\/(cloud|games|legal)(\/|$)/.test(window.location.pathname), secondary: true },
+    { label: 'Donate', href: hrefFor('/donate'), active: activePage === 'donate', secondary: true },
   ]
   const isLearnPage = activePage === 'learn'
 
@@ -476,7 +483,7 @@ function renderHeader(): string {
         </button>
         <nav aria-label="Main navigation">
           <ul class="navigation">
-            ${navItems.map((item) => `<li class="navigation-item"><a class="navigation-item-link${item.active ? ' is-active' : ''}" href="${item.href}">${item.label}</a></li>`).join('')}
+            ${navItems.map((item) => `<li class="navigation-item${'secondary' in item && item.secondary ? ' navigation-item-secondary' : ''}"><a class="navigation-item-link${item.active ? ' is-active' : ''}"${item.active ? ' aria-current="page"' : ''} href="${item.href}">${item.label}</a></li>`).join('')}
             <li class="navigation-item download-button"><a class="navigation-item-link" href="${hrefFor('/download')}">Download <span class="download-version" data-download-version>v${fallbackRelease.version}</span></a></li>
           </ul>
         </nav>
@@ -877,6 +884,7 @@ function renderFooter(): string {
         <div class="footer-columns">
           <section>
             <h3>Ada</h3>
+            <a href="${hrefFor('/studio')}">Studio</a>
             <a href="${hrefFor('/download')}">Download</a>
             <a href="https://github.com/AdaEngine/AdaEngine">Source code<span class="footer-external-mark" aria-hidden="true">↗</span></a>
           </section>
@@ -1479,6 +1487,12 @@ async function refreshDownloads() {
 }
 
 async function renderRoute() {
+  app.classList.remove('store-app')
+  if ((/^\/store(\/|$)/.test(window.location.pathname) || (window.location.hostname.startsWith('store.') || window.location.hostname.startsWith('store-test.')) && window.location.pathname === '/')) {
+    const { renderStore } = await import('./store')
+    await renderStore(app, renderHeader, setupHeaderNavigation)
+    return
+  }
   if (/^\/(cloud|games|legal)(\/|$)/.test(window.location.pathname)) {
     const { renderCloud } = await import('./cloud')
     await renderCloud(app, renderHeader, setupHeaderNavigation)
@@ -1486,6 +1500,11 @@ async function renderRoute() {
   }
   const route = resolveRoute(window.location.pathname, import.meta.env.BASE_URL)
   applySeo(createRouteSeo(route))
+
+  if (route.name === 'studio') {
+    app.innerHTML = `${renderHeader()}${renderStudioContent(hrefFor, assetFor)}${renderFooter()}`
+    return
+  }
 
   if (route.name === 'download') {
     renderDownloadPage()

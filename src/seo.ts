@@ -67,6 +67,16 @@ export function createRouteSeo(route: Route): SeoMetadata {
     return { title: 'Download Ada — Mac, Windows, Linux and iOS', description: 'Download Ada for your platform. Find desktop releases, source code and the iOS app on the App Store.', path: '/download', image: defaultSeoImage, type: 'website' }
   }
 
+  if (route.name === 'studio') {
+    return {
+      title: 'Ada Studio - Game Creation on Desktop, iPad and Mobile',
+      description: 'Meet Ada Studio. Build scenes, write Swift and AdaScript, and work with an AI agent on desktop and iPad. Bring your game ideas to life on mobile.',
+      path: '/studio',
+      image: `${siteOrigin}/images/studio/desktop.png`,
+      type: 'website',
+    }
+  }
+
   if (route.name === 'blog') {
     return {
       title: 'Ada News - Swift Game Engine Updates',

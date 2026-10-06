@@ -1,5 +1,7 @@
 import './cloud.css'
 import { draftLegal, legalDocument, type LegalMetadata } from './cloudLegal'
+import { activePublicationForProject } from './cloudProjects'
+import { renderTestAccess } from './cloudTestAccess'
 
 type Json = { [key: string]: any }
 const apiBase = (import.meta.env.VITE_CLOUD_API_URL as string | undefined) ?? ''
@@ -96,7 +98,8 @@ function providerButton(provider: 'apple' | 'google') {
 function signIn() {
   const section = panel(account ? 'Link another sign-in method' : desktopRequestId ? 'Sign in to Ada Editor' : 'Sign in to Ada')
   section.classList.add(account ? 'cloud-link-identity' : 'cloud-signin')
-  if (!account) section.append(el('p', availability.cloudServicesAvailable ? 'Your editor settings and shared games, in one account.' : 'Create your Ada account. Cloud Services will open soon in your region.', 'cloud-signin-description'))
+  if (window.location.hostname.startsWith('store') || sessionStorage.getItem('ada.store.return')) section.append(link('Return to Ada Store →', '/store'))
+  if (!account) section.append(el('p', availability.registrationRestricted ? 'This test environment is invite-only. Ask an administrator to grant access to your account ID or email.' : availability.cloudServicesAvailable ? 'Your editor settings and shared games, in one account.' : 'Create your Ada account. Cloud Services will open soon in your region.', 'cloud-signin-description'))
   const actions = el('div', '', 'cloud-provider-actions')
   const apple = providerButton('apple'), google = providerButton('google')
   actions.append(apple, google)
@@ -186,33 +189,27 @@ async function dashboard() {
   const profile = panel('Your account')
   const name = field('Display name', 'text', account.name)
   profile.append(name.wrapper, el('p', account.email ?? ''), button('Save name', async () => { account = await api('/me', 'PATCH', { name: name.input.value }); status('Saved') }))
+  const accountID = el('div', '', 'cloud-row')
+  accountID.append(el('code', account.id), button('Copy account ID', async () => { await navigator.clipboard.writeText(account!.id); status('Account ID copied.') }, true))
+  profile.append(el('p', 'Account ID', 'cloud-muted'), accountID)
   const billing = await api('/billing')
   availability = billing.availability ?? availability
   if (availability.cloudServicesAvailable === true) {
   const plan = panel(billing.pro ? 'Ada Pro' : 'Free')
   plan.append(el('p', billing.pro ? `Paid access until ${new Date(billing.expiresAt * 1000).toLocaleString()}` : 'Sync your editor settings for free. Pro adds web build publishing.'))
-  plan.append(el('p', 'Pro: one active build · five uploads per day · 10 GB game traffic per month'))
+  plan.append(el('p', 'Pro: one active build per project · five uploads per day · 10 GB game traffic per month'))
   if (billing.providers?.includes('apple')) plan.append(link('Manage App Store subscription', 'https://apps.apple.com/account/subscriptions'))
   if (billing.webCheckoutAvailable && availability.billingAvailable === true) plan.append(button('Subscribe monthly', async () => { const checkout = await api('/billing/checkout', 'POST', {}); window.location.assign(checkout.url) }))
   else plan.append(el('p', 'Web payments are not available yet. App Store purchases are managed in Ada Editor.', 'cloud-muted'))
-  await publicationForm(!!billing.pro)
   const settings = panel('Editor settings')
   settings.append(button('Show synced settings', async () => {
     const snapshot = await api('/settings'); const pre = el('pre', JSON.stringify(snapshot.values, null, 2)); settings.querySelector('pre')?.remove(); settings.append(pre)
   }, true))
   } else {
     comingSoon()
-    // Existing subscriptions and published data can still be managed during the rollout.
-    const management = panel('Existing subscriptions and publications')
+    // Existing subscriptions remain manageable; projects and builds live in My Projects.
+    const management = panel('Existing subscription')
     management.append(link('Manage App Store subscription', 'https://apps.apple.com/account/subscriptions'))
-    for (const publication of await api('/publications')) {
-      if (publication.revoked || publication.expiresAt * 1000 <= Date.now()) continue
-      const row = el('div', '', 'cloud-row')
-      row.append(link('Open game', publication.url), button('Revoke link', async () => {
-        await api(`/publications/${encodeURIComponent(publication.id)}`, 'DELETE'); row.remove()
-      }, true))
-      management.append(row)
-    }
   }
   signIn()
   const sessions = panel('Devices and account access')
@@ -226,27 +223,24 @@ async function dashboard() {
     await api('/me', 'DELETE'); account = null; termsAccepted = false; await renderCloud(root.parentElement!)
   }, true))
 }
-async function publicationForm(pro: boolean) {
-  const section = panel('Publish a web build')
-  section.append(el('p', 'Upload the ZIP produced from your Ada web export. Maximum 300 MB; 600 MB and 5,000 files after extraction.'))
+async function uploadProjectBuild(section: HTMLElement, project: Json, pro: boolean, currentPublication?: Json) {
+  const title = el('div', '', 'cloud-section-heading')
+  title.append(el('div', currentPublication ? 'Replace current build' : 'Upload a build'), el('p', 'ZIP from an Ada web export · 300 MB maximum', 'cloud-muted'))
+  section.append(title)
   const zip = field('Web build ZIP', 'file'); zip.input.accept = '.zip'
   const modeLabel = el('label', 'Visibility'), mode = el('select')
   for (const [value, label] of [['invite', 'Secret link · 48 hours'], ['catalog', 'Game catalog · 96 hours']]) { const option = el('option', label); option.value = value; mode.append(option) }
   modeLabel.append(mode)
-  const pageLabel = el('label', 'Catalog page'), pageSelect = el('select')
-  for (const page of await api('/pages')) { const option = el('option', page.title); option.value = page.id; pageSelect.append(option) }
-  pageLabel.append(pageSelect); pageLabel.hidden = true; mode.onchange = () => { pageLabel.hidden = mode.value !== 'catalog' }
   const progress = el('progress'); progress.max = 100; progress.value = 0; progress.setAttribute('aria-label', 'Upload progress')
-  const upload = button('Upload and publish', async () => {
+  const upload = button('Upload new build', async () => {
     const file = zip.input.files?.[0]
     if (!file || file.size === 0 || file.size > 300_000_000) throw new Error('Select a ZIP up to 300 MB.')
-    if (mode.value === 'catalog' && !pageSelect.value) throw new Error('Create a catalog page with a cover first.')
-    const pendingKey = `ada.cloud.upload.${account!.id}`
+    const pendingKey = `ada.cloud.upload.${account!.id}.${project.id}`
     const previous = JSON.parse(sessionStorage.getItem(pendingKey) ?? 'null')
-    const fingerprint = [file.name, file.size, file.lastModified, mode.value, pageSelect.value].join(':')
+    const fingerprint = [file.name, file.size, file.lastModified, mode.value, project.id].join(':')
     const operationId = previous?.fingerprint === fingerprint ? previous.operationId : crypto.randomUUID()
     sessionStorage.setItem(pendingKey, JSON.stringify({ fingerprint, operationId }))
-    let build = await api('/uploads', 'POST', { operationId, bytes: file.size, mode: mode.value, pageId: mode.value === 'catalog' ? pageSelect.value : null })
+    let build = await api('/uploads', 'POST', { operationId, bytes: file.size, mode: mode.value, pageId: project.id })
     if (build.status === 'created') {
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest(); xhr.open('PUT', build.uploadURL); xhr.timeout = 600_000
@@ -261,32 +255,117 @@ async function publicationForm(pro: boolean) {
     const deadline = Date.now() + 30 * 60_000
     while (['queued', 'processing'].includes(build.status) && Date.now() < deadline) { await new Promise(resolve => setTimeout(resolve, 2500)); build = await api(`/uploads/${build.id}`) }
     if (!['ready', 'published'].includes(build.status)) throw new Error(build.error ?? 'Build is not ready yet. You can retry this upload.')
-    const publication = await api(`/uploads/${build.id}/publish`, 'POST', {})
+    await api(`/uploads/${build.id}/publish`, 'POST', {})
     sessionStorage.removeItem(pendingKey)
-    status('Published. Updating a build keeps its original link and expiry time.')
-    const result = link(publication.url, publication.url); result.target = '_blank'; result.rel = 'noopener noreferrer'; section.append(result)
+    status('Build published. Replacing a build keeps its link and expiry time.')
+    await openProjects(project.id)
   })
   upload.disabled = !pro
-  section.append(zip.wrapper, modeLabel, pageLabel, progress, upload)
+  section.append(zip.wrapper, modeLabel, progress, upload)
   if (!pro) section.append(el('p', 'Publishing requires an active Pro subscription.', 'cloud-muted'))
-  for (const publication of await api('/publications')) {
-    const row = el('div', '', 'cloud-row')
-    const expired = publication.revoked || publication.expiresAt * 1000 <= Date.now()
-    row.append(el('span', expired ? 'Test ended' : `Available until ${new Date(publication.expiresAt * 1000).toLocaleString()}`))
-    if (!expired) row.append(link('Open game', publication.url), button('Revoke link', async () => { await api(`/publications/${publication.id}`, 'DELETE'); row.replaceChildren(el('span', 'Link revoked')) }, true))
-    section.append(row)
-  }
-  const create = panel('Create a catalog page')
+}
+
+async function createProjectForm(host: HTMLElement) {
+  const create = el('section', '', 'cloud-panel cloud-project-detail')
   const title = field('Game title'), description = el('textarea'), descriptionLabel = el('label', 'Description'), tags = field('Tags, separated by commas'), cover = field('Cover image', 'file'), shots = field('Screenshots — up to five', 'file')
   descriptionLabel.append(description); cover.input.accept = shots.input.accept = 'image/png,image/jpeg,image/webp'; shots.input.multiple = true
-  create.append(title.wrapper, descriptionLabel, tags.wrapper, cover.wrapper, shots.wrapper, button('Create page', async () => {
+  const heading = el('div', '', 'cloud-project-detail-header')
+  const copy = el('div'); copy.append(el('p', 'NEW PROJECT', 'cloud-eyebrow'), el('h2', 'Create a project'), el('p', 'Add its catalog details now. You can upload a playable build after the project is created.', 'cloud-muted'))
+  heading.append(copy)
+  create.append(heading, title.wrapper, descriptionLabel, tags.wrapper, cover.wrapper, shots.wrapper, button('Create project', async () => {
     const coverFile = cover.input.files?.[0], screenshots = Array.from(shots.input.files ?? [])
     if (!coverFile || screenshots.length > 5 || [coverFile, ...screenshots].some(file => file.size > 5_000_000)) throw new Error('Choose a cover and up to five screenshots, each no larger than 5 MB.')
     const coverMedia = await api('/media', 'POST', coverFile), screenshotIds = []
     for (const file of screenshots) screenshotIds.push((await api('/media', 'POST', file)).id)
     const page = await api('/pages', 'POST', { title: title.input.value, description: description.value, tags: tags.input.value.split(',').map(s => s.trim()).filter(Boolean), cover: coverMedia.id, screenshots: screenshotIds })
-    const option = el('option', page.title); option.value = page.id; pageSelect.append(option); pageSelect.value = page.id; status('Page created. Choose Catalog when publishing your build.')
+    await openProjects(page.id)
   }))
+  host.append(create)
+}
+
+function openProjects(id?: string) {
+  window.location.assign(id ? `/cloud/projects/${encodeURIComponent(id)}` : '/cloud/projects')
+}
+
+async function projects() {
+  if (!account) { signIn(); return }
+  const [pages, publications, billing] = await Promise.all([
+    api('/pages'),
+    api('/publications'),
+    availability.cloudServicesAvailable ? api('/billing') : Promise.resolve({ pro: false }),
+  ])
+  const requestedID = decodeURIComponent(location.pathname.split('/')[3] ?? '')
+  const selected = pages.find((page: Json) => page.id === requestedID) ?? (requestedID ? null : pages[0])
+  const layout = el('div', '', 'cloud-projects-layout')
+  const sidebar = el('aside', '', 'cloud-panel cloud-projects-sidebar')
+  const sidebarHeader = el('div', '', 'cloud-projects-sidebar-header')
+  sidebarHeader.append(el('div', `${pages.length} ${pages.length === 1 ? 'project' : 'projects'}`, 'cloud-muted'))
+  const createButton = button('New project', async () => { await openProjects('new') })
+  createButton.disabled = !availability.cloudServicesAvailable
+  sidebarHeader.append(createButton); sidebar.append(sidebarHeader)
+  const list = el('div', '', 'cloud-project-list')
+  for (const project of pages) {
+    const item = link('', `/cloud/projects/${encodeURIComponent(project.id)}`)
+    item.className = `cloud-project-list-item${selected?.id === project.id ? ' is-selected' : ''}`
+    if (project.cover) { const image = el('img'); image.src = apiBase + '/v1/media/' + encodeURIComponent(project.cover); image.alt = ''; item.append(image) }
+    const copy = el('span'); copy.append(el('strong', project.title), el('small', activePublicationForProject(publications, project.id) ? 'Build active' : 'No active build'))
+    item.append(copy); list.append(item)
+  }
+  if (!pages.length) list.append(el('p', 'No projects yet. Create one to upload your first web build.', 'cloud-muted'))
+  sidebar.append(list); layout.append(sidebar)
+  if (requestedID === 'new') {
+    await createProjectForm(layout)
+  } else if (selected) {
+    const detail = el('section', '', 'cloud-panel cloud-project-detail')
+    const header = el('div', '', 'cloud-project-detail-header')
+    const identity = el('div')
+    identity.append(el('p', 'PROJECT', 'cloud-eyebrow'), el('h2', selected.title), el('p', selected.description, 'cloud-muted'))
+    const deleteProject = button('Delete project', async () => {
+      if (!confirm(`Delete “${selected.title}” and its current build? This cannot be undone.`)) return
+      await api(`/pages/${encodeURIComponent(selected.id)}`, 'DELETE')
+      await openProjects()
+    }, true)
+    deleteProject.classList.add('cloud-danger')
+    header.append(identity, deleteProject); detail.append(header)
+    if (selected.tags?.length) detail.append(el('p', selected.tags.join(' · '), 'cloud-project-tags'))
+    const publication = activePublicationForProject(publications, selected.id)
+    const current = el('div', '', 'cloud-current-build')
+    current.append(el('div', 'Current build', 'cloud-section-title'))
+    if (publication) {
+      const summary = el('div', '', 'cloud-build-summary')
+      const copy = el('div'); copy.append(el('strong', publication.mode === 'catalog' ? 'Game catalog' : 'Secret link'), el('span', `Available until ${new Date(publication.expiresAt * 1000).toLocaleString()}`, 'cloud-muted'))
+      const actions = el('div', '', 'cloud-build-actions')
+      const play = link('Open build ↗', String(publication.url)); play.target = '_blank'; play.rel = 'noopener noreferrer'; play.className = 'header-buttons-github cloud-secondary'
+      actions.append(play, button('Delete current build', async () => {
+        if (!confirm('Delete the current build? The public link will stop working immediately.')) return
+        await api(`/publications/${encodeURIComponent(publication.id)}`, 'DELETE')
+        await openProjects(selected.id)
+      }, true))
+      summary.append(copy, actions); current.append(summary)
+    } else {
+      current.append(el('p', 'No active build. Upload a ZIP to create one.', 'cloud-muted'))
+    }
+    detail.append(current)
+    if (availability.cloudServicesAvailable) await uploadProjectBuild(detail, selected, !!billing.pro, publication)
+    else detail.append(el('p', 'New uploads are not available in your region yet. You can still delete this project or its current build.', 'cloud-muted'))
+    layout.append(detail)
+  } else {
+    const empty = el('section', '', 'cloud-panel cloud-project-detail')
+    empty.append(el('p', 'MY PROJECTS', 'cloud-eyebrow'), el('h2', 'Create your first project'), el('p', 'Each project keeps its own catalog details and current playable build.', 'cloud-muted'))
+    if (availability.cloudServicesAvailable) empty.append(button('Create project', async () => { await openProjects('new') }))
+    layout.append(empty)
+  }
+  root.append(layout)
+  const unassigned = publications.filter((publication: Json) => !publication.pageId && !publication.revoked && publication.expiresAt * 1000 > Date.now())
+  if (unassigned.length) {
+    const legacy = panel('Previous builds')
+    legacy.append(el('p', 'These builds were published before projects were introduced. You can keep using or delete them.', 'cloud-muted'))
+    for (const publication of unassigned) {
+      const row = el('div', '', 'cloud-row')
+      row.append(link('Open build', publication.url), el('span', `Available until ${new Date(publication.expiresAt * 1000).toLocaleString()}`), button('Delete build', async () => { await api(`/publications/${encodeURIComponent(publication.id)}`, 'DELETE'); row.remove() }, true))
+      legacy.append(row)
+    }
+  }
 }
 async function catalog() {
   const id = window.location.pathname.split('/')[2]
@@ -294,7 +373,7 @@ async function catalog() {
   const grid = el('div', '', 'cloud-grid'); root.append(grid)
   if (!pages.length) {
     const empty = el('section', '', 'cloud-panel')
-    const publish = link('Publish your game', '/cloud')
+    const publish = link('Create a project', '/cloud/projects')
     publish.className = 'header-buttons'
     empty.append(el('h2', 'Public games'), el('p', 'Games published to the catalog will appear here. Secret test links are not listed.'), publish)
     grid.append(empty)
@@ -313,6 +392,8 @@ async function catalog() {
   }
 }
 async function admin() {
+  if (!account?.isAdmin) { panel('Administrator access required'); return }
+  if (account.testAccessRestricted) await renderTestAccess(panel('Test environment access'), api, status)
   const section = panel('Game reports')
   for (const report of await api('/admin/reports')) {
     const row = el('article'); row.append(el('p', report.reason), link('Game page', '/games/' + report.pageId), button('Block game', async () => { await api(`/admin/pages/${report.pageId}/block`, 'POST', {}); row.append(el('p', 'Blocked')) }, true)); section.append(row)
@@ -327,11 +408,11 @@ export async function renderCloud(container: HTMLElement, renderHeader?: () => s
   initializeSiteNavigation()
   const context = el('div', '', 'cloud-context container content-restriction')
   const nav = el('nav', '', 'cloud-navigation'); nav.setAttribute('aria-label', 'Cloud navigation')
-  const accountLink = link('Account & builds', '/cloud'), catalogLink = link('Game catalog', '/games')
-  for (const item of [accountLink, catalogLink]) item.className = 'navigation-item-link'
-  const active = location.pathname.startsWith('/games') ? catalogLink : accountLink
+  const accountLink = link('Account', '/cloud'), projectsLink = link('My Projects', '/cloud/projects'), catalogLink = link('Game catalog', '/games')
+  for (const item of [accountLink, projectsLink, catalogLink]) item.className = 'navigation-item-link'
+  const active = location.pathname.startsWith('/games') ? catalogLink : location.pathname.startsWith('/cloud/projects') ? projectsLink : accountLink
   active.classList.add('is-active'); active.setAttribute('aria-current', 'page')
-  nav.append(accountLink, catalogLink); context.append(el('h1', 'Cloud'), nav)
+  nav.append(accountLink, projectsLink, catalogLink); context.append(el('h1', 'Cloud'), nav)
   root = el('main', '', 'cloud-main container content-restriction'); notice = el('p', '', 'cloud-notice container content-restriction'); notice.setAttribute('role', 'status'); notice.setAttribute('aria-live', 'polite')
   container.append(context, notice, root); document.title = 'Ada Cloud'
   try {
@@ -355,6 +436,14 @@ export async function renderCloud(container: HTMLElement, renderHeader?: () => s
     }
     availability = await api('/availability').catch(() => ({ cloudServicesAvailable: false, billingAvailable: false }))
     account = await api('/me').catch(() => null)
+    if (account && sessionStorage.getItem('ada.store.return') === '1' && location.pathname === '/cloud' && !desktopRequestId) {
+      sessionStorage.removeItem('ada.store.return'); location.replace('/store'); return
+    }
+    if (account?.isAdmin) {
+      const adminLink = link('Admin', '/cloud/admin'); adminLink.className = 'navigation-item-link'
+      if (location.pathname === '/cloud/admin') { active.classList.remove('is-active'); active.removeAttribute('aria-current'); adminLink.classList.add('is-active'); adminLink.setAttribute('aria-current', 'page') }
+      nav.append(adminLink)
+    }
     if (desktopRequestId && location.pathname === '/cloud') {
       try { await api('/auth/desktop/' + encodeURIComponent(desktopRequestId)) }
       catch {
@@ -369,6 +458,7 @@ export async function renderCloud(container: HTMLElement, renderHeader?: () => s
       return
     }
     if (location.pathname.startsWith('/games')) await catalog()
+    else if (location.pathname.startsWith('/cloud/projects')) await projects()
     else if (location.pathname === '/cloud/admin') await admin()
     else await dashboard()
   } catch (error) { status(error instanceof Error ? error.message : 'Cloud is temporarily unavailable') }

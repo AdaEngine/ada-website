@@ -5,6 +5,7 @@ import { join } from 'node:path'
 import { markdownToHtml } from './content.ts'
 import { hrefFor, normalizeBasePath, normalizeRoutePath, resolveRoute } from './routing.ts'
 import { absoluteSiteUrl, createRouteSeo, siteOrigin } from './seo.ts'
+import { activePublicationForProject } from './cloudProjects.ts'
 
 const analyticsScript = '<script defer src="https://metrics.adaengine.org/script.js" data-website-id="560e03b9-085c-4df4-b9e8-2beb7e76b575"></script>'
 
@@ -27,7 +28,16 @@ assert.equal(hrefFor('/', '/adawebsite/'), '/adawebsite/')
 assert.equal(hrefFor('/articles/release-notes', '/adawebsite/'), '/adawebsite/articles/release-notes')
 assert.equal(hrefFor('articles/release-notes', '/'), '/articles/release-notes')
 
+const activeProjectBuild = { id: 'build-a', pageId: 'project-a', expiresAt: 200, revoked: false }
+assert.equal(activePublicationForProject([activeProjectBuild], 'project-a', 100_000), activeProjectBuild)
+assert.equal(activePublicationForProject([activeProjectBuild], 'project-b', 100_000), undefined)
+assert.equal(activePublicationForProject([{ ...activeProjectBuild, revoked: true }], 'project-a', 100_000), undefined)
+assert.equal(activePublicationForProject([activeProjectBuild], 'project-a', 200_000), undefined)
+
 assert.deepEqual(resolveRoute('/', '/'), { name: 'home' })
+assert.deepEqual(resolveRoute('/studio', '/'), { name: 'studio' })
+assert.deepEqual(resolveRoute('/studio/', '/'), { name: 'studio' })
+assert.deepEqual(resolveRoute('/adawebsite/studio', '/adawebsite/'), { name: 'studio' })
 assert.deepEqual(resolveRoute('/blog', '/'), { name: 'blog' })
 assert.deepEqual(resolveRoute('/demos', '/'), { name: 'demos' })
 assert.deepEqual(resolveRoute('/demos/sprite-example', '/'), { name: 'demo', slug: 'sprite-example' })
@@ -46,6 +56,8 @@ assert.deepEqual(resolveRoute('/adawebsite/missing', '/adawebsite/'), { name: 'n
 
 assert.equal(siteOrigin, 'https://adaengine.org')
 assert.equal(absoluteSiteUrl('/learn'), 'https://adaengine.org/learn')
+assert.equal(createRouteSeo({ name: 'studio' }).path, '/studio')
+assert.equal(createRouteSeo({ name: 'studio' }).title, 'Ada Studio - Game Creation on Desktop, iPad and Mobile')
 assert.deepEqual(createRouteSeo({ name: 'home' }), {
   title: 'Ada - Open-Source Swift Game Engine',
   description: 'Ada is an open-source game engine for Swift developers, with ECS, 2D and 3D rendering, physics, UI, editor tooling, and WebAssembly demos.',
