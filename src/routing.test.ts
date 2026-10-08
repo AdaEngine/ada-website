@@ -5,7 +5,7 @@ import { join } from 'node:path'
 import { markdownToHtml } from './content.ts'
 import { hrefFor, normalizeBasePath, normalizeRoutePath, resolveRoute } from './routing.ts'
 import { absoluteSiteUrl, createRouteSeo, siteOrigin } from './seo.ts'
-import { activePublicationForProject } from './cloudProjects.ts'
+import { activePublicationForProject, publicationAvailable } from './cloudProjects.ts'
 
 const analyticsScript = '<script defer src="https://metrics.adaengine.org/script.js" data-website-id="560e03b9-085c-4df4-b9e8-2beb7e76b575"></script>'
 
@@ -33,6 +33,14 @@ assert.equal(activePublicationForProject([activeProjectBuild], 'project-a', 100_
 assert.equal(activePublicationForProject([activeProjectBuild], 'project-b', 100_000), undefined)
 assert.equal(activePublicationForProject([{ ...activeProjectBuild, revoked: true }], 'project-a', 100_000), undefined)
 assert.equal(activePublicationForProject([activeProjectBuild], 'project-a', 200_000), undefined)
+const persistentGame = { id: 'game-a', pageId: 'project-a', mode: 'ugc', approved: true, releaseId: 'release-a', expiresAt: null }
+assert.equal(publicationAvailable(persistentGame, 9e15), true)
+assert.equal(publicationAvailable({ ...persistentGame, approved: false }), false)
+assert.equal(publicationAvailable({ ...persistentGame, revoked: true }), false)
+assert.equal(publicationAvailable({ ...persistentGame, releaseId: undefined }), false)
+assert.equal(activePublicationForProject([activeProjectBuild, persistentGame], 'project-a', 100_000), persistentGame)
+assert.equal(activePublicationForProject([{ ...activeProjectBuild, mode: 'ugc-preview' }], 'project-a', 100_000), undefined)
+
 
 assert.deepEqual(resolveRoute('/', '/'), { name: 'home' })
 assert.deepEqual(resolveRoute('/studio', '/'), { name: 'studio' })
@@ -62,14 +70,14 @@ assert.deepEqual(createRouteSeo({ name: 'home' }), {
   title: 'Ada - Open-Source Swift Game Engine',
   description: 'Ada is an open-source game engine for Swift developers, with ECS, 2D and 3D rendering, physics, UI, editor tooling, and WebAssembly demos.',
   path: '/',
-  image: 'https://adaengine.org/images/main/tilemap.png',
+  image: 'https://adaengine.org/images/social/ada-preview-v2.png',
   type: 'website',
 })
 assert.deepEqual(createRouteSeo({ name: 'static-page', page: 'learn' }), {
   title: 'Learn Ada - Swift Game Engine Tutorials and Examples',
   description: 'Learn Ada with Swift game development guides, ECS fundamentals, rendering notes, physics examples, and links to source code.',
   path: '/learn',
-  image: 'https://adaengine.org/images/main/tilemap.png',
+  image: 'https://adaengine.org/images/social/ada-preview-v2.png',
   type: 'website',
 })
 

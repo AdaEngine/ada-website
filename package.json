@@ -13,7 +13,8 @@
     "preview": "vite preview",
     "test": "node src/routing.test.ts",
     "postbuild": "node scripts/generate-static-pages.mjs",
-    "build:store": "tsc -b && vite build --config vite.store.config.ts"
+    "build:store": "tsc -b && vite build --config vite.store.config.ts",
+    "build:console": "tsc -b && vite build --config vite.console.config.ts"
   },
   "devDependencies": {
     "typescript": "^5.8.3",

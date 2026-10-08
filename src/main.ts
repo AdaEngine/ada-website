@@ -401,10 +401,12 @@ function applySeo(meta: SeoMetadata) {
   upsertMeta('property', 'og:type', meta.type)
   upsertMeta('property', 'og:url', canonicalUrl)
   upsertMeta('property', 'og:image', meta.image)
+  upsertMeta('property', 'og:image:alt', meta.title)
   upsertMeta('name', 'twitter:card', 'summary_large_image')
   upsertMeta('name', 'twitter:title', meta.title)
   upsertMeta('name', 'twitter:description', meta.description)
   upsertMeta('name', 'twitter:image', meta.image)
+  upsertMeta('name', 'twitter:image:alt', meta.title)
 
   if (meta.robots) {
     upsertMeta('name', 'robots', meta.robots)

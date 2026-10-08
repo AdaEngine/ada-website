@@ -12,3 +12,5 @@ dist/
 !public/demos/**/browser-wasi-shim/dist/**
 .vite/
 AdaEngine/
+
+/dist-console/

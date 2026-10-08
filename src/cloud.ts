@@ -1,6 +1,6 @@
 import './cloud.css'
 import { draftLegal, legalDocument, type LegalMetadata } from './cloudLegal'
-import { activePublicationForProject } from './cloudProjects'
+import { activePublicationForProject, publicationAvailable } from './cloudProjects'
 import { renderTestAccess } from './cloudTestAccess'
 
 type Json = { [key: string]: any }
@@ -12,7 +12,9 @@ let refreshing: Promise<void> | null = null
 let siteHeader: () => string
 let initializeSiteNavigation: () => void
 let legal: LegalMetadata = draftLegal
-let termsAccepted = false
+let authenticatedCallback: (() => Promise<void>) | undefined
+const operatorSignIn = !!import.meta.env.VITE_OPERATOR_CONSOLE
+let termsAccepted = operatorSignIn
 let desktopRequestId: string | null = null
 let availability: Json = { cloudServicesAvailable: false, billingAvailable: false }
 
@@ -71,7 +73,7 @@ async function start(provider: string, email?: string, linking = false) {
   if (!termsAccepted) throw new Error('Please accept the Terms of Use before continuing.')
   const proof = await pkce()
   sessionStorage.setItem('ada.cloud.pkce', proof.verifier)
-  const flow = await api('/auth/start', 'POST', { provider, email, challenge: proof.challenge, client: 'web', link: linking, legal: { accepted: true, termsVersion: legal.version } })
+  const flow = await api('/auth/start', 'POST', { provider, email, challenge: proof.challenge, client: 'web', link: linking, legal: operatorSignIn ? undefined : { accepted: true, termsVersion: legal.version } })
   if (flow.authorizeURL) { window.location.assign(flow.authorizeURL); return }
   sessionStorage.setItem('ada.cloud.flow', flow.flowId)
   sessionStorage.setItem('ada.cloud.emailFlow', JSON.stringify({ flowId: flow.flowId, verifier: proof.verifier, email, expiresAt: Date.now() + 600_000 }))
@@ -99,7 +101,8 @@ function signIn() {
   const section = panel(account ? 'Link another sign-in method' : desktopRequestId ? 'Sign in to Ada Editor' : 'Sign in to Ada')
   section.classList.add(account ? 'cloud-link-identity' : 'cloud-signin')
   if (window.location.hostname.startsWith('store') || sessionStorage.getItem('ada.store.return')) section.append(link('Return to Ada Store →', '/store'))
-  if (!account) section.append(el('p', availability.registrationRestricted ? 'This test environment is invite-only. Ask an administrator to grant access to your account ID or email.' : availability.cloudServicesAvailable ? 'Your editor settings and shared games, in one account.' : 'Create your Ada account. Cloud Services will open soon in your region.', 'cloud-signin-description'))
+  if (operatorSignIn) section.append(el('p', 'Доступ только для существующих операторов организации.', 'cloud-signin-description'))
+  else if (!account) section.append(el('p', availability.registrationRestricted ? 'This test environment is invite-only. Ask an administrator to grant access to your account ID or email.' : availability.cloudServicesAvailable ? 'Your editor settings and shared games, in one account.' : 'Create your Ada account. Cloud Services will open soon in your region.', 'cloud-signin-description'))
   const actions = el('div', '', 'cloud-provider-actions')
   const apple = providerButton('apple'), google = providerButton('google')
   actions.append(apple, google)
@@ -113,7 +116,8 @@ function signIn() {
   privacy.append('How we handle personal data: ', link('Privacy Policy', '/legal/privacy'), ' · ', link('GDPR rights', '/legal/gdpr'))
   const draft = el('p', 'Draft legal documents — preview only, not yet effective.', 'cloud-legal-note')
   draft.hidden = legal.status === 'published'
-  section.append(actions, divider, fields, agreement, privacy, draft)
+  section.append(actions, divider, fields)
+  if (!operatorSignIn) section.append(agreement, privacy, draft)
   const updateAcceptance = () => {
     termsAccepted = checkbox.checked
     for (const node of [apple, google, ...fields.querySelectorAll<HTMLButtonElement>('button[data-requires-terms]')]) node.disabled = !termsAccepted
@@ -223,13 +227,13 @@ async function dashboard() {
     await api('/me', 'DELETE'); account = null; termsAccepted = false; await renderCloud(root.parentElement!)
   }, true))
 }
-async function uploadProjectBuild(section: HTMLElement, project: Json, pro: boolean, currentPublication?: Json) {
+async function uploadProjectBuild(section: HTMLElement, project: Json, pro: boolean) {
   const title = el('div', '', 'cloud-section-heading')
-  title.append(el('div', currentPublication ? 'Replace current build' : 'Upload a build'), el('p', 'ZIP from an Ada web export · 300 MB maximum', 'cloud-muted'))
+  title.append(el('div', 'Upload a new version'), el('p', 'ZIP from an Ada web export · 300 MB maximum', 'cloud-muted'))
   section.append(title)
   const zip = field('Web build ZIP', 'file'); zip.input.accept = '.zip'
   const modeLabel = el('label', 'Visibility'), mode = el('select')
-  for (const [value, label] of [['invite', 'Secret link · 48 hours'], ['catalog', 'Game catalog · 96 hours']]) { const option = el('option', label); option.value = value; mode.append(option) }
+  for (const [value, label] of [['ugc', 'Permanent game · reviewed before publishing'], ['invite', 'Secret link · 48 hours'], ['catalog', 'Temporary catalog test · 96 hours']]) { const option = el('option', label); option.value = value; mode.append(option) }
   modeLabel.append(mode)
   const progress = el('progress'); progress.max = 100; progress.value = 0; progress.setAttribute('aria-label', 'Upload progress')
   const upload = button('Upload new build', async () => {
@@ -254,10 +258,10 @@ async function uploadProjectBuild(section: HTMLElement, project: Json, pro: bool
     status('Checking the archive and preparing your game…')
     const deadline = Date.now() + 30 * 60_000
     while (['queued', 'processing'].includes(build.status) && Date.now() < deadline) { await new Promise(resolve => setTimeout(resolve, 2500)); build = await api(`/uploads/${build.id}`) }
-    if (!['ready', 'published'].includes(build.status)) throw new Error(build.error ?? 'Build is not ready yet. You can retry this upload.')
+    if (!['ready', 'published', 'submitted'].includes(build.status)) throw new Error(build.error ?? 'Build is not ready yet. You can retry this upload.')
     await api(`/uploads/${build.id}/publish`, 'POST', {})
     sessionStorage.removeItem(pendingKey)
-    status('Build published. Replacing a build keeps its link and expiry time.')
+    status(mode.value === 'ugc' ? 'Version submitted for review. Your approved version stays available while this one is checked.' : 'Build published. Replacing a temporary build keeps its link and expiry time.')
     await openProjects(project.id)
   })
   upload.disabled = !pro
@@ -321,7 +325,7 @@ async function projects() {
     const identity = el('div')
     identity.append(el('p', 'PROJECT', 'cloud-eyebrow'), el('h2', selected.title), el('p', selected.description, 'cloud-muted'))
     const deleteProject = button('Delete project', async () => {
-      if (!confirm(`Delete “${selected.title}” and its current build? This cannot be undone.`)) return
+      if (!confirm(`Delete “${selected.title}” and all its versions? This cannot be undone.`)) return
       await api(`/pages/${encodeURIComponent(selected.id)}`, 'DELETE')
       await openProjects()
     }, true)
@@ -333,10 +337,10 @@ async function projects() {
     current.append(el('div', 'Current build', 'cloud-section-title'))
     if (publication) {
       const summary = el('div', '', 'cloud-build-summary')
-      const copy = el('div'); copy.append(el('strong', publication.mode === 'catalog' ? 'Game catalog' : 'Secret link'), el('span', `Available until ${new Date(publication.expiresAt * 1000).toLocaleString()}`, 'cloud-muted'))
+      const copy = el('div'); copy.append(el('strong', publication.mode === 'ugc' ? `Permanent game · version ${publication.releaseNumber}` : publication.mode === 'catalog' ? 'Game catalog test' : 'Secret link'), el('span', publication.mode === 'ugc' ? 'Available until you unpublish it' : `Available until ${new Date((publication.expiresAt ?? 0) * 1000).toLocaleString()}`, 'cloud-muted'))
       const actions = el('div', '', 'cloud-build-actions')
       const play = link('Open build ↗', String(publication.url)); play.target = '_blank'; play.rel = 'noopener noreferrer'; play.className = 'header-buttons-github cloud-secondary'
-      actions.append(play, button('Delete current build', async () => {
+      actions.append(play, button(publication.mode === 'ugc' ? 'Unpublish game' : 'Delete current build', async () => {
         if (!confirm('Delete the current build? The public link will stop working immediately.')) return
         await api(`/publications/${encodeURIComponent(publication.id)}`, 'DELETE')
         await openProjects(selected.id)
@@ -346,7 +350,8 @@ async function projects() {
       current.append(el('p', 'No active build. Upload a ZIP to create one.', 'cloud-muted'))
     }
     detail.append(current)
-    if (availability.cloudServicesAvailable) await uploadProjectBuild(detail, selected, !!billing.pro, publication)
+    await releaseHistory(detail, selected, publication)
+    if (availability.cloudServicesAvailable) await uploadProjectBuild(detail, selected, !!billing.pro)
     else detail.append(el('p', 'New uploads are not available in your region yet. You can still delete this project or its current build.', 'cloud-muted'))
     layout.append(detail)
   } else {
@@ -356,13 +361,13 @@ async function projects() {
     layout.append(empty)
   }
   root.append(layout)
-  const unassigned = publications.filter((publication: Json) => !publication.pageId && !publication.revoked && publication.expiresAt * 1000 > Date.now())
+  const unassigned = publications.filter((publication: Json) => !publication.pageId && !publication.revoked && (publication.expiresAt ?? 0) * 1000 > Date.now())
   if (unassigned.length) {
     const legacy = panel('Previous builds')
     legacy.append(el('p', 'These builds were published before projects were introduced. You can keep using or delete them.', 'cloud-muted'))
     for (const publication of unassigned) {
       const row = el('div', '', 'cloud-row')
-      row.append(link('Open build', publication.url), el('span', `Available until ${new Date(publication.expiresAt * 1000).toLocaleString()}`), button('Delete build', async () => { await api(`/publications/${encodeURIComponent(publication.id)}`, 'DELETE'); row.remove() }, true))
+      row.append(link('Open build', publication.url), el('span', `Available until ${new Date((publication.expiresAt ?? 0) * 1000).toLocaleString()}`), button('Delete build', async () => { await api(`/publications/${encodeURIComponent(publication.id)}`, 'DELETE'); row.remove() }, true))
       legacy.append(row)
     }
   }
@@ -383,7 +388,7 @@ async function catalog() {
     if (page.cover) { const image = el('img'); image.src = apiBase + '/v1/media/' + encodeURIComponent(page.cover); image.alt = page.title; image.loading = 'lazy'; card.append(image) }
     card.append(el('h2', page.title), el('p', `Author: ${page.owner}`, 'cloud-muted'), el('p', page.description), el('p', (page.tags ?? []).join(' · '), 'cloud-muted'))
     const pub = page.publication
-    if (pub && !pub.revoked && pub.expiresAt * 1000 > Date.now()) { const play = link('Play game ↗', pub.url); play.target = '_blank'; play.rel = 'noopener noreferrer'; card.append(play, el('p', `Test ends ${new Date(pub.expiresAt * 1000).toLocaleString()}`)) }
+    if (pub && publicationAvailable(pub)) { const play = link('Play game ↗', pub.url); play.target = '_blank'; play.rel = 'noopener noreferrer'; card.append(play, el('p', pub.mode === 'ugc' ? `Version ${pub.releaseNumber} · reviewed` : `Test ends ${new Date(pub.expiresAt * 1000).toLocaleString()}`)) }
     else card.append(el('p', 'This test has ended. The game page remains available.'))
     card.append(link('Game page', '/games/' + page.id), el('p', `${page.likes ?? 0} likes`))
     if (id) for (const media of page.screenshots ?? []) { const image = el('img'); image.src = apiBase + '/v1/media/' + encodeURIComponent(media); image.alt = `${page.title} screenshot`; card.append(image) }
@@ -391,15 +396,62 @@ async function catalog() {
     grid.append(card)
   }
 }
+async function releaseHistory(host: HTMLElement, project: Json, publication?: Json) {
+  const releases: Json[] = await api(`/game-releases?pageId=${encodeURIComponent(project.id)}`)
+  if (!releases.length) return
+  const heading = el('div', '', 'cloud-section-heading'); heading.append(el('div', 'Permanent versions'), el('p', 'Only approved versions can go live. You can restore a previous approved version.', 'cloud-muted')); host.append(heading)
+  for (const release of releases) {
+    const row = el('div', '', 'cloud-row')
+    const active = publication?.releaseId === release.id
+    const copy = el('div'); copy.append(el('strong', `Version ${release.number} · ${active ? 'live' : release.status === 'pending' ? 'awaiting review' : release.status}`), el('p', new Date(release.createdAt * 1000).toLocaleString(), 'cloud-muted'))
+    if (release.reason) copy.append(el('p', release.reason))
+    row.append(copy)
+    if (['pending', 'approved'].includes(release.status)) {
+      row.append(button('Create preview link', async () => {
+        const preview = await api(`/game-releases/${release.id}/preview`, 'POST', {})
+        const open = link('Open preview ↗', preview.url); open.target = '_blank'; open.rel = 'noopener noreferrer'
+        row.append(open); status('This unlisted preview link expires in 10 minutes. Share it only with reviewers.')
+      }, true))
+      if (release.status === 'approved' && !active) row.append(button('Make this version live', async () => { await api(`/game-releases/${release.id}/activate`, 'POST', {}); openProjects(project.id) }, true))
+      row.append(button('Remove version', async () => {
+        if (!confirm(active ? 'Remove this version and unpublish the game?' : 'Remove this version permanently?')) return
+        await api(`/game-releases/${release.id}`, 'DELETE'); openProjects(project.id)
+      }, true))
+    }
+    host.append(row)
+  }
+}
+
 async function admin() {
   if (!account?.isAdmin) { panel('Administrator access required'); return }
   if (account.testAccessRestricted) await renderTestAccess(panel('Test environment access'), api, status)
+  const queue = panel('Game versions awaiting review')
+  const pending: Json[] = await api('/admin/game-releases')
+  if (!pending.length) queue.append(el('p', 'No versions are waiting for review.', 'cloud-muted'))
+  for (const release of pending) {
+    const row = el('article', '', 'cloud-row cloud-review'), copy = el('div', '', 'cloud-review-copy')
+    copy.append(el('strong', `${release.metadata.title} · version ${release.number}`), el('p', release.metadata.description), el('p', `Author: ${release.owner}`, 'cloud-muted'))
+    if (release.metadata.cover) { const cover = el('img'); cover.src = apiBase + '/v1/media/' + encodeURIComponent(release.metadata.cover); cover.alt = release.metadata.title; copy.append(cover) }
+    const reason = field('Reason for rejection')
+    row.append(copy, reason.wrapper, button('Create review preview', async () => {
+      const preview = await api(`/game-releases/${release.id}/preview`, 'POST', {})
+      const open = link('Open review preview ↗', preview.url); open.target = '_blank'; open.rel = 'noopener noreferrer'; row.append(open)
+      status('Review the game and its metadata. The unlisted preview expires in 10 minutes.')
+    }, true), button('Approve and publish', async () => {
+      await api(`/admin/game-releases/${release.id}/review`, 'POST', { decision: 'approve' }); row.remove(); status('Version approved and published.')
+    }), button('Reject version', async () => {
+      if (!reason.input.value.trim()) throw new Error('Enter a reason so the author can fix this version.')
+      await api(`/admin/game-releases/${release.id}/review`, 'POST', { decision: 'reject', reason: reason.input.value }); row.remove(); status('Version rejected. The author can see your reason.')
+    }, true))
+    queue.append(row)
+  }
   const section = panel('Game reports')
   for (const report of await api('/admin/reports')) {
     const row = el('article'); row.append(el('p', report.reason), link('Game page', '/games/' + report.pageId), button('Block game', async () => { await api(`/admin/pages/${report.pageId}/block`, 'POST', {}); row.append(el('p', 'Blocked')) }, true)); section.append(row)
   }
 }
-export async function renderCloud(container: HTMLElement, renderHeader?: () => string, setupNavigation?: () => void) {
+export async function renderCloud(container: HTMLElement, renderHeader?: () => string, setupNavigation?: () => void, afterAuthentication?: () => Promise<void>) {
+  if (afterAuthentication) authenticatedCallback = afterAuthentication
   if (renderHeader) siteHeader = renderHeader
   if (setupNavigation) initializeSiteNavigation = setupNavigation
   container.replaceChildren(); container.className = 'ada-cloud'
@@ -436,6 +488,7 @@ export async function renderCloud(container: HTMLElement, renderHeader?: () => s
     }
     availability = await api('/availability').catch(() => ({ cloudServicesAvailable: false, billingAvailable: false }))
     account = await api('/me').catch(() => null)
+    if (account && authenticatedCallback) { await authenticatedCallback(); return }
     if (account && sessionStorage.getItem('ada.store.return') === '1' && location.pathname === '/cloud' && !desktopRequestId) {
       sessionStorage.removeItem('ada.store.return'); location.replace('/store'); return
     }

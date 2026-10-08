@@ -13,7 +13,7 @@ export type SeoMetadata = {
 
 export const siteOrigin = 'https://adaengine.org'
 export const siteName = 'Ada'
-export const defaultSeoImage = `${siteOrigin}/images/main/tilemap.png`
+export const defaultSeoImage = `${siteOrigin}/images/social/ada-preview-v2.png`
 
 const staticPageSeo: Record<StaticPageName, SeoMetadata> = {
   learn: {
@@ -140,7 +140,7 @@ export function createArticleSeo(article: Article): SeoMetadata {
     title: `${article.title} - Ada News`,
     description: article.description,
     path: `/articles/${article.slug}`,
-    image: absoluteSiteUrl(article.image ?? 'images/main/tilemap.png'),
+    image: article.image ? absoluteSiteUrl(article.image) : defaultSeoImage,
     type: 'article',
   }
 }

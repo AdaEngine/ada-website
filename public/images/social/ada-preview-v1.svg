@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <title>Ada — Game engine built in Swift</title>
+  <desc>Ada logo on a dark background with blue and violet light. Open-source game engine built in Swift.</desc>
+  <defs>
+    <radialGradient id="glow" cx="82%" cy="40%" r="72%">
+      <stop stop-color="#293764"/>
+      <stop offset="0.48" stop-color="#171b35"/>
+      <stop offset="1" stop-color="#080a10"/>
+    </radialGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#78bbff"/>
+      <stop offset="1" stop-color="#a699ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#080a10"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <circle cx="928" cy="296" r="224" fill="none" stroke="#ffffff" stroke-opacity="0.06"/>
+  <circle cx="928" cy="296" r="180" fill="none" stroke="#ffffff" stroke-opacity="0.04"/>
+  <rect x="80" y="92" width="44" height="5" rx="2.5" fill="url(#accent)"/>
+  <g font-family="Helvetica Neue, Arial, sans-serif">
+    <text x="80" y="142" fill="#bec9e4" font-size="20" font-weight="500" letter-spacing="4">OPEN-SOURCE GAME ENGINE</text>
+    <text x="72" y="296" fill="#ffffff" font-size="144" font-weight="700" letter-spacing="-7">Ada</text>
+    <text x="80" y="370" fill="#f0f3fc" font-size="38" font-weight="500">Game engine built in Swift.</text>
+    <text x="80" y="424" fill="#a3b0cc" font-size="24">Create 2D and 3D worlds.</text>
+    <line x1="80" y1="496" x2="1120" y2="496" stroke="#ffffff" stroke-opacity="0.12"/>
+    <text x="80" y="550" fill="#cbd4e8" font-size="24">adaengine.org</text>
+    <text x="1120" y="550" fill="#a3b0cc" font-size="20" text-anchor="end">Swift · 2D &amp; 3D · Cross-platform</text>
+  </g>
+  <g transform="translate(796 205) scale(0.36)"><path d="M116.277 519.023C111.066 523.023 5.06604 526.023 0.0660448 519.023C-4.93396 512.023 275.566 13.0233 296.603 6.02327C317.64 -0.976731 415.306 -2.97678 434.186 6.02327C453.066 15.0233 741.066 513.523 736.066 519.023C731.066 524.523 624.974 523.023 618.52 519.023C612.066 515.023 381.059 93.6953 366.062 92.8592C351.066 92.0232 121.487 515.023 116.277 519.023Z" fill="white"/>
+<path d="M500.974 432.187C497.566 436.523 236.566 437.023 233.823 432.187C231.08 427.351 287.566 330.023 293.932 326.648C300.298 323.273 433.335 322.273 442.2 326.648C451.066 331.023 504.381 427.851 500.974 432.187Z" fill="white"/>
+</g>
+</svg>
