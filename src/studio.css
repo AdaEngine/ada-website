@@ -1,4 +1,5 @@
 /* Ada's typography and dark surfaces, with a quieter editorial rhythm. */
+html:has(.studio-page), body:has(.studio-page) { min-width: 0; }
 .studio-page { overflow: clip; }
 .studio-page svg { width: 22px; height: 22px; flex-shrink: 0; }
 .studio-hero { padding-top: clamp(136px, 12vw, 176px); text-align: center; }
@@ -13,10 +14,10 @@
 .studio-platform-links a > svg:last-child { width: 16px; color: var(--muted); }
 .studio-hero-media { position: relative; margin: 60px auto 0; padding-right: 72px; text-align: left; }
 .studio-hero-media::before { content: ''; position: absolute; z-index: -1; inset: -70px -180px -40px; background: radial-gradient(ellipse at center, rgba(43, 104, 208, .2), transparent 65%); pointer-events: none; }
-.studio-editor-frame { overflow: hidden; border: 1px solid var(--border); border-radius: 18px; background: #17191d; box-shadow: 0 28px 80px #0006; }
+.studio-editor-frame { filter: drop-shadow(0 28px 40px #0006); }
 .studio-editor-frame img { display: block; width: 100%; height: auto; }
-.studio-phone-frame { position: relative; padding: 6px; border: 1px solid #595d67; border-radius: 32px; background: #0d0e11; box-shadow: 0 24px 48px #0008; }
-.studio-phone-frame img { display: block; width: 100%; height: auto; border-radius: 26px; }
+.studio-phone-frame { position: relative; filter: drop-shadow(0 24px 24px #0008); }
+.studio-phone-frame img { display: block; width: 100%; height: auto; }
 .studio-hero-phone { position: absolute; width: 18%; right: 0; bottom: 60px; transform: rotate(5deg); }
 .studio-hero-media figcaption { display: flex; justify-content: space-between; gap: 16px; padding-top: 20px; color: var(--muted); font-size: 12px; }
 .studio-section { padding-top: 132px; scroll-margin-top: 0; }
@@ -86,8 +87,7 @@
 @media (max-width: 900px) {
   .studio-hero h1 { font-size: clamp(58px, 10vw, 84px); }
   .studio-hero-media { padding-right: 40px; }
-  .studio-hero-phone { width: 20%; bottom: 46px; border-radius: 24px; padding: 4px; }
-  .studio-hero-phone img { border-radius: 20px; }
+  .studio-hero-phone { width: 20%; bottom: 46px; }
   .studio-section { padding-top: 100px; }
   .studio-workspace-grid { grid-template-columns: 1fr; }
   .studio-scene-art { max-height: 300px; }
@@ -109,9 +109,7 @@
   .studio-platform-links a > svg:first-child { width: 18px; }
   .studio-platform-links a > svg:last-child { display: none; }
   .studio-hero-media { margin-top: 42px; padding-right: 28px; }
-  .studio-editor-frame { border-radius: 8px; }
-  .studio-hero-phone { width: 24%; bottom: 42px; border-radius: 13px; padding: 3px; }
-  .studio-hero-phone img { border-radius: 10px; }
+  .studio-hero-phone { width: 24%; bottom: 42px; }
   .studio-hero-media figcaption { font-size: 11px; max-width: 220px; padding-top: 18px; }
   .studio-hero-media figcaption span:last-child { display: none; }
   .studio-section { padding-top: 80px; }
@@ -125,8 +123,7 @@
   .studio-scene-art { min-height: 210px; }
   .studio-mobile-section { padding-bottom: 80px; }
   .studio-phone-pair { gap: 12px; padding-inline: 6px; }
-  .studio-phone-pair .studio-phone-frame { width: calc(50% - 6px); border-radius: 25px; padding: 4px; }
-  .studio-phone-pair img { border-radius: 21px; }
+  .studio-phone-pair .studio-phone-frame { width: calc(50% - 6px); }
   .studio-phone-play { margin-top: 44px; }
   .studio-final { padding-bottom: 64px; }
   .studio-final-inner { padding: 44px 20px; }

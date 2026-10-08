@@ -29,10 +29,10 @@ export function renderStudioContent(hrefFor: UrlFor, assetFor: UrlFor): string {
         </nav>
         <figure class="studio-hero-media">
           <div class="studio-editor-frame">
-            <img src="${assetFor('images/studio/desktop.png')}" alt="Ada Studio desktop workspace with project files, Swift code, and build output" width="2000" height="1139" fetchpriority="high" />
+            <img src="${assetFor('images/studio/desktop-device.png')}" alt="Ada Studio desktop scene workspace, entity hierarchy, and component inspector in a MacBook frame" width="1662" height="848" fetchpriority="high" />
           </div>
           <div class="studio-hero-phone studio-phone-frame">
-            <img src="${assetFor('images/studio/mobile-projects.jpg')}" alt="Ada mobile project library with a Foxwood game preview" width="368" height="800" />
+            <img src="${assetFor('images/studio/mobile-projects-device.png')}" alt="Ada Studio mobile project library with a Medieval Arena preview in an iPhone frame" width="851" height="1849" />
           </div>
           <figcaption><span>More room to build. More ways to create.</span><span>Powered by Ada</span></figcaption>
         </figure>
@@ -51,8 +51,8 @@ export function renderStudioContent(hrefFor: UrlFor, assetFor: UrlFor): string {
         <div class="studio-workspace-grid">
           <article class="studio-scene-card">
             <div class="studio-card-copy"><span class="studio-feature-icon">${icon('scene')}</span><h3>Build a world. Make it yours.</h3><p>Work with scenes, entities, and components. Turn a collection of assets into the start of something playable.</p></div>
-            <div class="studio-scene-art"><img src="${assetFor('images/main/tilemap.png')}" alt="A colorful 2D tilemap world built with Ada" width="1824" height="1480" loading="lazy" /></div>
-            <span class="studio-media-label">Made with Ada</span>
+            <div class="studio-scene-art"><img src="${assetFor('images/studio/skeletal-garden.png')}" alt="Skeletal Garden: animated robots, textured props, and a wooded landscape rendered by AdaEngine" width="2200" height="1520" loading="lazy" /></div>
+            <span class="studio-media-label">Skeletal Garden · Made with Ada</span>
           </article>
           <div class="studio-workspace-details">
             <article class="studio-code-card">
@@ -83,10 +83,10 @@ export function renderStudioContent(hrefFor: UrlFor, assetFor: UrlFor): string {
         </div>
         <figure class="studio-mobile-media">
           <div class="studio-phone-pair">
-            <div class="studio-phone-frame studio-phone-build"><img src="${assetFor('images/studio/mobile-build.jpg')}" alt="Mobile interface preview: describe a fox platformer idea in the Build screen" width="368" height="800" loading="lazy" /><span class="studio-phone-caption">Build</span></div>
-            <div class="studio-phone-frame studio-phone-play"><img src="${assetFor('images/studio/mobile-play.jpg')}" alt="Mobile interface preview: a fox platformer scene and feedback prompt in the Play screen" width="368" height="800" loading="lazy" /><span class="studio-phone-caption">Play</span></div>
+            <div class="studio-phone-frame studio-phone-build"><img src="${assetFor('images/studio/mobile-build-device.png')}" alt="Ada Studio Mobile Build workspace for Medieval Arena in an iPhone frame" width="851" height="1849" loading="lazy" /><span class="studio-phone-caption">Build</span></div>
+            <div class="studio-phone-frame studio-phone-play"><img src="${assetFor('images/studio/mobile-play-device.png')}" alt="Medieval Arena running in Ada Studio Mobile Play in an iPhone frame" width="851" height="1849" loading="lazy" /><span class="studio-phone-caption">Play</span></div>
           </div>
-          <figcaption>Mobile interface previews</figcaption>
+          <figcaption>Build and Play in Ada Studio Mobile</figcaption>
         </figure>
       </section>
 
