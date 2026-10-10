@@ -5,11 +5,11 @@ export type DownloadRelease = { version: string; url: string; assets: ReleaseAss
 export const appStoreURL = 'https://apps.apple.com/app/id6809145006'
 // Last verified public release. Keep links usable when the GitHub API is unavailable.
 export const fallbackRelease: DownloadRelease = {
-  version: '1.0',
-  url: 'https://github.com/AdaEngine/AdaEngine/releases/tag/editor-v1.0-1',
+  version: '1.0.0',
+  url: 'https://github.com/AdaEngine/Ada/releases/tag/editor-v1.0.0-20261010',
   assets: [{
-    name: 'AdaEngine-1.0-1-macOS.zip',
-    url: 'https://github.com/AdaEngine/AdaEngine/releases/download/editor-v1.0-1/AdaEngine-1.0-1-macOS.zip',
+    name: 'AdaEngine-1.0.0-20261010-macOS.zip',
+    url: 'https://github.com/AdaEngine/Ada/releases/download/editor-v1.0.0-20261010/AdaEngine-1.0.0-20261010-macOS.zip',
   }],
 }
 
@@ -18,7 +18,7 @@ function releaseURL(value: unknown): string | undefined {
   try {
     const url = new URL(value)
     return url.protocol === 'https:' && url.hostname === 'github.com' && !url.username && !url.password
-      && url.pathname.startsWith('/AdaEngine/AdaEngine/releases/') ? url.href : undefined
+      && ['/AdaEngine/Ada/releases/', '/AdaEngine/AdaEngine/releases/'].some(path => url.pathname.startsWith(path)) ? url.href : undefined
   } catch { return undefined }
 }
 
@@ -66,7 +66,7 @@ export function selectDownloadRelease(data: unknown): DownloadRelease {
 
 export async function loadDownloadRelease(): Promise<DownloadRelease> {
   try {
-    const response = await fetch('https://api.github.com/repos/AdaEngine/AdaEngine/releases?per_page=20', {
+    const response = await fetch('https://api.github.com/repos/AdaEngine/Ada/releases?per_page=20', {
       headers: { Accept: 'application/vnd.github+json' }, signal: AbortSignal.timeout(5000),
     })
     if (!response.ok) return fallbackRelease

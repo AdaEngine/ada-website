@@ -272,3 +272,11 @@ assert.equal(assetsFor('linux', selectedRelease).length, 1)
 assert.equal(parseRelease({ ...installerRelease, prerelease: true }), undefined)
 assert.equal(parseRelease({ ...installerRelease, html_url: 'javascript:alert(1)' }), undefined)
 assert.equal(parseRelease({ ...installerRelease, assets: [{ name: 'bad.exe', browser_download_url: 'https://example.com/bad.exe' }] })?.assets.length, 0)
+
+const canonicalInstaller = {
+  ...installerRelease,
+  html_url: installerRelease.html_url.replace('/AdaEngine/AdaEngine/', '/AdaEngine/Ada/'),
+  assets: installerRelease.assets.map(asset => ({ ...asset, browser_download_url: asset.browser_download_url.replace('/AdaEngine/AdaEngine/', '/AdaEngine/Ada/') })),
+}
+assert.equal(assetsFor('macos', selectDownloadRelease([canonicalInstaller])).length, 1)
+assert.equal(parseRelease(canonicalInstaller)?.url, canonicalInstaller.html_url)
