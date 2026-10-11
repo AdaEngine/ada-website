@@ -8,8 +8,8 @@ export const fallbackRelease: DownloadRelease = {
   version: '1.0.0',
   url: 'https://github.com/AdaEngine/Ada/releases/tag/editor-v1.0.0-20261010',
   assets: [{
-    name: 'AdaEngine-1.0.0-20261010-macOS.zip',
-    url: 'https://github.com/AdaEngine/Ada/releases/download/editor-v1.0.0-20261010/AdaEngine-1.0.0-20261010-macOS.zip',
+    name: 'AdaEngine-1.0.0-20261011-macOS.zip',
+    url: 'https://github.com/AdaEngine/Ada/releases/download/editor-v1.0.0-20261010/AdaEngine-1.0.0-20261011-macOS.zip',
   }],
 }
 
