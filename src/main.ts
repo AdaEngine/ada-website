@@ -574,7 +574,7 @@ function renderLatestNews(): string {
               <article class="home-article-preview">
                 <a href="${hrefFor(`/articles/${article.slug}`)}">
                   <div class="article-preview-image">
-                    <img class="background_image" src="${assetFor(fallbackArticleImage)}" alt="${escapeHtml(article.title)}" />
+                    <img class="background_image" src="${assetFor(article.image ?? fallbackArticleImage)}" alt="${escapeHtml(article.title)}" />
                     <div class="background_image_overlay"></div>
                     <div class="article-preview-content">
                       <p class="article-date">${formatDate(article.date)}</p>
