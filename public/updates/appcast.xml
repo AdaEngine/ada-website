@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
     <channel>
         <title>AdaEngine for macOS</title>
@@ -7,11 +7,27 @@
         <language>en</language>
         <item>
             <title>1.0.0</title>
+            <pubDate>Sun, 11 Oct 2026 22:46:53 +0300</pubDate>
+            <sparkle:version>20261013</sparkle:version>
+            <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[<h2>Ada Studio 1.0.0 — build 20261013</h2>
+<ul>
+<li>New Swift projects use the official AdaEngine GitHub dependency and remain portable between computers.</li>
+<li>Opening existing Swift projects repairs local AdaEngine dependencies.</li>
+<li>Preview, source navigation and web tooling find the SDK inside the installed Studio application.</li>
+<li>Native exports and release resource loading no longer depend on the build computer's checkout.</li>
+</ul>
+]]></description>
+            <enclosure url="https://github.com/AdaEngine/Ada/releases/download/editor-v1.0.0-20261013/AdaEngine-1.0.0-20261013-macOS.zip" length="103844731" type="application/octet-stream" sparkle:edSignature="JWGA6HMBgwe3EFJKYTebt8pzeducvzcdrFMAxZZiNbTBN5ReMtS1m61SzoRAlIkNiRBAoAN7+subVESfh0jMBA=="/>
+        </item>
+        <item>
+            <title>1.0.0</title>
             <pubDate>Sun, 11 Oct 2026 15:43:48 +0300</pubDate>
             <sparkle:version>20261011</sparkle:version>
             <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/AdaEngine/Ada/releases/download/editor-v1.0.0-20261010/AdaEngine-1.0.0-20261011-macOS.zip" length="103819425" type="application/octet-stream" sparkle:edSignature="FyubPESRsR3qit5tv1xF8fadcZhOZMxr00gbBrys71Wm52Xmrad1AkWxXFyVRMhhABb8bJmjtN7VP/E1BIlyAw==" />
+            <enclosure url="https://github.com/AdaEngine/Ada/releases/download/editor-v1.0.0-20261010/AdaEngine-1.0.0-20261011-macOS.zip" length="103819425" type="application/octet-stream" sparkle:edSignature="FyubPESRsR3qit5tv1xF8fadcZhOZMxr00gbBrys71Wm52Xmrad1AkWxXFyVRMhhABb8bJmjtN7VP/E1BIlyAw=="/>
         </item>
     </channel>
 </rss>

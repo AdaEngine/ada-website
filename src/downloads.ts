@@ -6,10 +6,10 @@ export const appStoreURL = 'https://apps.apple.com/app/id6809145006'
 // Last verified public release. Keep links usable when the GitHub API is unavailable.
 export const fallbackRelease: DownloadRelease = {
   version: '1.0.0',
-  url: 'https://github.com/AdaEngine/Ada/releases/tag/editor-v1.0.0-20261010',
+  url: 'https://github.com/AdaEngine/Ada/releases/tag/editor-v1.0.0-20261013',
   assets: [{
-    name: 'AdaEngine-1.0.0-20261011-macOS.zip',
-    url: 'https://github.com/AdaEngine/Ada/releases/download/editor-v1.0.0-20261010/AdaEngine-1.0.0-20261011-macOS.zip',
+    name: 'AdaEngine-1.0.0-20261013-macOS.zip',
+    url: 'https://github.com/AdaEngine/Ada/releases/download/editor-v1.0.0-20261013/AdaEngine-1.0.0-20261013-macOS.zip',
   }],
 }
 
