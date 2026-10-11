@@ -79,4 +79,5 @@ Optional:
 
 - Markdown is imported at build time through `import.meta.glob`
 - Existing static publication flow is preserved: content lives in the repository and is bundled into the final site
+- The postbuild step also generates a static entry point for each published article, using the client Markdown renderer and article SEO metadata. Direct article links return HTTP 200, and link previews receive the article title, summary, and cover before JavaScript runs.
 - Renderer currently supports headings, paragraphs, unordered lists, inline/code blocks, emphasis, strong text, and links

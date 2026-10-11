@@ -1540,6 +1540,54 @@ pre code {
     font-size: 14px;
     text-align: center;
 }
+.article-comparison-frame {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+}
+.article-comparison-frame img {
+    max-height: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+.article-comparison-frame img.article-comparison-before {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    clip-path: inset(0 calc(100% - var(--comparison-position)) 0 0);
+}
+.article-comparison-frame::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--comparison-position);
+    border-left: 2px solid #fff;
+    pointer-events: none;
+}
+.article-comparison-label {
+    position: absolute;
+    top: 12px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    color: #fff;
+    background: #000b;
+    font-size: 12px;
+    pointer-events: none;
+}
+.article-comparison-label-before { left: 12px; }
+.article-comparison-label-after { right: 12px; }
+[data-article-comparison-range] {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    margin: 8px 0 0;
+    accent-color: var(--accent);
+    cursor: ew-resize;
+}
 .article-image-lightbox[hidden] {
     display: none;
 }

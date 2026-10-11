@@ -1,0 +1,177 @@
+{
+  "release": "1.0.0",
+  "prepared": "2026-10-09",
+  "assets": [
+    {
+      "file": "a2ui-controls.mp4",
+      "bytes": 41930,
+      "sha256": "b03a664731237c817ef10b71d8aecf3201721c143b3c3b9df7c823404daef76a",
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1280,
+            "height": 984,
+            "pix_fmt": "yuv420p"
+          }
+        ],
+        "format": {
+          "duration": "7.500000"
+        }
+      }
+    },
+    {
+      "file": "a2ui-controls.png",
+      "bytes": 91275,
+      "sha256": "0459cb1d803e1a80e73080cffa4ea286039bdfcab836b64a07187a338165a050"
+    },
+    {
+      "file": "adaui-kanban.mp4",
+      "bytes": 906054,
+      "sha256": "6301c094e90f78a2e157f49cd3124f641fd6471daf0c3985bd6a70e8528003ff",
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 640,
+            "height": 360,
+            "pix_fmt": "yuv420p"
+          }
+        ],
+        "format": {
+          "duration": "16.916667"
+        }
+      }
+    },
+    {
+      "file": "adaui-kanban.png",
+      "bytes": 104285,
+      "sha256": "c53ee42567cdf8010851e94989c27a927848b2809e4541e955a8bc8b9d3c2c62"
+    },
+    {
+      "file": "agent-mode.png",
+      "bytes": 300773,
+      "sha256": "6b9da76e4b84d6ab89957682b4fad28a65cc64683bd3f513094ad9a4af2a2b6d"
+    },
+    {
+      "file": "android-build-export.png",
+      "bytes": 234428,
+      "sha256": "4cdc36814fb94bce5299a0d20b6c1060eda89c0f00bd1a4fc1c67283c0073640"
+    },
+    {
+      "file": "garden-metalfx-spatial.png",
+      "bytes": 1131354,
+      "sha256": "61a947f1d9e19776b0b6e2ee5b1f09a6bcf57c5d54fcaffa011757524cf930bf"
+    },
+    {
+      "file": "garden-metalfx-temporal.png",
+      "bytes": 2247707,
+      "sha256": "dc392450c1c1056e66a4bdbf9d4630fd7e1225a692384d103bdb64e7b1180b2f"
+    },
+    {
+      "file": "garden-no-ssao.png",
+      "bytes": 1522109,
+      "sha256": "af6acd9d65e7602f470feba77966b17efacadb490b9316736f408de8387c8b75"
+    },
+    {
+      "file": "garden-overview.png",
+      "bytes": 1179040,
+      "sha256": "759ab7f501cc8539d6778c770abe22f874a142e7a5dfcd5d18e156435dbe9c8e"
+    },
+    {
+      "file": "garden-ssao.png",
+      "bytes": 1911663,
+      "sha256": "edd86441561a8c246030904db8172b583178f5d34ef813971aeb14687d888e3d"
+    },
+    {
+      "file": "garden-webgpu.png",
+      "bytes": 1906051,
+      "sha256": "29723326ac84c82c2091c2bb73475ab221233e3324760c15c55237545ff21f5e"
+    },
+    {
+      "file": "medieval-arena.png",
+      "bytes": 116665,
+      "sha256": "25a06bf7b39e9cec47d286584095a2c06fe4c920f0a03a87ff608c8ce194f393"
+    },
+    {
+      "file": "performance-timeline.png",
+      "bytes": 462624,
+      "sha256": "a128f9b148634a25ac38c1e5f395d88a4e8a5acfd2295a69992517763f917f2c"
+    },
+    {
+      "file": "physics-3d.mp4",
+      "bytes": 4601199,
+      "sha256": "83e6ded37512709e6f8f91a619a94164bf5f7784949ada301df40d665c2698e0",
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1280,
+            "height": 1104,
+            "pix_fmt": "yuv420p"
+          }
+        ],
+        "format": {
+          "duration": "17.708333"
+        }
+      }
+    },
+    {
+      "file": "physics-3d.png",
+      "bytes": 441834,
+      "sha256": "29c6d30b21f67f154422c0749b52a5b025e6a0f4ccef3c8dcbbd2c296b6b702e"
+    },
+    {
+      "file": "sprite-rendering.mp4",
+      "bytes": 1047473,
+      "sha256": "5aa97b8868cc743d2d9665c36c614212e0110a42472787834aa20d76a9de77df",
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 640,
+            "height": 506,
+            "pix_fmt": "yuv420p"
+          }
+        ],
+        "format": {
+          "duration": "12.583333"
+        }
+      }
+    },
+    {
+      "file": "sprite-rendering.png",
+      "bytes": 136842,
+      "sha256": "04dccc67ba7026ae6a4ca30bdb971c20097fe9a0a53d55ad717de225c5a08b95"
+    },
+    {
+      "file": "tilemap-editor.png",
+      "bytes": 417555,
+      "sha256": "e2ccadf75ee15eb45d698796be4c4575e40ef8a3bc91330e412283bccc70f3f5"
+    },
+    {
+      "file": "ui-designer-npc.png",
+      "bytes": 257481,
+      "sha256": "da852957400af41a451908924179a38e66b290ebe9c9e6ebc83a47e6c257c549"
+    }
+  ],
+  "provenance": {
+    "a2ui-controls": "Native Ada Studio capture of an explicitly authored demo form; field changes verified in its persisted data model. No model generation or server submission recorded.",
+    "ui-designer-npc": "NPCProfile.ui exported through Open in UI Designer; foreground colors refined in the isolated demonstration resource.",
+    "agent-mode": "Native Ada Studio Agent Mode, isolated Medieval Arena project; configured agent connected, no generation turn recorded.",
+    "tilemap-editor": "Native Ada Studio capture of Arena.tilemap from the isolated Medieval Arena fixture.",
+    "garden-comparisons": "Existing SkeletalGarden native frame captures: quality/no-ao and spatial/temporal. Static image comparisons, not a motion-quality or FPS benchmark.",
+    "garden-webgpu": "Existing SkeletalGarden native-webgpu/frame-50.png capture.",
+    "physics-3d, sprite-rendering, adaui-kanban": "H.264 transcodes of existing public/images/features GIF recordings. Archive demonstrations, not fresh 1.0 regression runs.",
+    "performance-timeline": "Existing native Studio CPU timeline capture from 2026-10-04.",
+    "android-build-export": "Existing native Studio Build & Export settings capture. Shows tool configuration, not device playback."
+  }
+}

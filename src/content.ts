@@ -274,6 +274,8 @@ function renderInlineMarkdown(text: string): string {
 function humanizeLanguage(language: string): string {
   const normalized = language.toLowerCase()
   const labels: Record<string, string> = {
+    ada: 'AdaScript',
+    adascript: 'AdaScript',
     js: 'JavaScript',
     javascript: 'JavaScript',
     json: 'JSON',
@@ -314,20 +316,36 @@ function renderCodeBlock(code: string, language: string, title: string): string 
 }
 
 function renderArticleMedia(line: string): string | null {
+  const comparison = line.match(/^::compare\[([^\]]+)\]\(([^\s)]+)\s+([^\s)]+)\s+"([^"]+)"\s+"([^"]+)"\)$/)
+  if (comparison) {
+    const [, title, before, after, beforeLabel, afterLabel] = comparison
+    return `
+      <figure class="article-media article-comparison" data-article-comparison>
+        <div class="article-comparison-frame" style="--comparison-position:50%">
+          <img src="${escapeHtml(assetFor(after))}" alt="${escapeHtml(afterLabel)}" loading="lazy" />
+          <img class="article-comparison-before" src="${escapeHtml(assetFor(before))}" alt="${escapeHtml(beforeLabel)}" loading="lazy" />
+          <span class="article-comparison-label article-comparison-label-before">${escapeHtml(beforeLabel)}</span>
+          <span class="article-comparison-label article-comparison-label-after">${escapeHtml(afterLabel)}</span>
+        </div>
+        <input type="range" min="0" max="100" value="50" aria-label="${escapeHtml(title)}" aria-valuetext="50% ${escapeHtml(beforeLabel)}" data-article-comparison-range data-before-label="${escapeHtml(beforeLabel)}" />
+        <figcaption>${renderInlineMarkdown(title)}</figcaption>
+      </figure>
+    `
+  }
   const mediaMatch = line.match(/^!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)$/)
-  const videoMatch = line.match(/^::video\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)$/)
+  const videoMatch = line.match(/^::video\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?(?:\s+poster="([^"]+)")?\)$/)
   const match = mediaMatch ?? videoMatch
 
   if (!match) {
     return null
   }
 
-  const [, alt, rawSrc, title] = match
+  const [, alt, rawSrc, title, poster] = match
   const src = assetFor(rawSrc)
   const caption = title || alt
   const isVideo = Boolean(videoMatch) || /\.(mp4|webm|ogg|mov)$/i.test(rawSrc)
   const media = isVideo
-    ? `<video controls playsinline preload="metadata" src="${escapeHtml(src)}">${escapeHtml(alt)}</video>`
+    ? `<video controls playsinline preload="metadata"${poster ? ` poster="${escapeHtml(assetFor(poster))}"` : ''} src="${escapeHtml(src)}">${escapeHtml(alt)}</video>`
     : `<img src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" loading="lazy" role="button" tabindex="0" aria-label="Open image fullscreen" data-article-lightbox-image />`
 
   return `

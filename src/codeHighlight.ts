@@ -9,6 +9,23 @@ import xml from 'highlight.js/lib/languages/xml'
 import yaml from 'highlight.js/lib/languages/yaml'
 
 hljs.registerLanguage('bash', bash)
+hljs.registerLanguage('adascript', (api) => ({
+  name: 'AdaScript',
+  keywords: {
+    keyword: 'var const func class struct enum import from if else for in while repeat switch case default break continue return async await',
+    literal: 'true false null',
+    type: 'Any Bool Int Float String List Map Range',
+  },
+  contains: [
+    api.C_LINE_COMMENT_MODE,
+    api.C_BLOCK_COMMENT_MODE,
+    api.QUOTE_STRING_MODE,
+    api.APOS_STRING_MODE,
+    { scope: 'meta', begin: /@[A-Za-z_]\w*/ },
+    { scope: 'property', begin: /\.[A-Za-z_]\w*/ },
+    api.C_NUMBER_MODE,
+  ],
+}))
 hljs.registerLanguage('javascript', javascript)
 hljs.registerLanguage('json', json)
 hljs.registerLanguage('markdown', markdown)
@@ -27,6 +44,7 @@ hljs.registerLanguage('xml', xml)
 hljs.registerLanguage('yaml', yaml)
 
 const languageAliases: Record<string, string> = {
+  ada: 'adascript',
   html: 'xml',
   js: 'javascript',
   md: 'markdown',

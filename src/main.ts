@@ -1635,6 +1635,7 @@ function setupInteractions() {
   setupDemoCategoryNavigation()
   setupArticleReadingNavigation()
   setupArticleImageLightbox()
+  setupArticleComparisons()
 }
 
 function setupFeatureGifPreviews() {
@@ -1707,6 +1708,17 @@ function renderFeatureModalMedia(item: FeatureItem): string {
       </span>
     </div>
   `
+}
+
+function setupArticleComparisons() {
+  document.querySelectorAll<HTMLInputElement>('[data-article-comparison-range]').forEach((range) => {
+    const frame = range.closest('[data-article-comparison]')?.querySelector<HTMLElement>('.article-comparison-frame')
+    if (!frame) return
+    range.addEventListener('input', () => {
+      frame.style.setProperty('--comparison-position', `${range.value}%`)
+      range.setAttribute('aria-valuetext', `${range.value}% ${range.dataset.beforeLabel}`)
+    })
+  })
 }
 
 function setupArticleImageLightbox() {
