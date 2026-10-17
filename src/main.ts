@@ -1,5 +1,7 @@
 import './style.css'
+import './home.css'
 import { renderStudioContent } from './studio'
+import './theme.css'
 import { appStoreURL, assetsFor, assetLabel, fallbackRelease, loadDownloadRelease, type DownloadRelease, type DesktopPlatform } from './downloads'
 import { languageClass, renderHighlightedCodeLines } from './codeHighlight'
 import { articles, getArticleBySlug, type ArticleAuthor, type ArticleHeading } from './content'
@@ -496,11 +498,13 @@ function renderHeader(): string {
 
 function renderHero(): string {
   return `
-    <section class="hero-section safe-area-insets">
+    <section class="home-introduction" aria-labelledby="home-title">
+      <div class="home-section-rail"><span>01 / Introduction</span><span>Open source. Endless possibilities.</span></div>
+      <div class="hero-section">
       <div class="hero-copy">
-        <p class="hero-eyebrow">Swift Game Engine is here</p>
-        <h1 class="ae-header-title">The Open-Source Engine for Swift Developers</h1>
-        <p class="hero-subtitle">Build high-performance 2D and 3D games using modern Swift. Clean architecture, native feeling, and developer-first tooling.</p>
+        <p class="hero-eyebrow"><span class="home-status-dot" aria-hidden="true"></span> A game engine for Swift developers</p>
+        <h1 class="ae-header-title" id="home-title">Your ideas.<br />Built in <span>Swift.</span></h1>
+        <p class="hero-subtitle">An open-source engine for the worlds you want to create. Build 2D and 3D games with modern Swift and tools that feel right at home.</p>
         <div class="hero-actions">
           <a class="header-buttons" href="${hrefFor('/download')}">Download <span class="download-version" data-download-version>v${fallbackRelease.version}</span></a>
           <a class="header-buttons-github" href="https://github.com/${githubRepository}" aria-label="Ada on GitHub">
@@ -513,12 +517,15 @@ function renderHero(): string {
               <span data-github-stars-value>...</span>
             </span>
           </a>
+          <a class="home-docs-action" href="https://docs.adaengine.org/">Read the docs <span aria-hidden="true">↗</span></a>
         </div>
+        <div class="home-platforms" aria-label="Available platforms"><span>macOS</span><span>iOS</span><span>Windows</span><span>Linux</span><span>Web</span></div>
       </div>
-      <div class="hero-visual" aria-hidden="true" data-hero-gif-src="${assetFor('images/main/adaengine-hero.gif')}">
-        <picture class="ae-logo-header"><source srcset="${assetFor('images/ae_logo~dark.svg')}" media="(prefers-color-scheme: dark)" /><img src="${assetFor('images/ae_logo.svg')}" alt="" /></picture>
-        <div class="hero-orbit hero-orbit-one"></div>
-        <div class="hero-orbit hero-orbit-two"></div>
+      <figure class="home-editor-preview">
+        <div class="home-preview-bar"><span>Ada Editor</span><span>Built to make things <span aria-hidden="true">↗</span></span></div>
+        <div class="home-editor-image"><img src="${assetFor('images/studio/desktop.png')}" alt="Ada Editor showing a Swift project and source code" fetchpriority="high" /></div>
+        <figcaption><span>Native tools. Your creative space.</span><span>Swift / 2D / 3D</span></figcaption>
+      </figure>
       </div>
     </section>
   `
@@ -564,30 +571,23 @@ function renderLatestNews(): string {
   if (!articles.length) return ''
 
   return `
-    <section id="latest-news" class="latest-news safe-area-insets">
-      <h2 class="section-title">Latest News</h2>
+    <section id="latest-news" class="latest-news home-section" aria-labelledby="home-news-title">
+      <div class="home-section-rail"><span>03 / From the team</span><a href="${hrefFor('/blog')}">All news <span aria-hidden="true">↗</span></a></div>
+      <div class="home-section-intro"><h2 id="home-news-title">The latest from Ada.</h2><p>Updates, ideas and things we’re building.</p></div>
       <div class="home-articles-grid">
-        ${articles
-          .slice(0, 4)
-          .map(
-            (article) => `
-              <article class="home-article-preview">
-                <a href="${hrefFor(`/articles/${article.slug}`)}">
-                  <div class="article-preview-image">
-                    <img class="background_image" src="${assetFor(article.image ?? fallbackArticleImage)}" alt="${escapeHtml(article.title)}" />
-                    <div class="background_image_overlay"></div>
-                    <div class="article-preview-content">
-                      <p class="article-date">${formatDate(article.date)}</p>
-                      ${renderTagList(article.tags)}
-                      <h3>${article.title}</h3>
-                      <p>${escapeHtml(article.author.name)}</p>
-                    </div>
-                  </div>
-                </a>
-              </article>
-            `,
-          )
-          .join('')}
+        ${articles.slice(0, 4).map((article) => `
+          <article class="home-article-preview">
+            <a href="${hrefFor(`/articles/${article.slug}`)}">
+              <div class="home-news-image"><img src="${assetFor(article.image ?? fallbackArticleImage)}" alt="${escapeHtml(article.title)}" loading="lazy" decoding="async" /></div>
+              <div class="home-news-copy">
+                <div class="home-news-meta"><span>${formatDate(article.date)}</span><span>${escapeHtml(article.author.name)}</span></div>
+                <h3>${escapeHtml(article.title)} <span aria-hidden="true">↗</span></h3>
+                <p>${escapeHtml(article.description)}</p>
+                ${renderTagList(article.tags)}
+              </div>
+            </a>
+          </article>
+        `).join('')}
       </div>
     </section>
   `
@@ -612,6 +612,7 @@ function renderBlogPage() {
     <main class="page-shell blog-page-shell">
       <section class="container content-restriction blog-page">
         <header class="blog-page-hero">
+          <p class="page-eyebrow">01 / Engine news</p>
           <h1>Engine News</h1>
           <p>Updates, release notes, and engineering deep dives from the Ada team.</p>
         </header>
@@ -794,11 +795,9 @@ function renderFeatures(): string {
   const orderedFeatures = [...features.slice(-3), ...features.slice(0, -3)]
 
   return `
-    <section id="features" class="features-container safe-area-insets">
-      <div class="section-heading">
-        <p class="eyebrow">Capabilities</p>
-        <h2 class="section-title">Features</h2>
-      </div>
+    <section id="features" class="features-container home-section" aria-labelledby="home-features-title">
+      <div class="home-section-rail"><span>02 / Capabilities</span><span>A complete creative toolkit</span></div>
+      <div class="home-section-intro"><h2 id="home-features-title">Small details.<br />Big possibilities.</h2><p>Everything you need to bring a world to life, built around the way you write Swift.</p></div>
       <div class="features-grid">
         ${orderedFeatures
           .map(
@@ -806,11 +805,11 @@ function renderFeatures(): string {
               <button class="engine-info-item-container feature-card feature-card-${index + 1}" type="button" data-feature-index="${features.indexOf(item)}" data-feature-position="${index + 1}" aria-haspopup="dialog">
                 ${renderFeatureContent(item)}
                 <div class="engine-info-item-text">
-                  <span class="feature-number">0${index + 1}</span>
+                  <span class="feature-number">${String(index + 1).padStart(2, '0')} / Engine</span>
                   <h3>${item.title}</h3>
                   <p>${item.description}</p>
                 </div>
-                <span class="feature-card-action">Learn more</span>
+                <span class="feature-card-action">Explore feature <span aria-hidden="true">↗</span></span>
               </button>
             `,
           )
@@ -938,6 +937,7 @@ function renderLearnPage() {
     <main class="page-shell learn-page-shell">
       <section class="container content-restriction learn-page">
         <header class="learn-hero">
+          <p class="page-eyebrow">01 / Learn Ada</p>
           <h1>${page.title}</h1>
           <p>${page.lead}</p>
         </header>
@@ -994,6 +994,7 @@ function renderDonationPage() {
     <main class="page-shell donation-page-shell">
       <section class="container content-restriction donation-page">
         <header class="donation-hero">
+          <p class="page-eyebrow">01 / Support the project</p>
           <h1>Support Ada</h1>
           <p>Ada is an independent open-source project. Your support helps us dedicate more time to development and tooling.</p>
         </header>
@@ -1034,6 +1035,7 @@ function renderCommunityPage() {
     <main class="page-shell community-page-shell">
       <section class="container content-restriction community-page">
         <header class="community-hero">
+          <p class="page-eyebrow">01 / Made together</p>
           <h1>Join the Community</h1>
           <p>Connect with other developers, share your projects, and contribute to the engine.</p>
         </header>
@@ -1066,18 +1068,25 @@ function renderCommunityPage() {
 function renderHomePage() {
   // Keep the showcase implementation ready for a later re-enable.
   const showShowcase = false
+  const discord = communityLinks.find((link) => link.title === 'Discord')!
 
   app.innerHTML = `
-    ${renderHeader()}
-    <main class="page-shell">
-      <div class="container content-restriction">
-        ${renderHero()}
-        ${showShowcase ? renderShowcaseGallery() : ''}
-        ${renderLatestNews()}
-        ${renderFeatures()}
-      </div>
-    </main>
-    ${renderFooter()}
+    <div class="home-page">
+      ${renderHeader()}
+      <main class="page-shell home-main">
+        <div class="container content-restriction">
+          ${renderHero()}
+          ${showShowcase ? renderShowcaseGallery() : ''}
+          ${renderFeatures()}
+          ${renderLatestNews()}
+          <section class="home-community" aria-labelledby="home-community-title">
+            <div class="home-section-rail"><span>04 / Made together</span><span>Independent. Open. Community-built.</span></div>
+            <div class="home-community-content"><div><h2 id="home-community-title">Make something<br />of your own.</h2><p>Share your work, ask a question, or help shape what comes next.</p></div><a class="home-community-action" href="${discord.href}">Join the community <span aria-hidden="true">↗</span></a></div>
+          </section>
+        </div>
+      </main>
+      ${renderFooter()}
+    </div>
     ${renderFeatureModal()}
   `
 }
@@ -1230,6 +1239,7 @@ function renderNotFound(title = 'Page not found', description = 'This route does
     ${renderHeader()}
     <main class="page-shell">
       <section class="container content-restriction safe-area-insets status-page">
+        <p class="page-eyebrow">404 / Page unavailable</p>
         <h1>${title}</h1>
         <p>${description}</p>
         <a class="header-buttons" href="${hrefFor('/')}">Home</a>

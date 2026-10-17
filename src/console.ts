@@ -1,6 +1,7 @@
 import './style.css'
 import './cloud.css'
 import './console.css'
+import './theme.css'
 import { renderCloud } from './cloud'
 
 type Json = Record<string, any>
