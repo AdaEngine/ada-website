@@ -25,7 +25,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-26
+    runs-on: ${{ ((github.event_name == 'workflow_dispatch' && inputs.build_demos) || github.event_name == 'repository_dispatch') && 'macos-26' || 'ubuntu-latest' }}
     env:
       BUILD_DEMOS: ${{ ((github.event_name == 'workflow_dispatch' && inputs.build_demos) || github.event_name == 'repository_dispatch') && 'true' || 'false' }}
       SWIFT_WASM_SDK_ID: ${{ vars.SWIFT_WASM_SDK_ID || 'swift-6.3.2-RELEASE_wasm' }}
@@ -33,6 +33,7 @@ jobs:
       SWIFT_WASM_SDK_CHECKSUM: ${{ vars.SWIFT_WASM_SDK_CHECKSUM || 'a61f0584c93283589f8b2f42db05c1f9a182b506c2957271402992655591dd7c' }}
     steps:
       - name: Setup Xcode version
+        if: env.BUILD_DEMOS == 'true'
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
           xcode-version: '26.1.1'
