@@ -203,7 +203,8 @@ assert.match(mainSource, /feature-modal-close-label">Close</)
 assert.doesNotMatch(mainSource, /<code>public\/images\/features\//)
 assert.match(mainSource, /Failed to initialize page interactions/)
 assert.match(mainSource, /void setupGitHubStars\(\)/)
-assert.ok(mainSource.indexOf('${renderFooter()}\n    ${renderFeatureModal()}') > mainSource.indexOf('function renderHomePage()'))
+const homePageSource = mainSource.match(/function renderHomePage\(\) \{[\s\S]*?\n\}/)?.[0] ?? ''
+assert.match(homePageSource, /\$\{renderFooter\(\)\}[\s\S]*\$\{renderFeatureModal\(\)\}/)
 
 const stylesheet = readFileSync('src/style.css', 'utf8')
 assert.match(stylesheet, /\.feature-media-spinner \{[\s\S]*?animation: feature-media-spin/)
