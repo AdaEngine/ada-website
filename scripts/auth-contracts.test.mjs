@@ -75,4 +75,3 @@ test('Store authentication callback wins over a pending Playground destination',
   await renderCloud(document.body, () => '<header>Store sign-in</header>', () => {}, async () => { called = true })
   assert(called); assert.equal(location.pathname, '/cloud'); assert.equal(takePlaygroundReturn(sessionStorage), null)
 }))
-
