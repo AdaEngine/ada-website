@@ -93,7 +93,10 @@ No IP lookup or geolocation service is required.
 The footer switches to the same page in either language, preserving its query
 and fragment. The choice is saved in `localStorage` (`ada-site-language`). If
 storage is blocked, a `lang` query parameter carries the explicit choice.
-The Store and Cloud applications keep their existing language handling.
+Standalone Store and Cloud use the same catalog, detection rules and footer picker.
+Their own hostnames support `/ru` and `/ru/cloud`; Store sign-in stays on its
+own origin so its Identity proxy and session cookie continue to work.
+Creator-provided asset names, descriptions and reviews remain unchanged.
 
 UI translations live in `src/locales/ru.json`, keyed by the English source copy.
 Use `t('English source copy')` for new website text; untranslated keys fall back
@@ -104,3 +107,15 @@ The two release articles remain English and show a notice on Russian pages.
 metadata, canonical URLs and `hreflang` links. `npm run geo` includes both language
 versions in the sitemap. Run `npm test` for routing, detection, switching, page
 rendering and existing application contract checks.
+
+
+## Cloud account and Store frontend builds
+
+`npm run build:store` emits `dist-store`. `npm run build:cloud-site` emits
+`dist-cloud-site`, the account/catalog frontend for the existing Cloud host,
+using the same shared editorial theme as the main website and Store.
+Both keep `/v1` requests on the current origin. The shared theme is bundled
+as part of each artifact; publishing the main website alone does not update
+either service's independently hosted static files.
+
+Cloud and Store deployments publish these artifacts independently of the main website.

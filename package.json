@@ -14,7 +14,8 @@
     "test": "node src/routing.test.ts && node --test scripts/localization.test.mjs",
     "postbuild": "node scripts/generate-static-pages.mjs",
     "build:store": "tsc -b && vite build --config vite.store.config.ts",
-    "build:console": "tsc -b && vite build --config vite.console.config.ts"
+    "build:console": "tsc -b && vite build --config vite.console.config.ts",
+    "build:cloud-site": "tsc -b && vite build --config vite.cloud-site.config.ts"
   },
   "devDependencies": {
     "typescript": "^5.8.3",

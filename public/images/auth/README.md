@@ -8,3 +8,9 @@ These assets are used only as their respective identity provider's sign-in butto
 Both are displayed at 216×48 CSS pixels, preserving their aspect ratios. Local assets keep button rendering independent of third-party script availability and leave the existing server OAuth/PKCE flow intact.
 
 Responsive full-width variant: Apple artwork remains 216×48 within a white button; Google uses the official standalone `https://developers.google.com/static/identity/images/g-logo.png` at 20×20, with Google Sans Medium locally hosted from the Google Fonts CSS API. Neither logo nor label is stretched when the button width changes.
+
+- `apple-sign-in-white-ru.png`: Apple-generated Russian Sign in with Apple,
+  same dimensions and unmodified artwork as the English button. Source:
+  https://appleid.cdn-apple.com/appleid/button?type=sign-in&color=white&width=216&height=48&border_radius=24&scale=4&locale=ru_RU
+  The Cloud panel selects the artwork for its current language, including live
+  language changes inside Studio.

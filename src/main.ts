@@ -1,4 +1,5 @@
-import { getLocale, initialLocale, localizedPath, localeFromPath, locales, readSavedLocale, saveLocale, setLocale, t, type Locale } from './localization'
+import { renderLanguageSwitcher, setupLanguageSwitcher } from './languagePicker'
+import { getLocale, initialLocale, localizedPath, localeFromPath, locales, readSavedLocale, setLocale, t, withoutLocale } from './localization'
 import './style.css'
 import './home.css'
 import { renderStudioContent } from './studio'
@@ -13,15 +14,12 @@ import { absoluteSiteUrl, createArticleSeo, createDemoSeo, createRouteSeo, creat
 const app = document.querySelector<HTMLDivElement>('#app') ?? failMissingApp()
 const baseUrl = import.meta.env.BASE_URL
 const entryPath = normalizeRoutePath(window.location.pathname, baseUrl)
-// Store and Cloud are separate applications with their own language handling.
-const isWebsite = !/^(store|cloud)(?:-test)?\./.test(window.location.hostname)
-  && !/^\/(store|cloud|games|legal)(\/|$)/.test(entryPath)
 const queryLanguage = new URLSearchParams(window.location.search).get('lang')
 const queryLocale = queryLanguage === 'en' || queryLanguage === 'ru' ? queryLanguage : null
-const language = isWebsite ? initialLocale(entryPath, queryLocale ?? readSavedLocale(), navigator.languages ?? [navigator.language]) : 'en'
+const language = initialLocale(entryPath, queryLocale ?? readSavedLocale(), navigator.languages ?? [navigator.language])
 setLocale(language)
 document.documentElement.lang = language
-if (isWebsite && language !== localeFromPath(entryPath)) {
+if (language !== localeFromPath(entryPath)) {
   window.location.replace(`${createHref(localizedPath(entryPath, language), baseUrl)}${window.location.search}${window.location.hash}`)
 }
 
@@ -367,19 +365,27 @@ function formatDate(date: string): string {
 
 function hrefFor(path: string): string {
   if (/^store(?:-test)?\./.test(window.location.hostname) && /^\/cloud(\/|$)/.test(path)) {
-    return new URL(path, window.location.hostname.startsWith('store-test.') ? 'https://cloud-test.adaengine.org' : 'https://cloud.adaengine.org').href
+    return localizedProductURL(new URL(path, window.location.hostname.startsWith('store-test.') ? 'https://cloud-test.adaengine.org' : 'https://cloud.adaengine.org').href)
   }
-  const mainSite = (import.meta.env.VITE_MAIN_SITE_URL as string | undefined) ?? (/^store(?:-test)?\./.test(window.location.hostname) ? 'https://adaengine.org' : undefined)
-  if (!/^\/(cloud|games|legal|store)(\/|$)/.test(path)) path = localizedPath(path, getLocale())
-  if (mainSite && !/^\/(cloud|games|legal|store)(\/|$)/.test(path)) return new URL(path, mainSite).href
+  const servicePath = /^\/(cloud|games|legal|store)(?:\/|[?#]|$)/.test(withoutLocale(path))
+  const mainSite = (import.meta.env.VITE_MAIN_SITE_URL as string | undefined) ?? (/^(store|cloud)(?:-test)?\./.test(window.location.hostname) ? 'https://adaengine.org' : undefined)
+  path = localizedPath(path, getLocale())
+  if (mainSite && !servicePath) return localizedProductURL(new URL(path, mainSite).href)
   const href = createHref(path, baseUrl)
   // Carry an explicit choice when browser privacy settings block localStorage.
-  if (isWebsite && queryLocale && !/^\/(cloud|games|legal|store)(\/|$)/.test(path)) {
+  if (queryLocale) {
     const url = new URL(href, window.location.origin)
     url.searchParams.set('lang', getLocale())
     return `${url.pathname}${url.search}${url.hash}`
   }
   return href
+}
+
+function localizedProductURL(value: string): string {
+  const url = new URL(value)
+  url.pathname = localizedPath(url.pathname, getLocale())
+  if (getLocale() === 'en') url.searchParams.set('lang', 'en')
+  return url.href
 }
 
 function assetFor(path: string): string {
@@ -489,8 +495,9 @@ async function setupGitHubStars() {
 
 function renderHeader(): string {
   const currentRoute = resolveRoute(window.location.pathname, import.meta.env.BASE_URL)
-  const isStoreView = /^\/store(\/|$)/.test(window.location.pathname) || (/^store(?:-test)?\./.test(window.location.hostname) && window.location.pathname === '/')
-  const activePage = isStoreView ? 'store' : currentRoute.name === 'static-page' ? currentRoute.page : currentRoute.name === 'demo' ? 'demos' : currentRoute.name
+  const isStoreView = /^\/store(\/|$)/.test(withoutLocale(entryPath)) || (/^store(?:-test)?\./.test(window.location.hostname) && withoutLocale(entryPath) === '/')
+  const isCloudView = /^\/(cloud|games|legal)(\/|$)/.test(withoutLocale(entryPath)) || (/^cloud(?:-test)?\./.test(window.location.hostname) && withoutLocale(entryPath) === '/')
+  const activePage = isStoreView ? 'store' : isCloudView ? 'cloud' : currentRoute.name === 'static-page' ? currentRoute.page : currentRoute.name === 'demo' ? 'demos' : currentRoute.name
   const navItems = [
     { label: t('Home'), href: hrefFor('/'), active: activePage === 'home' },
     { label: t('Studio'), href: hrefFor('/studio'), active: activePage === 'studio' },
@@ -498,8 +505,8 @@ function renderHeader(): string {
     { label: t('Demos'), href: hrefFor('/demos'), active: activePage === 'demos' },
     { label: t('Learn'), href: hrefFor('/learn'), active: activePage === 'learn' },
     { label: t('Socials'), href: hrefFor('/community'), active: activePage === 'community', secondary: true },
-    { label: t('Store'), href: isStoreView ? hrefFor('/store') : 'https://store.adaengine.org', active: isStoreView, secondary: true },
-    { label: t('Cloud'), href: hrefFor('/cloud'), active: /^\/(cloud|games|legal)(\/|$)/.test(window.location.pathname), secondary: true },
+    { label: t('Store'), href: isStoreView ? hrefFor('/store') : `https://${/^(cloud-test|store-test)\./.test(window.location.hostname) ? 'store-test' : 'store'}.adaengine.org${getLocale() === 'ru' ? '/ru/store' : '/store?lang=en'}`, active: isStoreView, secondary: true },
+    { label: t('Cloud'), href: localizedProductURL(new URL('/cloud', /^(cloud-test|store-test)\./.test(window.location.hostname) ? 'https://cloud-test.adaengine.org' : 'https://cloud.adaengine.org').href), active: isCloudView, secondary: true },
     { label: t('Donate'), href: hrefFor('/donate'), active: activePage === 'donate', secondary: true },
   ]
   const isLearnPage = activePage === 'learn'
@@ -942,19 +949,6 @@ function renderFooter(): string {
       </div>
     </footer>
   `
-}
-
-function renderLanguageSwitcher(): string {
-  return `<div class="footer-language">
-    <label for="site-language" title="${t('Language')}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg>
-    </label>
-    <span class="footer-language-control">
-      <select id="site-language" aria-label="${t('Language')}" data-site-language>
-        ${locales.map(locale => `<option value="${locale}" lang="${locale}"${getLocale() === locale ? ' selected' : ''}>${locale === 'en' ? 'English' : 'Русский'}</option>`).join('')}
-      </select>
-    </span>
-  </div>`
 }
 
 function renderLearnIcon(icon?: LearnCard['icon']): string {
@@ -1547,14 +1541,15 @@ async function refreshDownloads() {
 
 async function renderRoute() {
   app.classList.remove('store-app')
-  if ((/^\/store(\/|$)/.test(window.location.pathname) || (window.location.hostname.startsWith('store.') || window.location.hostname.startsWith('store-test.')) && window.location.pathname === '/')) {
+  const path = withoutLocale(entryPath)
+  if ((/^\/store(\/|$)/.test(path) || (window.location.hostname.startsWith('store.') || window.location.hostname.startsWith('store-test.')) && path === '/')) {
     const { renderStore } = await import('./store')
-    await renderStore(app, renderHeader, setupHeaderNavigation)
+    await renderStore(app, renderHeader, setupHeaderNavigation, renderFooter)
     return
   }
-  if (/^\/(cloud|games|legal)(\/|$)/.test(window.location.pathname)) {
+  if (/^\/(cloud|games|legal)(\/|$)/.test(path) || (/^cloud(?:-test)?\./.test(window.location.hostname) && path === '/')) {
     const { renderCloud } = await import('./cloud')
-    await renderCloud(app, renderHeader, setupHeaderNavigation)
+    await renderCloud(app, renderHeader, setupHeaderNavigation, undefined, renderFooter)
     return
   }
   const route = resolveRoute(window.location.pathname, import.meta.env.BASE_URL)
@@ -1604,6 +1599,7 @@ async function renderRoute() {
 }
 
 function setupHeaderNavigation() {
+  setupLanguageSwitcher(baseUrl)
   const header = document.querySelector<HTMLElement>('.header')
   const burger = document.querySelector<HTMLButtonElement>('.burger-container')
   if (!header || header.dataset.navigationReady === 'true') return
@@ -1650,17 +1646,6 @@ function setupHeaderNavigation() {
 }
 
 function setupInteractions() {
-  document.querySelectorAll<HTMLSelectElement>('[data-site-language]').forEach(select => {
-    select.addEventListener('change', () => {
-      const locale = select.value as Locale
-      if (!locales.includes(locale)) return
-      const url = new URL(window.location.href)
-      url.pathname = createHref(localizedPath(normalizeRoutePath(url.pathname, baseUrl), locale), baseUrl)
-      if (saveLocale(locale)) url.searchParams.delete('lang')
-      else url.searchParams.set('lang', locale)
-      window.location.assign(url.href)
-    })
-  })
   setupHeaderNavigation()
   setupFeatureGifPreviews()
 

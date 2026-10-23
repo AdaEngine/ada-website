@@ -1,4 +1,4 @@
-import { cpSync, mkdirSync } from 'node:fs'
+import { cpSync, existsSync, mkdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
 import siteConfig from './vite.config'
@@ -17,6 +17,7 @@ export default defineConfig({
       const out = resolve('dist-store')
       mkdirSync(resolve(out, 'images'), { recursive: true })
       for (const path of ['fonts', 'images/auth', 'images/ae_logo.svg', 'images/ae_logo~dark.svg']) {
+        if (path === 'fonts' && !existsSync(resolve('public', path))) continue
         cpSync(resolve('public', path), resolve(out, path), { recursive: true })
       }
     },

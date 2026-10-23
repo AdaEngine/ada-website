@@ -14,8 +14,22 @@ export function withoutLocale(path: string): string {
 }
 
 export function localizedPath(path: string, locale: Locale): string {
+  const suffixIndex = path.search(/[?#]/)
+  if (suffixIndex >= 0) return localizedPath(path.slice(0, suffixIndex) || '/', locale) + path.slice(suffixIndex)
   const plain = withoutLocale(path)
   return locale === 'en' ? plain : `/ru${plain === '/' ? '' : plain}`
+}
+
+export function message(key: string, ...values: unknown[]): string {
+  return t(key).replace(/\{(\d+)\}/g, (_, index) => String(values[Number(index)] ?? ''))
+}
+
+export function localizedNavigation(path: string, locale: Locale, explicitChoice: string | null): string {
+  const localized = localizedPath(path, locale)
+  if (explicitChoice !== 'en' && explicitChoice !== 'ru') return localized
+  const url = new URL(localized, 'https://ada.invalid')
+  url.searchParams.set('lang', locale)
+  return `${url.pathname}${url.search}${url.hash}`
 }
 
 export function preferredLocale(languages: readonly string[]): Locale {

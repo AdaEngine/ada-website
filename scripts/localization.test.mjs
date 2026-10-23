@@ -10,13 +10,14 @@ import { hrefFor, normalizeRoutePath, resolveRoute } from '../src/routing.ts'
 
 const output = mkdtempSync(join(tmpdir(), 'ada-localization-'))
 after(() => rmSync(output, { recursive: true, force: true }))
-await build({ configFile: false, publicDir: false, logLevel: 'silent', build: {
-  outDir: output, lib: { entry: resolve('src/main.ts'), formats: ['iife'], name: 'AdaWebsite', fileName: () => 'site.js' },
+// Keep lazy DOM mutations intact when flattening the production chunks into one test IIFE.
+await build({ configFile: false, publicDir: false, logLevel: 'silent', define: { 'import.meta.env.VITE_CLOUD_STANDALONE_SITE': 'true' }, build: {
+  outDir: output, rollupOptions: { treeshake: false }, lib: { entry: resolve('src/main.ts'), formats: ['iife'], name: 'AdaWebsite', fileName: () => 'site.js' },
 } })
 const code = readFileSync(join(output, 'site.js'), 'utf8')
 const manifest = JSON.parse(readFileSync('public/demos/manifest.json', 'utf8'))
-async function page(path, run, { languages = ['en-US'], saved, storageBlocked = false } = {}) {
-  const w = new Window({ url: 'https://adaengine.org' + path })
+async function page(path, run, { languages = ['en-US'], saved, storageBlocked = false, hostname = 'adaengine.org', services = false, signedIn = false } = {}) {
+  const w = new Window({ url: 'https://' + hostname + path })
   const redirects = [], navigations = []
   w.location.assign = url => { navigations.push(url) }
   w.location.replace = url => { redirects.push(url) }
@@ -24,6 +25,20 @@ async function page(path, run, { languages = ['en-US'], saved, storageBlocked = 
   if (saved) w.localStorage.setItem(localeStorageKey, saved)
   if (storageBlocked) Object.defineProperty(w, 'localStorage', { get() { throw new Error('Storage blocked') } })
   w.fetch = async url => {
+    if (services && String(url).startsWith('/v1/')) {
+      const path = String(url).split('?')[0]
+      const asset = { id: 'asset-1', title: 'Home', description: 'An author description in English', authorName: 'Creator', category: 'textures', rating: 0, reviewCount: 0, downloads: 42, cover: 'image-1', gallery: [], license: 'MIT', version: '1.0.0', bytes: 42000 }
+      const data = {
+        '/v1/legal': {}, '/v1/availability': { cloudServicesAvailable: false },
+        '/v1/me': signedIn ? { id: 'owner', accountId: 'owner', name: 'Home' } : null,
+        '/v1/store/categories': { categories: ['2d', '3d', 'textures'], licenses: ['MIT'], limits: { imageBytes: 5000000, galleryImages: 8, archiveBytes: 300000000 } },
+        '/v1/store/assets': { total: 1, items: [asset] },
+        '/v1/store/assets/asset-1': asset, '/v1/store/assets/asset-1/reviews': [],
+        '/v1/auth/exchange': {}, '/v1/catalog': [],
+      }[path]
+      if (data === undefined) throw new Error('Unexpected service endpoint: ' + path)
+      return Response.json(data)
+    }
     if (String(url).endsWith('demos/manifest.json')) return Response.json(manifest)
     if (String(url).endsWith('.swift')) return new Response('let demo = 1')
     throw new Error('Offline fixture')
@@ -133,3 +148,88 @@ test('an explicit English choice works across navigation with storage blocked an
   picker.dispatchEvent(new w.Event('change', { bubbles: true }))
   assert.deepEqual(navigations, ['https://adaengine.org/ru/download?lang=ru'])
 }, { languages: ['ru-RU'], storageBlocked: true }))
+
+
+test('standalone Russian Cloud localizes sign-in, terms and navigation with a footer picker', () => page('/ru/cloud', (doc, w, _redirects, navigations) => {
+  assert.match(doc.querySelector('.cloud-signin').textContent, /Войти в Ada/)
+  assert.equal(doc.querySelector('.cloud-provider-apple img').getAttribute('src'), '/images/auth/apple-sign-in-white-ru.png')
+  assert.match(doc.querySelector('.cloud-signin').textContent, /Отправить код/)
+  assert.equal(doc.querySelector('.cloud-agreement a').getAttribute('href'), '/ru/legal/terms')
+  assert.equal(doc.querySelector('[data-site-language]').value, 'ru')
+  const picker = doc.querySelector('[data-site-language]'); picker.value = 'en'
+  picker.dispatchEvent(new w.Event('change', { bubbles: true }))
+  assert.deepEqual(navigations, ['https://adaengine.org/cloud'])
+}, { services: true }))
+
+test('OAuth completion retains the Russian Cloud path', () => page('/ru/cloud?code=callback', (doc, w) => {
+  assert.equal(w.location.pathname, '/ru/cloud')
+  assert.equal(w.location.search, '')
+  assert(doc.querySelector('.cloud-signin'))
+}, { services: true }))
+
+test('Cloud root on its own hostname uses the localized account application and website links', () => page('/ru', doc => {
+  assert(doc.querySelector('.cloud-signin'))
+  assert.equal(doc.querySelector('.header-logo').getAttribute('href'), 'https://adaengine.org/ru')
+}, { hostname: 'cloud.adaengine.org', services: true }))
+
+test('Russian Store translates filters and account UI while preserving creator text', () => page('/ru/store', (doc, w, _redirects, navigations) => {
+  assert.match(doc.querySelector('.store-hero').textContent, /Бесплатные ресурсы/)
+  assert.equal(doc.querySelector('.store-card h3').textContent, 'Home')
+  assert.equal(doc.querySelector('.store-card .store-eyebrow').textContent, 'Текстуры')
+  assert.match(doc.querySelector('.store-account-actions').textContent, /Мои ресурсы/)
+  assert.equal(doc.querySelector('.store-account-actions a').getAttribute('href'), 'https://cloud.adaengine.org/ru/cloud')
+  const picker = doc.querySelector('[data-site-language]'); picker.value = 'en'
+  picker.dispatchEvent(new w.Event('change', { bubbles: true }))
+  assert.deepEqual(navigations, ['https://adaengine.org/store'])
+}, { services: true, signedIn: true }))
+
+test('Store root supports Russian on its own hostname and sign-in stays on the Store origin', () => page('/ru', doc => {
+  assert(doc.querySelector('.store-hero'))
+  assert.equal(doc.querySelector('.store-account-actions a').getAttribute('href'), '/ru/cloud')
+  assert.equal(doc.querySelector('.header-logo').getAttribute('href'), 'https://adaengine.org/ru')
+}, { hostname: 'store.adaengine.org', services: true }))
+
+
+test('Store publishing form localizes fields without rewriting default creator content', () => page('/ru/store', (doc, w) => {
+  doc.querySelector('.store-hero .store-primary').onclick(new w.MouseEvent('click', { bubbles: true }))
+  const form = doc.querySelector('.store-form')
+  assert(form)
+  assert.match(form.textContent, /Название ресурса/)
+  assert.match(form.textContent, /Отображаемое имя автора/)
+  assert.match(form.textContent, /Опубликовать бесплатный ресурс/)
+  assert.equal(form.querySelector('input').value, '')
+}, { services: true, signedIn: true }))
+
+test('Store detail and review UI translate while asset title and description stay original', () => page('/ru/store', async (doc, w) => {
+  doc.querySelector('.store-card').onclick(new w.MouseEvent('click', { bubbles: true }))
+  for (let i = 0; i < 10; i++) await new Promise(resolve => setImmediate(resolve))
+  assert.equal(doc.querySelector('.store-dialog h2').textContent, 'Home')
+  assert.equal(doc.querySelector('.store-description').textContent, 'An author description in English')
+  assert.match(doc.querySelector('.store-dialog').textContent, /Отзывы сообщества/)
+  assert.equal(doc.querySelector('[aria-label="Ваш отзыв"]').placeholder, 'Как этот ресурс проявил себя в вашем проекте?')
+  assert.equal(doc.querySelector('.store-detail-actions a').getAttribute('href'), '/v1/store/assets/asset-1/download')
+}, { services: true, signedIn: true }))
+
+for (const product of ['cloud', 'store']) {
+  test(`${product} keeps an English choice in internal links when storage is blocked`, () => page(`/${product}?lang=en`, doc => {
+    const link = doc.querySelector(product === 'cloud' ? '.cloud-navigation a[href^="/cloud"]' : '.store-account-actions a')
+    assert.equal(link.getAttribute('href'), '/cloud?lang=en')
+  }, { services: true, storageBlocked: true, languages: ['ru-RU'] }))
+}
+
+
+test('standalone Cloud catalog stays on the localized host instead of redirecting to itself', () => page('/ru/games', (doc, _w, redirects) => {
+  assert.match(doc.querySelector('.cloud-grid').textContent, /Открытые игры/)
+  assert.equal(doc.querySelector('.cloud-grid a').getAttribute('href'), '/ru/cloud/projects')
+  assert.deepEqual(redirects, [])
+}, { services: true }))
+
+test('Store navigation keeps the language-prefixed catalog on its own origin', () => page('/ru', doc => {
+  const active = doc.querySelector('.navigation-item-link.is-active')
+  assert.equal(active.getAttribute('href'), '/ru/store')
+}, { hostname: 'store.adaengine.org', services: true }))
+
+test('cross-product English links carry the choice past server root redirects', () => page('/cloud?lang=en', doc => {
+  const link = [...doc.querySelectorAll('.navigation-item-link')].find(node => node.textContent === 'Store')
+  assert.equal(link.getAttribute('href'), 'https://store.adaengine.org/store?lang=en')
+}, { hostname: 'cloud.adaengine.org', services: true }))
