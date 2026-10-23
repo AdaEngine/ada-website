@@ -15,4 +15,9 @@ AdaEngine/
 
 /dist-console/
 
+/dist-cloud/
+
+# Shared Cloud panels built for the canonical WebUI Playground.
+/dist-panels/
+
 /dist-cloud-site/

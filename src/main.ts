@@ -8,7 +8,7 @@ import { appStoreURL, assetsFor, assetLabel, fallbackRelease, loadDownloadReleas
 import { languageClass, renderHighlightedCodeLines } from './codeHighlight'
 import { articles, getArticleBySlug, type ArticleAuthor, type ArticleHeading } from './content'
 import { findDemoBySlug, groupDemosByTag, loadDemoSource, loadDemosManifest, type DemoEntry, type DemosManifest } from './demos'
-import { hrefFor as createHref, normalizeRoutePath, resolveRoute, type StaticPageName } from './routing'
+import { playgroundURL, hrefFor as createHref, normalizeRoutePath, resolveRoute, type StaticPageName } from './routing'
 import { absoluteSiteUrl, createArticleSeo, createDemoSeo, createRouteSeo, createStructuredData, localizeSeo, siteName, type SeoMetadata } from './seo'
 
 const app = document.querySelector<HTMLDivElement>('#app') ?? failMissingApp()
@@ -45,7 +45,6 @@ type ShowcaseItem = {
   image: string
 }
 
-const siteTitle = 'Ada'
 const fallbackArticleImage = 'images/main/tilemap.png'
 const blogArticleImages = ['images/main/tilemap.png', 'images/main/space_invaders.jpeg', 'images/main/duck_hunt.png']
 const githubRepository = 'AdaEngine/AdaEngine'
@@ -506,7 +505,7 @@ function renderHeader(): string {
     { label: t('Learn'), href: hrefFor('/learn'), active: activePage === 'learn' },
     { label: t('Socials'), href: hrefFor('/community'), active: activePage === 'community', secondary: true },
     { label: t('Store'), href: isStoreView ? hrefFor('/store') : `https://${/^(cloud-test|store-test)\./.test(window.location.hostname) ? 'store-test' : 'store'}.adaengine.org${getLocale() === 'ru' ? '/ru/store' : '/store?lang=en'}`, active: isStoreView, secondary: true },
-    { label: t('Cloud'), href: localizedProductURL(new URL('/cloud', /^(cloud-test|store-test)\./.test(window.location.hostname) ? 'https://cloud-test.adaengine.org' : 'https://cloud.adaengine.org').href), active: isCloudView, secondary: true },
+    { label: 'Playground', href: import.meta.env.DEV ? hrefFor('/games') : localizedProductURL(playgroundURL(window.location.hostname, import.meta.env.VITE_PLAYGROUND_ORIGIN as string | undefined)), active: isCloudView, secondary: true },
     { label: t('Donate'), href: hrefFor('/donate'), active: activePage === 'donate', secondary: true },
   ]
   const isLearnPage = activePage === 'learn'
@@ -519,7 +518,6 @@ function renderHeader(): string {
             <source srcset="${assetFor('images/ae_logo~dark.svg')}" media="(prefers-color-scheme: dark)" />
             <img src="${assetFor('images/ae_logo.svg')}" alt="Ada" />
           </picture>
-          <h2>${siteTitle}</h2>
         </a>
         <button class="burger-container" type="button" aria-label="${t("Open menu")}" aria-expanded="false">
           <span id="burger" aria-hidden="true"><span class="bar topBar"></span><span class="bar bottomBar"></span></span>

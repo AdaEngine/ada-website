@@ -3,7 +3,7 @@ import { assetsFor, parseRelease, selectDownloadRelease, appStoreURL } from './d
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { markdownToHtml } from './content.ts'
-import { hrefFor, normalizeBasePath, normalizeRoutePath, resolveRoute } from './routing.ts'
+import { playgroundURL, hrefFor, normalizeBasePath, normalizeRoutePath, resolveRoute } from './routing.ts'
 import { absoluteSiteUrl, createRouteSeo, siteOrigin } from './seo.ts'
 import { activePublicationForProject, publicationAvailable } from './cloudProjects.ts'
 
@@ -281,3 +281,8 @@ const canonicalInstaller = {
 }
 assert.equal(assetsFor('macos', selectDownloadRelease([canonicalInstaller])).length, 1)
 assert.equal(parseRelease(canonicalInstaller)?.url, canonicalInstaller.html_url)
+
+assert.equal(playgroundURL('adaengine.org'), 'https://cloud.adaengine.org/games')
+assert.equal(playgroundURL('store-test.adaengine.org'), 'https://cloud-test.adaengine.org/games')
+assert.equal(playgroundURL('cloud.adaengine.org'), 'https://cloud.adaengine.org/games')
+assert.equal(playgroundURL('adaengine.org', 'https://preview.example.test'), 'https://preview.example.test/games')

@@ -118,4 +118,8 @@ Both keep `/v1` requests on the current origin. The shared theme is bundled
 as part of each artifact; publishing the main website alone does not update
 either service's independently hosted static files.
 
-Cloud and Store deployments publish these artifacts independently of the main website.
+The separate `build:cloud` command still assembles the Studio Playground shell
+from the sibling AdaEngine checkout. It is independent of `build:cloud-site`.
+Do not replace a deployed Cloud artifact with the Playground build as part of
+a theme or translation-only rollout. Deployment of either product is separate
+from building or committing its source.

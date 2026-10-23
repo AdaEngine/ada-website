@@ -11,16 +11,19 @@
     "build": "tsc -b && vite build",
     "pretest": "npm run geo",
     "preview": "vite preview",
-    "test": "node src/routing.test.ts && node --test scripts/localization.test.mjs",
+    "test": "node src/routing.test.ts && node --test --test-concurrency=1 scripts/auth-contracts.test.mjs scripts/browser-sso.test.mjs scripts/cloud-panels.test.mjs scripts/localization.test.mjs",
     "postbuild": "node scripts/generate-static-pages.mjs",
     "build:store": "tsc -b && vite build --config vite.store.config.ts",
     "build:console": "tsc -b && vite build --config vite.console.config.ts",
+    "dev:cloud": "npm run build:cloud && vite --config vite.cloud.config.ts",
+    "build:cloud": "npm run build:panels && node scripts/build-playground.mjs",
+    "build:panels": "tsc -b && vite build --config vite.panels.config.ts",
     "build:cloud-site": "tsc -b && vite build --config vite.cloud-site.config.ts"
   },
   "devDependencies": {
+    "happy-dom": "21.0.3",
     "typescript": "^5.8.3",
-    "vite": "^5.4.10",
-    "happy-dom": "21.0.3"
+    "vite": "^5.4.10"
   },
   "dependencies": {
     "highlight.js": "^11.11.1"

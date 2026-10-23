@@ -1,5 +1,6 @@
 import { getLocale, localizedNavigation, localizedPath, message, t, withoutLocale } from './localization'
 import './store.css'
+import { restoreBrowserSession } from './browserSSO'
 
 type Asset = {
   id: string; owner: string; title: string; description: string; authorName: string; category: string;
@@ -16,13 +17,15 @@ async function api(path: string, method = 'GET', body?: unknown, retry = true): 
     body: body === undefined ? undefined : body instanceof File ? body : JSON.stringify(body),
   })
   if (response.status === 401 && retry && !path.startsWith('/auth/')) {
-    refresh ??= api('/auth/refresh', 'POST', {}, false).finally(() => { refresh = null })
+    refresh ??= api('/auth/refresh', 'POST', {}, false).catch(async error => {
+      if (error.status !== 401 || !await restoreBrowserSession(apiBase)) throw error
+    }).finally(() => { refresh = null })
     await refresh
     return api(path, method, body, false)
   }
   if (!response.headers.get('Content-Type')?.includes('application/json')) throw new Error(t('Store API is unavailable. Please try again later.'))
   const data = await response.json().catch(() => ({}))
-  if (!response.ok) throw new Error(data.error?.message ?? message('Store unavailable ({0}). Please try again.', response.status))
+  if (!response.ok) throw Object.assign(new Error(data.error?.message ?? message('Store unavailable ({0}). Please try again.', response.status)), { status: response.status })
   return data
 }
 function el<K extends keyof HTMLElementTagNameMap>(tag: K, text = '', cls = ''): HTMLElementTagNameMap[K] {
@@ -70,10 +73,10 @@ export async function renderStore(app: HTMLElement, renderHeader: () => string, 
   const more = button(t('Load more'), () => load(false), 'store-secondary'); more.hidden = true; content.append(more)
   const footer = el('footer', '', 'store-footer container content-restriction'); footer.append(el('p', t('Made by creators. Shared with the community.')), link(t('Ada Studio ↗'), new URL(localizedPath('/studio', getLocale()), 'https://adaengine.org').href), link(t('Your Cloud account ↗'), cloudAccountURL())); if (renderFooter) app.insertAdjacentHTML('beforeend', renderFooter()); else app.append(footer)
   setupNavigation()
-  let account: { accountId: string } | null = null, category = '', offset = 0, generation = 0
+  let account: { id: string } | null = null, category = '', offset = 0, generation = 0
   let config: { categories: string[]; licenses: string[]; limits: { imageBytes: number; galleryImages: number; archiveBytes: number } }
   const report = (error: unknown) => { notice.textContent = error instanceof Error ? error.message : t('Request failed') }
-  try { const value = await api('/me'); account = typeof value.accountId === 'string' ? value : null } catch { /* Browsing is available to guests. */ }
+  try { const value = await api('/me'); account = typeof value.id === 'string' ? value : null } catch { /* Browsing is available to guests. */ }
   accountActions.append(account ? button(t('My assets'), () => openMine(), 'navigation-item-link') : link(t('Sign in'), '/cloud', 'navigation-item-link'))
   if (account) accountActions.append(link(t('Account'), cloudAccountURL(), 'navigation-item-link'))
   function card(asset: Asset) {

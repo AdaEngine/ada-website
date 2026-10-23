@@ -96,3 +96,8 @@ export function resolveRoute(pathname: string, baseUrl: string): Route {
 
   return { name: 'not-found', path }
 }
+
+export function playgroundURL(hostname: string, origin?: string): string {
+  const fallback = /^(cloud-test|store-test)\./.test(hostname) ? 'https://cloud-test.adaengine.org' : 'https://cloud.adaengine.org'
+  return new URL('/games', origin || fallback).href
+}

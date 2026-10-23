@@ -98,18 +98,19 @@ async function accounts() {
   const section = panel('Аккаунты и подписки'), search = input('Имя, email или ID аккаунта'), results = el('div', '', 'console-results'); let offset = 0, query = ''
   const load = async () => { const values: Json[] = await api(`/admin/accounts?q=${encodeURIComponent(query)}&offset=${offset}`); results.replaceChildren(table(['Аккаунт', 'Email', 'Создан'], values.map(value => [link(value.name || value.id, '/accounts/' + value.id), value.email || '—', timestamp(value.createdAt)]))); next.disabled = values.length < 50; previous.disabled = offset === 0; if (!values.length) results.append(el('p', 'Аккаунты не найдены.')) }
   const next = action('Следующие 50', async () => { offset += 50; await load() }, true), previous = action('Предыдущие', async () => { offset = Math.max(0, offset - 50); await load() }, true)
-  section.append(search.wrapper, action('Найти', async () => { query = search.control.value.trim(); offset = 0; await load() }), results, previous, next)
+  section.append(link('Мой аккаунт', '/accounts/' + currentAccount.id), search.wrapper, action('Найти', async () => { query = search.control.value.trim(); offset = 0; await load() }), results, previous, next)
   search.control.onkeydown = event => { if (event.key === 'Enter') { query = search.control.value.trim(); offset = 0; void load().catch(error => status(error.message)) } }
   await load()
 }
 async function accountDetails(owner: string) {
-  const [profile, billing]: Json[] = await Promise.all([api('/admin/accounts/' + encodeURIComponent(owner)).catch(error => { if (error instanceof APIError && error.status === 404) return { id: owner, name: 'Удалённый аккаунт' }; throw error }), api('/admin/billing/accounts/' + encodeURIComponent(owner))])
+  const [profile, billing]: Json[] = await Promise.all([api('/admin/accounts/' + encodeURIComponent(owner)).catch(error => { if (error instanceof APIError && error.status === 404) return { id: owner, name: 'Удалённый аккаунт', deleted: true }; throw error }), api('/admin/billing/accounts/' + encodeURIComponent(owner))])
   const section = panel(profile.name || 'Аккаунт'), plan = billing.entitlement
-  section.append(el('p', profile.email || ''), el('code', owner), el('p', `Доступ Pro: ${plan.pro ? 'активен' : plan.accessSuspended ? 'отозван оператором' : 'неактивен'}`), el('p', `Оплаченный период: ${timestamp(plan.expiresAt)}`, 'cloud-muted'))
+  section.append(el('p', profile.email || ''), el('code', owner), el('p', `Доступ Pro: ${plan.pro ? 'активен' : plan.accessSuspended ? 'отозван оператором' : 'неактивен'}`), el('p', `Pro действует до: ${timestamp(plan.expiresAt)}`, 'cloud-muted'))
   if (billing.restriction?.reason) section.append(el('p', `${billing.restriction.suspended ? 'Причина отзыва' : 'Причина восстановления'}: ${billing.restriction.reason}`))
   const reason = input('Причина изменения доступа'), controls = el('div', '', 'console-actions')
   controls.append(action(plan.accessSuspended ? 'Снять отзыв доступа' : 'Отозвать доступ Pro', async () => { if (!reason.control.value.trim()) throw new Error('Укажите причину.'); await api(`/admin/billing/accounts/${owner}/access`, 'POST', { suspended: !plan.accessSuspended, reason: reason.control.value, operationId: crypto.randomUUID() }); await render(); status('Доступ обновлён. Изменение записано в журнал.') }, true))
-  if (billing.transactions.length) section.append(reason.wrapper, controls, el('p', 'Отзыв доступа изменяет права в Ada Cloud. Автопродление и списания App Store управляются отдельно в Apple.', 'cloud-muted'))
+  if (billing.transactions.length || billing.proGrant) section.append(reason.wrapper, controls, el('p', 'Отзыв доступа изменяет права в Ada Cloud. Автопродление и списания App Store управляются отдельно в Apple.', 'cloud-muted'))
+  if (!profile.deleted) complimentaryPro(owner, billing)
   if (billing.appleSubscriptions?.length) {
     const subscriptions = panel('Подписки App Store')
     const labels: Record<string, string> = { active: 'Активна', expired: 'Истекла', billing_retry: 'Повтор оплаты', grace_period: 'Льготный период', revoked: 'Отозвана' }
@@ -129,6 +130,36 @@ async function accountDetails(owner: string) {
     if (!refund && !tx.revoked && !tx.refundMode) row.append(el('p', 'Возврат недоступен: платёжный канал не подключён.', 'cloud-muted'))
     transactions.append(row)
   }
+}
+function complimentaryPro(owner: string, billing: Json) {
+  const grant = billing.proGrant, section = panel('Подарочный Pro')
+  section.append(el('p', 'Выдайте Pro себе, другу или блогеру до любой выбранной даты. Доступ включает возможности Cloud Pro и его ежемесячный AI-лимит.', 'cloud-muted'))
+  if (grant) {
+    const state = grant.revoked ? 'отозван' : billing.entitlement.giftedPro ? 'активен' : 'срок истёк'
+    section.append(el('p', `Подарочный Pro: ${state} · до ${timestamp(grant.expiresAt)}`), el('p', `Причина: ${grant.reason}`, 'cloud-muted'))
+  } else section.append(el('p', 'Подарочный доступ ещё не выдавался.', 'cloud-muted'))
+  if (billing.entitlement.accessSuspended) section.append(el('p', 'Доступ к Pro заблокирован оператором. Для использования подарка снимите отзыв доступа выше.'))
+  const expiry = input('Доступ до (ваше местное время)', 'datetime-local'), reason = input('Причина выдачи или отзыва')
+  expiry.control.required = true; expiry.control.step = '60'; reason.control.required = true; reason.control.maxLength = 2000
+  const localDate = (date: Date) => new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
+  expiry.control.min = localDate(new Date(Date.now() + 60000)); expiry.control.max = '2999-12-31T23:59'
+  expiry.control.value = localDate(new Date(grant && grant.expiresAt * 1000 > Date.now() ? grant.expiresAt * 1000 : Date.now() + 30 * 86400000))
+  const presets = el('div', '', 'console-actions')
+  for (const days of [7, 30, 90, 365]) presets.append(action(`${days} дней`, async () => { const date = new Date(); date.setDate(date.getDate() + days); expiry.control.value = localDate(date) }, true))
+  const mutate = async (revoke: boolean) => {
+    if (!reason.control.value.trim()) throw new Error('Укажите причину.')
+    const expiresAt = Math.floor(new Date(expiry.control.value).getTime() / 1000)
+    if (!revoke && (!expiry.control.reportValidity() || !Number.isFinite(expiresAt) || expiresAt <= Date.now() / 1000)) throw new Error('Выберите дату окончания в будущем.')
+    await api(`/admin/billing/accounts/${owner}/pro-grant${revoke ? '/revoke' : ''}`, 'POST', {
+      operationId: crypto.randomUUID(), expectedRevision: grant?.revision ?? 0, reason: reason.control.value.trim(), ...(revoke ? {} : { expiresAt }),
+    })
+    await render()
+    status(revoke ? 'Подарочный Pro отозван. Изменение записано в журнал.' : 'Подарочный Pro выдан. Срок и причина записаны в журнал.')
+  }
+  const controls = el('div', '', 'console-actions')
+  controls.append(action(grant ? 'Сохранить срок Pro' : 'Выдать Pro', () => mutate(false)))
+  if (billing.entitlement.giftedPro) controls.append(action('Забрать подарочный Pro', () => mutate(true), true))
+  section.append(presets, expiry.wrapper, reason.wrapper, controls, el('p', 'Новый срок заменяет предыдущий. После истечения срока подарок отключается автоматически. Отзыв подарка сохраняет доступ по действующей оплаченной подписке.', 'cloud-muted'))
 }
 async function appStore() {
   const value: Json = await api('/admin/billing/apple')
@@ -166,7 +197,8 @@ async function refunds() {
 }
 function auditAction(entry: Json) {
   if (entry.action === 'subscription.access') return entry.result?.accessSuspended ? 'Отзыв доступа Pro' : 'Восстановление Pro'
-  return ({ 'release.approve': 'Одобрение версии', 'release.reject': 'Отклонение версии', 'release.revoke': 'Отзыв версии', 'game.block': 'Блокировка игры', 'refund.request': 'Заявка на возврат', 'apple.import': 'Проверка чека App Store', 'apple.sync': 'Сверка подписки App Store' } as Record<string, string>)[entry.action] ?? entry.action
+  if (entry.action === 'subscription.grant') return `Подарочный Pro до ${timestamp(entry.result?.grant?.expiresAt)}`
+  return ({ 'subscription.grant.revoke': 'Отзыв подарочного Pro', 'release.approve': 'Одобрение версии', 'release.reject': 'Отклонение версии', 'release.revoke': 'Отзыв версии', 'game.block': 'Блокировка игры', 'refund.request': 'Заявка на возврат', 'apple.import': 'Проверка чека App Store', 'apple.sync': 'Сверка подписки App Store' } as Record<string, string>)[entry.action] ?? entry.action
 }
 async function audit() {
   const section = panel('Журнал действий'), [billing, publishing, catalog]: Json[][] = await Promise.all([api('/admin/billing/audit'), api('/admin/game-releases/audit'), api('/admin/catalog/audit')])

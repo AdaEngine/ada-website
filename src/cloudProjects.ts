@@ -4,6 +4,8 @@ export type CloudPublication = {
   mode?: string
   expiresAt: number | null
   approved?: boolean
+  runtime?: { kind?: string; apiVersion?: number; manifestPath?: string }
+  uploadId?: string
   releaseId?: string
   revoked?: boolean
   [key: string]: unknown

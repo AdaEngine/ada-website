@@ -645,17 +645,5 @@
   "Like removed": "Отметка удалена",
   "Describe the problem with this game": "Опишите проблему с этой игрой",
   "Report": "Пожаловаться",
-  "Report sent": "Жалоба отправлена",
-  "My Projects": "Мои проекты",
-  "Game catalog": "Каталог игр",
-  "I agree to the ": "Я принимаю ",
-  "How we handle personal data: ": "Как мы обрабатываем персональные данные: ",
-  "Web build ZIP": "ZIP веб-сборки",
-  "Create project": "Создать проект",
-  "New project": "Новый проект",
-  "No projects yet. Create one to upload your first web build.": "Проектов пока нет. Создайте проект, чтобы загрузить первую веб-сборку.",
-  "Delete project": "Удалить проект",
-  "Delete “{0}” and all its versions? This cannot be undone.": "Удалить «{0}» и все его версии? Это действие нельзя отменить.",
-  "Create your first project": "Создайте первый проект",
-  "Each project keeps its own catalog details and current playable build.": "У каждого проекта свои данные каталога и текущая игровая сборка."
+  "Report sent": "Жалоба отправлена"
 }
