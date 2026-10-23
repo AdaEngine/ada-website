@@ -1540,6 +1540,8 @@ async function refreshDownloads() {
 }
 
 async function renderRoute() {
+  // Let the localized document handle OAuth callbacks after the redirect.
+  if (language !== localeFromPath(entryPath)) return
   app.classList.remove('store-app')
   const path = withoutLocale(entryPath)
   if ((/^\/store(\/|$)/.test(path) || (window.location.hostname.startsWith('store.') || window.location.hostname.startsWith('store-test.')) && path === '/')) {

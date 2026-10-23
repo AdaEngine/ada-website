@@ -24,7 +24,9 @@ async function page(path, run, { languages = ['en-US'], saved, storageBlocked = 
   Object.defineProperty(w.navigator, 'languages', { value: languages })
   if (saved) w.localStorage.setItem(localeStorageKey, saved)
   if (storageBlocked) Object.defineProperty(w, 'localStorage', { get() { throw new Error('Storage blocked') } })
+  const requests = []
   w.fetch = async url => {
+    requests.push(String(url))
     if (services && String(url).startsWith('/v1/')) {
       const path = String(url).split('?')[0]
       const asset = { id: 'asset-1', title: 'Home', description: 'An author description in English', authorName: 'Creator', category: 'textures', rating: 0, reviewCount: 0, downloads: 42, cover: 'image-1', gallery: [], license: 'MIT', version: '1.0.0', bytes: 42000 }
@@ -47,7 +49,7 @@ async function page(path, run, { languages = ['en-US'], saved, storageBlocked = 
   try {
     w.eval(code)
     for (let i = 0; i < 10; i++) await new Promise(resolve => setImmediate(resolve))
-    await run(w.document, w, redirects, navigations)
+    await run(w.document, w, redirects, navigations, requests)
   } finally { await w.happyDOM.close() }
 }
 
@@ -233,3 +235,10 @@ test('cross-product English links carry the choice past server root redirects', 
   const link = [...doc.querySelectorAll('.navigation-item-link')].find(node => node.textContent === 'Store')
   assert.equal(link.getAttribute('href'), 'https://store.adaengine.org/store?lang=en')
 }, { hostname: 'cloud.adaengine.org', services: true }))
+
+
+test('locale redirects do not exchange the OAuth code in the departing document', () => page('/cloud?code=single-use', (doc, _w, redirects, _navigations, requests) => {
+  assert.deepEqual(redirects, ['/ru/cloud?code=single-use'])
+  assert.equal(doc.querySelector('.cloud-signin'), null)
+  assert.equal(requests.some(url => url.startsWith('/v1/')), false)
+}, { services: true, languages: ['ru-RU'] }))
