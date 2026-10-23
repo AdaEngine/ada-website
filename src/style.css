@@ -4730,3 +4730,51 @@ body.modal-opened {
         }
     }
 }
+
+/* Native language picker supports keyboard navigation and mobile menus. */
+.footer-language {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 13px;
+}
+.footer-language > label { display: flex; align-items: center; opacity: .8; }
+.footer-language > label svg { width: 18px; height: 18px; }
+.footer-language-control { position: relative; }
+.footer-language-control::after {
+  content: '';
+  position: absolute;
+  right: 13px;
+  top: 17px;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+.footer-language select {
+  appearance: none;
+  -webkit-appearance: none;
+  min-height: 44px;
+  min-width: 108px;
+  padding: 0 34px 0 0;
+  border: 0;
+  border-radius: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+.footer-language select:hover { opacity: .8; }
+.footer-language select:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.footer-language option { color: #111; background: #fff; }
+.article-language-note {
+  margin-block: 20px;
+  padding: 12px 16px;
+  border-left: 2px solid currentColor;
+  color: var(--muted, #888);
+  font-size: 14px;
+}
+.footer-bottom { flex-wrap: wrap; }

@@ -1,3 +1,5 @@
+import { withoutLocale } from './localization.ts'
+
 export type StaticPageName = 'learn' | 'community' | 'donate'
 
 export type Route =
@@ -52,7 +54,7 @@ export function hrefFor(path: string, baseUrl: string): string {
 const staticPages: StaticPageName[] = ['learn', 'community', 'donate']
 
 export function resolveRoute(pathname: string, baseUrl: string): Route {
-  const path = normalizeRoutePath(pathname, baseUrl)
+  const path = withoutLocale(normalizeRoutePath(pathname, baseUrl))
 
   if (path === '/') {
     return { name: 'home' }

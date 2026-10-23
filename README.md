@@ -81,3 +81,26 @@ Optional:
 - Existing static publication flow is preserved: content lives in the repository and is bundled into the final site
 - The postbuild step also generates a static entry point for each published article, using the client Markdown renderer and article SEO metadata. Direct article links return HTTP 200, and link previews receive the article title, summary, and cover before JavaScript runs.
 - Renderer currently supports headings, paragraphs, unordered lists, inline/code blocks, emphasis, strong text, and links
+
+## Website languages
+
+English uses the original paths (`/download`); Russian uses `/ru/download`,
+`/ru/studio`, and the same prefix for every other public website route.
+On entry, an explicit Russian URL takes priority, then the user's saved choice,
+then `navigator.languages`. Unsupported languages fall back to English.
+No IP lookup or geolocation service is required.
+
+The footer switches to the same page in either language, preserving its query
+and fragment. The choice is saved in `localStorage` (`ada-site-language`). If
+storage is blocked, a `lang` query parameter carries the explicit choice.
+The Store and Cloud applications keep their existing language handling.
+
+UI translations live in `src/locales/ru.json`, keyed by the English source copy.
+Use `t('English source copy')` for new website text; untranslated keys fall back
+to English. Product names, source code, and documentation links stay intact.
+The two release articles remain English and show a notice on Russian pages.
+
+`npm run build` generates static entry points for both languages, with localized
+metadata, canonical URLs and `hreflang` links. `npm run geo` includes both language
+versions in the sitemap. Run `npm test` for routing, detection, switching, page
+rendering and existing application contract checks.

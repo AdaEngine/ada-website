@@ -1,3 +1,4 @@
+import { getLocale, initialLocale, localizedPath, localeFromPath, locales, readSavedLocale, saveLocale, setLocale, t, type Locale } from './localization'
 import './style.css'
 import './home.css'
 import { renderStudioContent } from './studio'
@@ -6,11 +7,23 @@ import { appStoreURL, assetsFor, assetLabel, fallbackRelease, loadDownloadReleas
 import { languageClass, renderHighlightedCodeLines } from './codeHighlight'
 import { articles, getArticleBySlug, type ArticleAuthor, type ArticleHeading } from './content'
 import { findDemoBySlug, groupDemosByTag, loadDemoSource, loadDemosManifest, type DemoEntry, type DemosManifest } from './demos'
-import { hrefFor as createHref, resolveRoute, type StaticPageName } from './routing'
-import { absoluteSiteUrl, createArticleSeo, createDemoSeo, createRouteSeo, createStructuredData, siteName, type SeoMetadata } from './seo'
+import { hrefFor as createHref, normalizeRoutePath, resolveRoute, type StaticPageName } from './routing'
+import { absoluteSiteUrl, createArticleSeo, createDemoSeo, createRouteSeo, createStructuredData, localizeSeo, siteName, type SeoMetadata } from './seo'
 
 const app = document.querySelector<HTMLDivElement>('#app') ?? failMissingApp()
 const baseUrl = import.meta.env.BASE_URL
+const entryPath = normalizeRoutePath(window.location.pathname, baseUrl)
+// Store and Cloud are separate applications with their own language handling.
+const isWebsite = !/^(store|cloud)(?:-test)?\./.test(window.location.hostname)
+  && !/^\/(store|cloud|games|legal)(\/|$)/.test(entryPath)
+const queryLanguage = new URLSearchParams(window.location.search).get('lang')
+const queryLocale = queryLanguage === 'en' || queryLanguage === 'ru' ? queryLanguage : null
+const language = isWebsite ? initialLocale(entryPath, queryLocale ?? readSavedLocale(), navigator.languages ?? [navigator.language]) : 'en'
+setLocale(language)
+document.documentElement.lang = language
+if (isWebsite && language !== localeFromPath(entryPath)) {
+  window.location.replace(`${createHref(localizedPath(entryPath, language), baseUrl)}${window.location.search}${window.location.hash}`)
+}
 
 function failMissingApp(): never {
   throw new Error('Root app container #app was not found')
@@ -42,17 +55,17 @@ const githubRepository = 'AdaEngine/AdaEngine'
 const showcaseItems: ShowcaseItem[] = [
   {
     title: 'Ada Editor',
-    eyebrow: 'Editor',
-    description: 'A native scene editor and Swift-first workspace for building Ada projects.',
-    action: 'Open Ada Editor',
+    eyebrow: t('Editor'),
+    description: t('A native scene editor and Swift-first workspace for building Ada projects.'),
+    action: t('Open Ada Editor'),
     href: 'https://github.com/AdaEngine/AdaEngine/tree/main/Editor',
     image: 'images/main/ada-editor.png',
   },
   {
     title: 'Sloppy Client',
-    eyebrow: 'Client',
-    description: 'A focused desktop client for project-oriented AI agent sessions and day-to-day work.',
-    action: 'Open Sloppy Client',
+    eyebrow: t('Client'),
+    description: t('A focused desktop client for project-oriented AI agent sessions and day-to-day work.'),
+    action: t('Open Sloppy Client'),
     href: 'https://github.com/TeamSloppy/Sloppy/tree/main/Apps/Client',
     image: 'images/main/sloppy-client.png',
   },
@@ -96,55 +109,55 @@ type DonationOption = {
 
 const staticPages: Record<StaticPageName, StaticPageContent> = {
   learn: {
-    title: 'Learn Ada',
-    lead: 'Master game development in Swift. From your first sprite to advanced Metal rendering techniques.',
+    title: t('Learn Ada'),
+    lead: t('Master game development in Swift. From your first sprite to advanced Metal rendering techniques.'),
     sections: [
       {
-        title: 'Documentation',
-        body: 'Read guides, API notes and examples for the engine core, ECS, renderer, physics and UI systems.',
-        links: [{ label: 'Open documentation', href: 'https://docs.adaengine.org/' }],
+        title: t('Documentation'),
+        body: t('Read guides, API notes and examples for the engine core, ECS, renderer, physics and UI systems.'),
+        links: [{ label: t('Open documentation'), href: 'https://docs.adaengine.org/' }],
       },
       {
-        title: 'Examples',
-        body: 'Explore sample projects such as tilemaps, arcade games and Swift-first game prototypes.',
-        links: [{ label: 'Browse examples', href: 'https://github.com/AdaEngine/AdaEngine/tree/main/Examples' }],
+        title: t('Examples'),
+        body: t('Explore sample projects such as tilemaps, arcade games and Swift-first game prototypes.'),
+        links: [{ label: t('Browse examples'), href: 'https://github.com/AdaEngine/AdaEngine/tree/main/Examples' }],
       },
       {
-        title: 'Features',
-        body: 'Return to the home page feature overview for a quick summary of what Ada can do.',
-        links: [{ label: 'View features', href: `${hrefFor('/')}#features` }],
+        title: t('Features'),
+        body: t('Return to the home page feature overview for a quick summary of what Ada can do.'),
+        links: [{ label: t('View features'), href: `${hrefFor('/')}#features` }],
       },
     ],
   },
   community: {
-    title: 'Community',
-    lead: 'Join Ada discussions, follow development and help the project grow together with other Swift developers.',
+    title: t('Community'),
+    lead: t('Join Ada discussions, follow development and help the project grow together with other Swift developers.'),
     sections: [
       {
-        title: 'GitHub Discussions',
-        body: 'Ask questions, share ideas and discuss engine development directly with the community.',
-        links: [{ label: 'Join discussions', href: 'https://github.com/AdaEngine/AdaEngine/discussions' }],
+        title: t('GitHub Discussions'),
+        body: t('Ask questions, share ideas and discuss engine development directly with the community.'),
+        links: [{ label: t('Join discussions'), href: 'https://github.com/AdaEngine/AdaEngine/discussions' }],
       },
       {
-        title: 'Source Code',
-        body: 'Report issues, contribute fixes and review the current engine implementation on GitHub.',
-        links: [{ label: 'Open repository', href: 'https://github.com/AdaEngine/AdaEngine' }],
+        title: t('Source Code'),
+        body: t('Report issues, contribute fixes and review the current engine implementation on GitHub.'),
+        links: [{ label: t('Open repository'), href: 'https://github.com/AdaEngine/AdaEngine' }],
       },
     ],
   },
   donate: {
-    title: 'Donate',
-    lead: 'Ada is free and open source forever. Donations help support ongoing development, examples and documentation.',
+    title: t('Donate'),
+    lead: t('Ada is free and open source forever. Donations help support ongoing development, examples and documentation.'),
     sections: [
       {
-        title: 'Support the project',
-        body: 'If Ada is useful to you, consider supporting development through the donation page.',
-        links: [{ label: 'Donate on Boosty', href: 'https://boosty.to/adaengine' }],
+        title: t('Support the project'),
+        body: t('If Ada is useful to you, consider supporting development through the donation page.'),
+        links: [{ label: t('Donate on Boosty'), href: 'https://boosty.to/adaengine' }],
       },
       {
-        title: 'Contribute instead',
-        body: 'Code contributions, bug reports, examples and documentation improvements are also a great way to help.',
-        links: [{ label: 'Contribute on GitHub', href: 'https://github.com/AdaEngine/AdaEngine' }],
+        title: t('Contribute instead'),
+        body: t('Code contributions, bug reports, examples and documentation improvements are also a great way to help.'),
+        links: [{ label: t('Contribute on GitHub'), href: 'https://github.com/AdaEngine/AdaEngine' }],
       },
     ],
   },
@@ -152,44 +165,44 @@ const staticPages: Record<StaticPageName, StaticPageContent> = {
 
 const learnSections: Array<{ title: string; cards: LearnCard[] }> = [
   {
-    title: 'Getting Started',
+    title: t('Getting Started'),
     cards: [
       {
-        title: 'Get Started',
-        body: 'Install the engine and create your first window in under 5 minutes.',
+        title: t('Get Started'),
+        body: t('Install the engine and create your first window in under 5 minutes.'),
         href: 'https://docs.adaengine.org/tutorials/adaengine',
         icon: 'book',
       },
       {
         title: 'ECS',
-        body: 'Understand the Entity-Component-System architecture that powers Ada.',
+        body: t('Understand the Entity-Component-System architecture that powers Ada.'),
         href: 'https://docs.adaengine.org/documentation/adaecs/',
         icon: 'play',
       },
       {
-        title: '2D Physics Tutorial',
-        body: 'Add rigid bodies, collision shapes, and handle physics callbacks.',
+        title: t('2D Physics Tutorial'),
+        body: t('Add rigid bodies, collision shapes, and handle physics callbacks.'),
         href: 'https://docs.adaengine.org/documentation/adaphysics/',
         icon: 'layout',
       },
     ],
   },
   {
-    title: 'API Reference & Documentation',
+    title: t('API Reference & Documentation'),
     cards: [
       {
-        title: 'Core Framework',
-        body: 'Math, Collections, and basic Engine systems.',
+        title: t('Core Framework'),
+        body: t('Math, Collections, and basic Engine systems.'),
         href: 'https://docs.adaengine.org/documentation/adaengine/',
       },
       {
-        title: 'Rendering Pipeline',
-        body: 'Materials, Shaders, Render Graphs, and Metal integration.',
+        title: t('Rendering Pipeline'),
+        body: t('Materials, Shaders, Render Graphs, and Metal integration.'),
         href: 'https://docs.adaengine.org/documentation/adarender/',
       },
       {
-        title: 'Audio System',
-        body: 'Spatial audio, sound effects, and music streaming.',
+        title: t('Audio System'),
+        body: t('Spatial audio, sound effects, and music streaming.'),
         href: 'https://docs.adaengine.org/documentation/adaaudio/',
       },
     ],
@@ -199,25 +212,25 @@ const learnSections: Array<{ title: string; cards: LearnCard[] }> = [
 const communityLinks: CommunityLink[] = [
   {
     title: 'GitHub',
-    subtitle: 'Contribute to source code',
+    subtitle: t('Contribute to source code'),
     href: 'https://github.com/AdaEngine/AdaEngine',
     icon: 'images/socials/github.svg',
   },
   {
     title: 'Discord',
-    subtitle: 'Live chat & support',
+    subtitle: t('Live chat & support'),
     href: 'https://discord.gg/JkEPE7nwDu',
     icon: 'images/socials/discord.svg',
   },
   {
     title: 'Reddit',
-    subtitle: 'r/AdaEngine discussions',
+    subtitle: t('r/AdaEngine discussions'),
     href: 'https://www.reddit.com/r/AdaEngine/',
     icon: 'images/socials/reddit.svg',
   },
   {
     title: 'Telegram',
-    subtitle: 'Announcements channel',
+    subtitle: t('Announcements channel'),
     href: 'https://t.me/adaengine',
     iconClass: 'community-link-icon-telegram',
     iconMarkup:
@@ -225,7 +238,7 @@ const communityLinks: CommunityLink[] = [
   },
   {
     title: 'X (Twitter)',
-    subtitle: 'Follow @ada_engine',
+    subtitle: t('Follow @ada_engine'),
     href: 'https://x.com/ada_engine',
     iconClass: 'community-link-icon-x',
     iconMarkup:
@@ -236,19 +249,19 @@ const communityLinks: CommunityLink[] = [
 const donationOptions: DonationOption[] = [
   {
     title: 'Boosty',
-    subtitle: 'Monthly Sponsorship',
-    body: 'Become a backer on Boosty to get early access to updates, exclusive tutorials, and your name in the engine credits.',
+    subtitle: t('Monthly Sponsorship'),
+    body: t('Become a backer on Boosty to get early access to updates, exclusive tutorials, and your name in the engine credits.'),
     href: 'https://boosty.to/adaengine',
-    action: 'Support on Boosty',
+    action: t('Support on Boosty'),
     icon: 'images/icons/ic_boosty.svg',
     tone: 'boosty',
   },
   {
     title: 'DonationAlerts',
-    subtitle: 'One-time Donation',
-    body: 'Prefer to make a one-time contribution? You can support us via DonationAlerts with various payment methods.',
+    subtitle: t('One-time Donation'),
+    body: t('Prefer to make a one-time contribution? You can support us via DonationAlerts with various payment methods.'),
     href: 'https://www.donationalerts.com/r/adaengine',
-    action: 'Donate via DA',
+    action: t('Donate via DA'),
     icon: 'images/donation_alerts_logo.svg',
     tone: 'donation-alerts',
   },
@@ -256,73 +269,73 @@ const donationOptions: DonationOption[] = [
 
 const features: FeatureItem[] = [
   {
-    title: 'Data Driven',
-    description: 'Ada build around custom Entity Component System. Simple to use, fast and cache-friendly for your game architecture.',
+    title: t('Data Driven'),
+    description: t('Ada build around custom Entity Component System. Simple to use, fast and cache-friendly for your game architecture.'),
     details:
-      'Ada is built around a custom, data-oriented Entity Component System inspired by modern Swift APIs. Components keep game state small and explicit, while systems operate through typed queries, resources, schedules and macros such as @Component and @System. This makes gameplay code modular, cache-friendly and easier to scale from a tiny prototype to a full scene with input, animation, physics and rendering working together.',
+      t('Ada is built around a custom, data-oriented Entity Component System inspired by modern Swift APIs. Components keep game state small and explicit, while systems operate through typed queries, resources, schedules and macros such as @Component and @System. This makes gameplay code modular, cache-friendly and easier to scale from a tiny prototype to a full scene with input, animation, physics and rendering working together.'),
     code: `@Component\nstruct Player: Entity { }\n\nstruct PlayerSystem: System {\n    func update(context: UpdateSceneContext) { }\n}`,
     gif: 'images/features/data-driven.gif',
   },
   {
-    title: '2D Renderer',
+    title: t('2D Renderer'),
     description:
-      'Supports real-time 2D rendering for your games and apps. Write custom shaders, materials and render pipelines.',
+      t('Supports real-time 2D rendering for your games and apps. Write custom shaders, materials and render pipelines.'),
     details:
-      'Ada ships with a high-level 2D rendering stack for sprites, text, tilemaps, cameras and custom materials. The demos cover sprite animation, transparency, lighting, text rendering, WGSL experiments and stress scenes, while the renderer still leaves room for lower-level control when you need custom shaders or pipeline work. It is designed for Swift-first game code where drawing a scene should feel direct, but not boxed in.',
+      t('Ada ships with a high-level 2D rendering stack for sprites, text, tilemaps, cameras and custom materials. The demos cover sprite animation, transparency, lighting, text rendering, WGSL experiments and stress scenes, while the renderer still leaves room for lower-level control when you need custom shaders or pipeline work. It is designed for Swift-first game code where drawing a scene should feel direct, but not boxed in.'),
     image: 'images/icons/ic_duck.png',
     gif: 'images/features/2d-renderer.gif',
   },
   {
-    title: '2D Physics',
-    description: 'Ada supports Box2D v3 physics with parallel calculations, lightweight memory usage and fast simulation.',
+    title: t('2D Physics'),
+    description: t('Ada supports Box2D v3 physics with parallel calculations, lightweight memory usage and fast simulation.'),
     details:
-      'The Physics2D plugin integrates Box2D with Ada entities through components such as PhysicsBody2DComponent and Collision2DComponent. Simulation runs on the fixed-update schedule, then syncs transforms back into the scene so gameplay systems can react through the same ECS flow as the rest of the engine. It includes collision events, debug drawing support and world resources for direct access when a game needs deeper physics control.',
+      t('The Physics2D plugin integrates Box2D with Ada entities through components such as PhysicsBody2DComponent and Collision2DComponent. Simulation runs on the fixed-update schedule, then syncs transforms back into the scene so gameplay systems can react through the same ECS flow as the rest of the engine. It includes collision events, debug drawing support and world resources for direct access when a game needs deeper physics control.'),
     image: 'images/icons/ic_box2d.svg',
     gif: 'images/features/2d-physics.gif',
   },
   {
-    title: 'Render Graphs',
-    description: 'Construct your own render pipeline using powerful render graphs.',
+    title: t('Render Graphs'),
+    description: t('Construct your own render pipeline using powerful render graphs.'),
     details:
-      'Rendering is organized around RenderGraph resources, nodes, slots, subgraphs and an executor that runs the graph each frame. Core 2D and 3D pipelines are assembled as graphs, and cameras can point at specific render subgraphs for flexible composition. Diagnostics can snapshot nodes, edges, subgraphs and frame records, which makes custom pipelines easier to reason about when you add post-processing, offscreen passes or specialized rendering stages.',
+      t('Rendering is organized around RenderGraph resources, nodes, slots, subgraphs and an executor that runs the graph each frame. Core 2D and 3D pipelines are assembled as graphs, and cameras can point at specific render subgraphs for flexible composition. Diagnostics can snapshot nodes, edges, subgraphs and frame records, which makes custom pipelines easier to reason about when you add post-processing, offscreen passes or specialized rendering stages.'),
     image: 'images/icons/ic_render_graph.svg',
     gif: 'images/features/render-graphs.gif',
   },
   {
-    title: 'Custom UI Engine',
-    description: 'Create your own UI using a SwiftUI-like approach that fits naturally into Ada scenes.',
+    title: t('Custom UI Engine'),
+    description: t('Create your own UI using a SwiftUI-like approach that fits naturally into Ada scenes.'),
     details:
-      'AdaUI brings a SwiftUI-like declarative layer into Ada with views, result builders, environment values, layout containers, gestures, animation, text fields, scroll views and navigation primitives. UI can live naturally beside game scenes, and the engine includes tooling such as a 3D AdaUI debug view for inspecting live UI trees. The goal is to make editor panels, HUDs and in-game interfaces feel native to the same Swift codebase as your gameplay.',
+      t('AdaUI brings a SwiftUI-like declarative layer into Ada with views, result builders, environment values, layout containers, gestures, animation, text fields, scroll views and navigation primitives. UI can live naturally beside game scenes, and the engine includes tooling such as a 3D AdaUI debug view for inspecting live UI trees. The goal is to make editor panels, HUDs and in-game interfaces feel native to the same Swift codebase as your gameplay.'),
     code: `struct MainView: View {\n    @Environment(\\.scene) var scene\n\n    var body: some View {\n        Text("Hello, World!")\n    }\n}`,
     gif: 'images/features/custom-ui.gif',
   },
   {
-    title: 'Free and Open Source',
-    description: 'Ada is 100% free for you. Licensed by MIT. Learn, modify or use without royalties or runtime fees.',
+    title: t('Free and Open Source'),
+    description: t('Ada is 100% free for you. Licensed by MIT. Learn, modify or use without royalties or runtime fees.'),
     details:
-      'Ada is MIT licensed and developed in the open, with source, tutorials, generated API documentation, demos and build guides available from the repository. You can study the engine internals, modify them for your project, ship without royalties or runtime fees, and contribute fixes, examples or documentation back to the community. The project is still evolving, so the roadmap is visible where the code actually lives.',
+      t('Ada is MIT licensed and developed in the open, with source, tutorials, generated API documentation, demos and build guides available from the repository. You can study the engine internals, modify them for your project, ship without royalties or runtime fees, and contribute fixes, examples or documentation back to the community. The project is still evolving, so the roadmap is visible where the code actually lives.'),
     image: 'images/icons/ic_opensource.svg',
     gif: 'images/features/open-source.gif',
   },
   {
     title: 'AdaScript',
-    description: 'Write gameplay scripts with AdaScript, powered by the Gravity language runtime and integrated with Ada ECS.',
+    description: t('Write gameplay scripts with AdaScript, powered by the Gravity language runtime and integrated with Ada ECS.'),
     details:
-      'AdaScript brings the Gravity scripting runtime into Ada for fast gameplay iteration. Scripts declare their component queries and use capability-scoped access to read or update reflected ECS fields, so scripted systems participate in the same scheduling and access rules as native Swift systems. Keep performance-critical code in Swift and move tuning, behaviours and gameplay logic into reloadable scripts.',
+      t('AdaScript brings the Gravity scripting runtime into Ada for fast gameplay iteration. Scripts declare their component queries and use capability-scoped access to read or update reflected ECS fields, so scripted systems participate in the same scheduling and access rules as native Swift systems. Keep performance-critical code in Swift and move tuning, behaviours and gameplay logic into reloadable scripts.'),
     gif: 'images/features/adascript.gif',
   },
   {
-    title: '3D Rendering',
-    description: 'Build 3D scenes with cameras, materials, lighting, skyboxes and extensible render pipelines.',
+    title: t('3D Rendering'),
+    description: t('Build 3D scenes with cameras, materials, lighting, skyboxes and extensible render pipelines.'),
     details:
-      'Ada’s 3D stack is built around the same render-graph architecture as its core renderer. Compose camera views, materials, meshes, lights, environment settings and skyboxes into a Swift-first scene, then extend the pipeline with your own passes and subgraphs when a project needs custom post-processing or rendering techniques.',
+      t('Ada’s 3D stack is built around the same render-graph architecture as its core renderer. Compose camera views, materials, meshes, lights, environment settings and skyboxes into a Swift-first scene, then extend the pipeline with your own passes and subgraphs when a project needs custom post-processing or rendering techniques.'),
     gif: 'images/features/3d-rendering.gif',
   },
   {
-    title: '3D Physics',
-    description: 'Simulate rigid bodies, collisions and constraints in 3D with the integrated Box3D physics engine.',
+    title: t('3D Physics'),
+    description: t('Simulate rigid bodies, collisions and constraints in 3D with the integrated Box3D physics engine.'),
     details:
-      'Ada includes a Box3D-backed 3D physics path for rigid body simulation, collision queries and joint constraints. It is designed to work alongside Ada entities and transforms, with a dedicated example target for validating 3D physics scenes. Box3D brings a C17 rigid-body simulation core while Ada keeps the scene-facing API in Swift.',
+      t('Ada includes a Box3D-backed 3D physics path for rigid body simulation, collision queries and joint constraints. It is designed to work alongside Ada entities and transforms, with a dedicated example target for validating 3D physics scenes. Box3D brings a C17 rigid-body simulation core while Ada keeps the scene-facing API in Swift.'),
     gif: 'images/features/3d-physics.gif',
   },
 ]
@@ -345,7 +358,7 @@ function featureDetails(item: FeatureItem): string {
 }
 
 function formatDate(date: string): string {
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat(getLocale() === 'ru' ? 'ru-RU' : 'en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -357,8 +370,16 @@ function hrefFor(path: string): string {
     return new URL(path, window.location.hostname.startsWith('store-test.') ? 'https://cloud-test.adaengine.org' : 'https://cloud.adaengine.org').href
   }
   const mainSite = (import.meta.env.VITE_MAIN_SITE_URL as string | undefined) ?? (/^store(?:-test)?\./.test(window.location.hostname) ? 'https://adaengine.org' : undefined)
+  if (!/^\/(cloud|games|legal|store)(\/|$)/.test(path)) path = localizedPath(path, getLocale())
   if (mainSite && !/^\/(cloud|games|legal|store)(\/|$)/.test(path)) return new URL(path, mainSite).href
-  return createHref(path, baseUrl)
+  const href = createHref(path, baseUrl)
+  // Carry an explicit choice when browser privacy settings block localStorage.
+  if (isWebsite && queryLocale && !/^\/(cloud|games|legal|store)(\/|$)/.test(path)) {
+    const url = new URL(href, window.location.origin)
+    url.searchParams.set('lang', getLocale())
+    return `${url.pathname}${url.search}${url.hash}`
+  }
+  return href
 }
 
 function assetFor(path: string): string {
@@ -384,6 +405,7 @@ function removeMeta(attribute: 'name' | 'property', key: string) {
 }
 
 function applySeo(meta: SeoMetadata) {
+  meta = localizeSeo(meta, getLocale())
   const canonicalUrl = absoluteSiteUrl(meta.path)
   let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]')
 
@@ -395,6 +417,16 @@ function applySeo(meta: SeoMetadata) {
 
   document.title = meta.title
   canonical.href = canonicalUrl
+  for (const node of document.head.querySelectorAll('link[data-language-alternate]')) node.remove()
+  for (const locale of [...locales, 'x-default'] as const) {
+    const link = document.createElement('link')
+    link.rel = 'alternate'
+    link.hreflang = locale
+    link.href = absoluteSiteUrl(localizedPath(meta.path, locale === 'x-default' ? 'en' : locale))
+    link.dataset.languageAlternate = 'true'
+    document.head.appendChild(link)
+  }
+  upsertMeta('property', 'og:locale', getLocale() === 'ru' ? 'ru_RU' : 'en_US')
 
   upsertMeta('name', 'description', meta.description)
   upsertMeta('property', 'og:site_name', siteName)
@@ -449,7 +481,7 @@ async function setupGitHubStars() {
     if (typeof repository.stargazers_count !== 'number') return
     const formattedCount = formatStarCount(repository.stargazers_count)
     starCount.textContent = formattedCount
-    starBadge?.setAttribute('aria-label', `${formattedCount} GitHub stars`)
+    starBadge?.setAttribute('aria-label', `${formattedCount} ${t("GitHub stars")}`)
   } catch {
     // Keep the GitHub link usable even if the public API is unavailable.
   }
@@ -460,35 +492,35 @@ function renderHeader(): string {
   const isStoreView = /^\/store(\/|$)/.test(window.location.pathname) || (/^store(?:-test)?\./.test(window.location.hostname) && window.location.pathname === '/')
   const activePage = isStoreView ? 'store' : currentRoute.name === 'static-page' ? currentRoute.page : currentRoute.name === 'demo' ? 'demos' : currentRoute.name
   const navItems = [
-    { label: 'Home', href: hrefFor('/'), active: activePage === 'home' },
-    { label: 'Studio', href: hrefFor('/studio'), active: activePage === 'studio' },
-    ...(articles.length ? [{ label: 'News', href: hrefFor('/blog'), active: activePage === 'blog' }] : []),
-    { label: 'Demos', href: hrefFor('/demos'), active: activePage === 'demos' },
-    { label: 'Learn', href: hrefFor('/learn'), active: activePage === 'learn' },
-    { label: 'Socials', href: hrefFor('/community'), active: activePage === 'community', secondary: true },
-    { label: 'Store', href: isStoreView ? hrefFor('/store') : 'https://store.adaengine.org', active: isStoreView, secondary: true },
-    { label: 'Cloud', href: hrefFor('/cloud'), active: /^\/(cloud|games|legal)(\/|$)/.test(window.location.pathname), secondary: true },
-    { label: 'Donate', href: hrefFor('/donate'), active: activePage === 'donate', secondary: true },
+    { label: t('Home'), href: hrefFor('/'), active: activePage === 'home' },
+    { label: t('Studio'), href: hrefFor('/studio'), active: activePage === 'studio' },
+    ...(articles.length ? [{ label: t('News'), href: hrefFor('/blog'), active: activePage === 'blog' }] : []),
+    { label: t('Demos'), href: hrefFor('/demos'), active: activePage === 'demos' },
+    { label: t('Learn'), href: hrefFor('/learn'), active: activePage === 'learn' },
+    { label: t('Socials'), href: hrefFor('/community'), active: activePage === 'community', secondary: true },
+    { label: t('Store'), href: isStoreView ? hrefFor('/store') : 'https://store.adaengine.org', active: isStoreView, secondary: true },
+    { label: t('Cloud'), href: hrefFor('/cloud'), active: /^\/(cloud|games|legal)(\/|$)/.test(window.location.pathname), secondary: true },
+    { label: t('Donate'), href: hrefFor('/donate'), active: activePage === 'donate', secondary: true },
   ]
   const isLearnPage = activePage === 'learn'
 
   return `
     <header class="header${isLearnPage ? ' header-learn' : ''}">
       <section class="container content-restriction header-container">
-        <a class="header-logo" href="${hrefFor('/')}" aria-label="Ada home">
+        <a class="header-logo" href="${hrefFor('/')}" aria-label="${t("Ada home")}">
           <picture class="header-logo-picture">
             <source srcset="${assetFor('images/ae_logo~dark.svg')}" media="(prefers-color-scheme: dark)" />
             <img src="${assetFor('images/ae_logo.svg')}" alt="Ada" />
           </picture>
           <h2>${siteTitle}</h2>
         </a>
-        <button class="burger-container" type="button" aria-label="Open menu" aria-expanded="false">
+        <button class="burger-container" type="button" aria-label="${t("Open menu")}" aria-expanded="false">
           <span id="burger" aria-hidden="true"><span class="bar topBar"></span><span class="bar bottomBar"></span></span>
         </button>
-        <nav aria-label="Main navigation">
+        <nav aria-label="${t("Main navigation")}">
           <ul class="navigation">
             ${navItems.map((item) => `<li class="navigation-item${'secondary' in item && item.secondary ? ' navigation-item-secondary' : ''}"><a class="navigation-item-link${item.active ? ' is-active' : ''}"${item.active ? ' aria-current="page"' : ''} href="${item.href}">${item.label}</a></li>`).join('')}
-            <li class="navigation-item download-button"><a class="navigation-item-link" href="${hrefFor('/download')}">Download <span class="download-version" data-download-version>v${fallbackRelease.version}</span></a></li>
+            <li class="navigation-item download-button"><a class="navigation-item-link" href="${hrefFor('/download')}">${t("Download")} <span class="download-version" data-download-version>v${fallbackRelease.version}</span></a></li>
           </ul>
         </nav>
       </section>
@@ -499,32 +531,32 @@ function renderHeader(): string {
 function renderHero(): string {
   return `
     <section class="home-introduction" aria-labelledby="home-title">
-      <div class="home-section-rail"><span>01 / Introduction</span><span>Open source. Endless possibilities.</span></div>
+      <div class="home-section-rail"><span>${t("01 / Introduction")}</span><span>${t("Open source. Endless possibilities.")}</span></div>
       <div class="hero-section">
       <div class="hero-copy">
-        <p class="hero-eyebrow"><span class="home-status-dot" aria-hidden="true"></span> A game engine for Swift developers</p>
-        <h1 class="ae-header-title" id="home-title">Your ideas.<br />Built in <span>Swift.</span></h1>
-        <p class="hero-subtitle">An open-source engine for the worlds you want to create. Build 2D and 3D games with modern Swift and tools that feel right at home.</p>
+        <p class="hero-eyebrow"><span class="home-status-dot" aria-hidden="true"></span> ${t("A game engine for Swift developers")}</p>
+        <h1 class="ae-header-title" id="home-title">${t("Your ideas.")}<br />${t("Built in")} <span>Swift.</span></h1>
+        <p class="hero-subtitle">${t("An open-source engine for the worlds you want to create. Build 2D and 3D games with modern Swift and tools that feel right at home.")}</p>
         <div class="hero-actions">
-          <a class="header-buttons" href="${hrefFor('/download')}">Download <span class="download-version" data-download-version>v${fallbackRelease.version}</span></a>
-          <a class="header-buttons-github" href="https://github.com/${githubRepository}" aria-label="Ada on GitHub">
+          <a class="header-buttons" href="${hrefFor('/download')}">${t("Download")} <span class="download-version" data-download-version>v${fallbackRelease.version}</span></a>
+          <a class="header-buttons-github" href="https://github.com/${githubRepository}" aria-label="${t("Ada on GitHub")}">
             <span class="github-button-label">
               <svg class="github-button-icon" viewBox="0 0 438.549 438.549" aria-hidden="true" focusable="false"><path d="M409.132 114.573c-19.608-33.596-46.205-60.194-79.798-79.8C295.736 15.166 259.057 5.365 219.27 5.365c-39.78 0-76.47 9.804-110.062 29.408-33.596 19.605-60.192 46.204-79.8 79.8C9.803 148.168 0 184.853 0 224.63c0 47.78 13.94 90.745 41.827 128.906 27.884 38.164 63.906 64.572 108.063 79.227 5.14.954 8.945.283 11.42-1.996 2.474-2.282 3.71-5.14 3.71-8.562 0-.57-.05-5.708-.144-15.417-.098-9.71-.144-18.18-.144-25.406l-6.567 1.136c-4.187.767-9.47 1.092-15.846 1-6.375-.09-12.992-.757-19.843-2-6.854-1.23-13.23-4.085-19.13-8.558-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.9-9.233-8.992-14.56-4.093-5.33-8.232-8.944-12.42-10.847l-1.998-1.43c-1.332-.952-2.568-2.1-3.71-3.43-1.143-1.33-1.998-2.663-2.57-3.997-.57-1.335-.097-2.43 1.428-3.29 1.525-.858 4.28-1.275 8.28-1.275l5.708.853c3.807.763 8.516 3.042 14.133 6.85 5.615 3.807 10.23 8.755 13.847 14.843 4.38 7.807 9.657 13.755 15.846 17.848 6.184 4.093 12.42 6.136 18.7 6.136 6.28 0 11.703-.476 16.273-1.423 4.565-.95 8.848-2.382 12.847-4.284 1.713-12.758 6.377-22.56 13.988-29.41-10.847-1.14-20.6-2.857-29.263-5.14-8.658-2.286-17.605-5.996-26.835-11.14-9.235-5.137-16.896-11.516-22.985-19.126-6.09-7.614-11.088-17.61-14.987-29.98-3.9-12.373-5.852-26.647-5.852-42.825 0-23.035 7.52-42.637 22.557-58.817-7.044-17.318-6.38-36.732 1.997-58.24 5.52-1.715 13.706-.428 24.554 3.853 10.85 4.284 18.794 7.953 23.84 10.995 5.046 3.04 9.09 5.618 12.135 7.708 17.706-4.947 35.977-7.42 54.82-7.42s37.116 2.473 54.822 7.42l10.85-6.85c7.418-4.57 16.18-8.757 26.26-12.564 10.09-3.806 17.803-4.854 23.135-3.14 8.562 21.51 9.325 40.923 2.28 58.24 15.035 16.18 22.558 35.788 22.558 58.818 0 16.178-1.958 30.497-5.853 42.966-3.9 12.47-8.94 22.457-15.125 29.98-6.19 7.52-13.9 13.85-23.13 18.985-9.233 5.14-18.183 8.85-26.84 11.135-8.663 2.286-18.416 4.004-29.264 5.146 9.894 8.563 14.842 22.078 14.842 40.54v60.237c0 3.422 1.19 6.28 3.572 8.562 2.38 2.278 6.136 2.95 11.276 1.994 44.163-14.653 80.185-41.062 108.068-79.226 27.88-38.16 41.826-81.126 41.826-128.906-.01-39.77-9.818-76.454-29.414-110.05z"/></svg>
               GitHub
             </span>
-            <span class="github-stars" data-github-stars aria-label="Loading GitHub stars">
+            <span class="github-stars" data-github-stars aria-label="${t("Loading GitHub stars")}">
               <svg class="github-star-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 2.6 2.92 5.92 6.53.95-4.72 4.6 1.11 6.5L12 17.5l-5.84 3.07 1.11-6.5-4.72-4.6 6.53-.95L12 2.6z"/></svg>
               <span data-github-stars-value>...</span>
             </span>
           </a>
-          <a class="home-docs-action" href="https://docs.adaengine.org/">Read the docs <span aria-hidden="true">↗</span></a>
+          <a class="home-docs-action" href="https://docs.adaengine.org/">${t("Read the docs")} <span aria-hidden="true">↗</span></a>
         </div>
-        <div class="home-platforms" aria-label="Available platforms"><span>macOS</span><span>iOS</span><span>Windows</span><span>Linux</span><span>Web</span></div>
+        <div class="home-platforms" aria-label="${t("Available platforms")}"><span>macOS</span><span>iOS</span><span>Windows</span><span>Linux</span><span>Web</span></div>
       </div>
       <figure class="home-editor-preview">
-        <div class="home-preview-bar"><span>Ada Editor</span><span>Built to make things <span aria-hidden="true">↗</span></span></div>
-        <div class="home-editor-image"><img src="${assetFor('images/studio/desktop.png')}" alt="Ada Editor showing a Swift project and source code" fetchpriority="high" /></div>
-        <figcaption><span>Native tools. Your creative space.</span><span>Swift / 2D / 3D</span></figcaption>
+        <div class="home-preview-bar"><span>Ada Editor</span><span>${t("Built to make things")} <span aria-hidden="true">↗</span></span></div>
+        <div class="home-editor-image"><img src="${assetFor('images/studio/desktop.png')}" alt="${t("Ada Editor showing a Swift project and source code")}" fetchpriority="high" /></div>
+        <figcaption><span>${t("Native tools. Your creative space.")}</span><span>Swift / 2D / 3D</span></figcaption>
       </figure>
       </div>
     </section>
@@ -534,14 +566,14 @@ function renderHero(): string {
 function renderShowcaseGallery(): string {
   return `
     <section class="showcase-gallery safe-area-insets" aria-labelledby="showcase-gallery-title">
-      <h2 class="showcase-gallery-title" id="showcase-gallery-title">Showcase</h2>
-      <div class="showcase-carousel" aria-roledescription="carousel" aria-label="Project screenshots">
+      <h2 class="showcase-gallery-title" id="showcase-gallery-title">${t("Showcase")}</h2>
+      <div class="showcase-carousel" aria-roledescription="carousel" aria-label="${t("Project screenshots")}">
         ${showcaseItems
           .map(
             (item, index) => `
               <article class="showcase-slide${index === 0 ? ' is-active' : ''}" aria-label="${escapeHtml(item.title)}" aria-hidden="${index === 0 ? 'false' : 'true'}">
                 <div class="showcase-slide-copy">
-                  <div class="showcase-carousel-dots" aria-label="Choose project">
+                  <div class="showcase-carousel-dots" aria-label="${t("Choose project")}">
                     ${showcaseItems.map((dotItem, dotIndex) => `<button class="showcase-carousel-dot${dotIndex === index ? ' is-active' : ''}" type="button" data-showcase-index="${dotIndex}" aria-label="Show ${escapeHtml(dotItem.title)}" aria-current="${dotIndex === index ? 'true' : 'false'}"></button>`).join('')}
                   </div>
                   <span class="showcase-slide-kicker">${escapeHtml(item.eyebrow)}</span>
@@ -564,7 +596,7 @@ function renderShowcaseGallery(): string {
 function renderTagList(tags: string[] = []): string {
   if (!tags.length) return ''
 
-  return `<ul class="tags">${tags.map((tag) => `<li>${tag}</li>`).join('')}</ul>`
+  return `<ul class="tags">${tags.map((tag) => `<li>${t(tag)}</li>`).join('')}</ul>`
 }
 
 function renderLatestNews(): string {
@@ -572,8 +604,8 @@ function renderLatestNews(): string {
 
   return `
     <section id="latest-news" class="latest-news home-section" aria-labelledby="home-news-title">
-      <div class="home-section-rail"><span>03 / From the team</span><a href="${hrefFor('/blog')}">All news <span aria-hidden="true">↗</span></a></div>
-      <div class="home-section-intro"><h2 id="home-news-title">The latest from Ada.</h2><p>Updates, ideas and things we’re building.</p></div>
+      <div class="home-section-rail"><span>${t("03 / From the team")}</span><a href="${hrefFor('/blog')}">${t("All news")} <span aria-hidden="true">↗</span></a></div>
+      <div class="home-section-intro"><h2 id="home-news-title">${t("The latest from Ada.")}</h2><p>${t("Updates, ideas and things we’re building.")}</p></div>
       <div class="home-articles-grid">
         ${articles.slice(0, 4).map((article) => `
           <article class="home-article-preview">
@@ -594,12 +626,12 @@ function renderLatestNews(): string {
 }
 
 function renderBlogTag(tags: string[] = []): string {
-  const tag = tags[0] ?? 'News'
+  const tag = tags[0] ?? t('News')
   const tone = ['release', 'tutorial', 'engineering', 'markdown', 'frontmatter', 'vite'].find((value) =>
     tag.toLowerCase().includes(value),
   )
 
-  return `<span class="blog-entry-tag blog-entry-tag-${tone ?? 'default'}">${escapeHtml(tag)}</span>`
+  return `<span class="blog-entry-tag blog-entry-tag-${tone ?? 'default'}">${escapeHtml(t(tag))}</span>`
 }
 
 function blogArticleImageFor(article: { image?: string }, index: number): string {
@@ -612,9 +644,9 @@ function renderBlogPage() {
     <main class="page-shell blog-page-shell">
       <section class="container content-restriction blog-page">
         <header class="blog-page-hero">
-          <p class="page-eyebrow">01 / Engine news</p>
-          <h1>Engine News</h1>
-          <p>Updates, release notes, and engineering deep dives from the Ada team.</p>
+          <p class="page-eyebrow">${t("01 / Engine news")}</p>
+          <h1>${t("Engine News")}</h1>
+          <p>${t("Updates, release notes, and engineering deep dives from the Ada team.")}</p>
         </header>
         ${
           articles.length
@@ -623,7 +655,7 @@ function renderBlogPage() {
                   .map(
                     (article, index) => `
                       <article class="blog-entry">
-                        <aside class="blog-entry-meta" aria-label="Article metadata">
+                        <aside class="blog-entry-meta" aria-label="${t("Article metadata")}">
                           <time datetime="${article.date}">${formatDate(article.date)}</time>
                           ${renderBlogTag(article.tags)}
                         </aside>
@@ -633,7 +665,7 @@ function renderBlogPage() {
                           <span class="blog-entry-content">
                             <h2>${escapeHtml(article.title)}</h2>
                             <p>${escapeHtml(article.description)}</p>
-                            <span class="blog-entry-action">Read full article →</span>
+                            <span class="blog-entry-action">${t("Read full article →")}</span>
                           </span>
                         </a>
                       </article>
@@ -642,8 +674,8 @@ function renderBlogPage() {
                   .join('')}
               </div>`
             : `<div class="blog-empty">
-                <h2>No articles yet</h2>
-                <p>Fresh Ada updates will appear here soon.</p>
+                <h2>${t("No articles yet")}</h2>
+                <p>${t("Fresh Ada updates will appear here soon.")}</p>
               </div>`
         }
       </section>
@@ -670,16 +702,16 @@ function renderDemosPage(manifest: DemosManifest) {
     <main class="page-shell demos-page-shell">
       <section class="container content-restriction demos-page">
         <header class="demos-hero">
-          <p class="eyebrow">Live WebAssembly examples</p>
-          <h1>Ada Demos</h1>
-          <p>Explore browser builds generated from the Swift files in the Ada repository. Each demo page includes the embedded build and the source that produced it.</p>
+          <p class="eyebrow">${t("Live WebAssembly examples")}</p>
+          <h1>${t("Ada Demos")}</h1>
+          <p>${t("Explore browser builds generated from the Swift files in the Ada repository. Each demo page includes the embedded build and the source that produced it.")}</p>
         </header>
         ${
           groups.length
             ? `<div class="demos-browse-layout">
-                <aside class="demo-category-nav" aria-label="Demo categories">
+                <aside class="demo-category-nav" aria-label="${t("Demo categories")}">
                   <div class="article-toc-panel demo-category-panel">
-                    <p class="article-toc-title">Categories</p>
+                    <p class="article-toc-title">${t("Categories")}</p>
                     <nav class="article-toc-list demo-category-list">${categoryLinks}</nav>
                   </div>
                 </aside>
@@ -690,7 +722,7 @@ function renderDemosPage(manifest: DemosManifest) {
                         <section class="demo-group" aria-labelledby="demo-group-${escapeHtml(group.tag)}">
                           <div class="demo-group-heading">
                             <h2 id="demo-group-${escapeHtml(group.tag)}">${escapeHtml(group.title)}</h2>
-                            <span>${group.demos.length} ${group.demos.length === 1 ? 'demo' : 'demos'}</span>
+                            <span>${group.demos.length} ${getLocale() === 'ru' ? 'демо' : group.demos.length === 1 ? 'demo' : 'demos'}</span>
                           </div>
                           <div class="demo-card-grid">
                             ${group.demos.map(renderDemoCard).join('')}
@@ -702,8 +734,8 @@ function renderDemosPage(manifest: DemosManifest) {
                 </div>
               </div>`
             : `<div class="demo-empty">
-                <h2>No demos published yet</h2>
-                <p>The website will show demos after the Ada export workflow publishes the first manifest.</p>
+                <h2>${t("No demos published yet")}</h2>
+                <p>${t("The website will show demos after the Ada export workflow publishes the first manifest.")}</p>
               </div>`
         }
       </section>
@@ -719,7 +751,7 @@ function renderDemoCard(demo: DemoEntry): string {
       <h3>${escapeHtml(demo.title)}</h3>
       <p>${escapeHtml(demo.description)}</p>
       <span class="demo-card-meta">${escapeHtml(demo.sourcePath)}</span>
-      ${demo.hasBuild ? '<span class="demo-card-action">Open demo</span>' : '<span class="demo-card-action demo-card-action-muted">Source only</span>'}
+      ${demo.hasBuild ? `<span class="demo-card-action">${t("Open demo")}</span>` : `<span class="demo-card-action demo-card-action-muted">${t("Source only")}</span>`}
     </a>
   `
 }
@@ -729,11 +761,11 @@ async function renderDemoPage(slug: string) {
   const demo = findDemoBySlug(manifest, slug)
 
   if (!demo) {
-    renderNotFound('Demo not found', 'Check the address or return to the demos page.')
+    renderNotFound(t('Demo not found'), t('Check the address or return to the demos page.'))
     return
   }
 
-  applySeo(createDemoSeo(demo))
+  applySeo(createDemoSeo(demo, getLocale()))
 
   const source = await loadDemoSource(demo)
   const repositoryRef = manifest.commit ?? 'main'
@@ -744,7 +776,7 @@ async function renderDemoPage(slug: string) {
     <main class="page-shell demo-detail-shell">
       <article class="container content-restriction demo-detail-page">
         <header class="demo-detail-hero">
-          <a class="article-back-link" href="${hrefFor('/demos')}">Back to Demos</a>
+          <a class="article-back-link" href="${hrefFor('/demos')}">${t("Back to Demos")}</a>
           <span class="demo-card-tag">${escapeHtml(demo.tagTitle)}</span>
           <h1>${escapeHtml(demo.title)}</h1>
           <p>${escapeHtml(demo.description)}</p>
@@ -752,8 +784,8 @@ async function renderDemoPage(slug: string) {
         </header>
         ${
           demo.hasBuild
-            ? `<section class="demo-player" aria-label="${escapeHtml(demo.title)} embedded demo">
-                <button class="demo-player-fullscreen" type="button" aria-label="Open demo fullscreen" title="Open fullscreen" data-demo-fullscreen>
+            ? `<section class="demo-player" aria-label="${escapeHtml(demo.title)} — ${t("Embedded demo")}">
+                <button class="demo-player-fullscreen" type="button" aria-label="${t("Open demo fullscreen")}" title="${t("Open fullscreen")}" data-demo-fullscreen>
                   <svg class="demo-player-fullscreen-enter-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                     <path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
@@ -764,16 +796,16 @@ async function renderDemoPage(slug: string) {
                 <iframe title="${escapeHtml(demo.title)}" src="${assetFor(demo.embed)}" allow="fullscreen; gamepad; keyboard-map; clipboard-read; clipboard-write; webgpu" allowfullscreen webkitallowfullscreen></iframe>
               </section>`
             : `<section class="demo-player demo-player-empty">
-                <h2>Build artifact is not available</h2>
-                <p>This demo is listed in the manifest, but the WebAssembly export was not published.</p>
+                <h2>${t("Build artifact is not available")}</h2>
+                <p>${t("This demo is listed in the manifest, but the WebAssembly export was not published.")}</p>
               </section>`
         }
         <section class="demo-source-section" aria-labelledby="demo-source-title">
           <div class="demo-source-heading">
-            <h2 id="demo-source-title">Source</h2>
+            <h2 id="demo-source-title">${t("Source")}</h2>
             <a class="demo-source-github-link" href="${sourceUrl}" target="_blank" rel="noreferrer">
               <svg class="demo-source-github-icon" viewBox="0 0 438.549 438.549" aria-hidden="true" focusable="false"><path d="M409.132 114.573c-19.608-33.596-46.205-60.194-79.798-79.8C295.736 15.166 259.057 5.365 219.27 5.365c-39.78 0-76.47 9.804-110.062 29.408-33.596 19.605-60.192 46.204-79.8 79.8C9.803 148.168 0 184.853 0 224.63c0 47.78 13.94 90.745 41.827 128.906 27.884 38.164 63.906 64.572 108.063 79.227 5.14.954 8.945.283 11.42-1.996 2.474-2.282 3.71-5.14 3.71-8.562 0-.57-.05-5.708-.144-15.417-.098-9.71-.144-18.18-.144-25.406l-6.567 1.136c-4.187.767-9.47 1.092-15.846 1-6.375-.09-12.992-.757-19.843-2-6.854-1.23-13.23-4.085-19.13-8.558-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.9-9.233-8.992-14.56-4.093-5.33-8.232-8.944-12.42-10.847l-1.998-1.43c-1.332-.952-2.568-2.1-3.71-3.43-1.143-1.33-1.998-2.663-2.57-3.997-.57-1.335-.097-2.43 1.428-3.29 1.525-.858 4.28-1.275 8.28-1.275l5.708.853c3.807.763 8.516 3.042 14.133 6.85 5.615 3.807 10.23 8.755 13.847 14.843 4.38 7.807 9.657 13.755 15.846 17.848 6.184 4.093 12.42 6.136 18.7 6.136 6.28 0 11.703-.476 16.273-1.423 4.565-.95 8.848-2.382 12.847-4.284 1.713-12.758 6.377-22.56 13.988-29.41-10.847-1.14-20.6-2.857-29.263-5.14-8.658-2.286-17.605-5.996-26.835-11.14-9.235-5.137-16.896-11.516-22.985-19.126-6.09-7.614-11.088-17.61-14.987-29.98-3.9-12.373-5.852-26.647-5.852-42.825 0-23.035 7.52-42.637 22.557-58.817-7.044-17.318-6.38-36.732 1.997-58.24 5.52-1.715 13.706-.428 24.554 3.853 10.85 4.284 18.794 7.953 23.84 10.995 5.046 3.04 9.09 5.618 12.135 7.708 17.706-4.947 35.977-7.42 54.82-7.42s37.116 2.473 54.822 7.42l10.85-6.85c7.418-4.57 16.18-8.757 26.26-12.564 10.09-3.806 17.803-4.854 23.135-3.14 8.562 21.51 9.325 40.923 2.28 58.24 15.035 16.18 22.558 35.788 22.558 58.818 0 16.178-1.958 30.497-5.853 42.966-3.9 12.47-8.94 22.457-15.125 29.98-6.19 7.52-13.9 13.85-23.13 18.985-9.233 5.14-18.183 8.85-26.84 11.135-8.663 2.286-18.416 4.004-29.264 5.146 9.894 8.563 14.842 22.078 14.842 40.54v60.237c0 3.422 1.19 6.28 3.572 8.562 2.38 2.278 6.136 2.95 11.276 1.994 44.163-14.653 80.185-41.062 108.068-79.226 27.88-38.16 41.826-81.126 41.826-128.906-.01-39.77-9.818-76.454-29.414-110.05z"/></svg>
-              <span>Open on GitHub</span>
+              <span>${t("Open on GitHub")}</span>
               <svg class="demo-source-external-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
           </div>
@@ -796,8 +828,8 @@ function renderFeatures(): string {
 
   return `
     <section id="features" class="features-container home-section" aria-labelledby="home-features-title">
-      <div class="home-section-rail"><span>02 / Capabilities</span><span>A complete creative toolkit</span></div>
-      <div class="home-section-intro"><h2 id="home-features-title">Small details.<br />Big possibilities.</h2><p>Everything you need to bring a world to life, built around the way you write Swift.</p></div>
+      <div class="home-section-rail"><span>${t("02 / Capabilities")}</span><span>${t("A complete creative toolkit")}</span></div>
+      <div class="home-section-intro"><h2 id="home-features-title">${t("Small details.")}<br />${t("Big possibilities.")}</h2><p>${t("Everything you need to bring a world to life, built around the way you write Swift.")}</p></div>
       <div class="features-grid">
         ${orderedFeatures
           .map(
@@ -805,11 +837,11 @@ function renderFeatures(): string {
               <button class="engine-info-item-container feature-card feature-card-${index + 1}" type="button" data-feature-index="${features.indexOf(item)}" data-feature-position="${index + 1}" aria-haspopup="dialog">
                 ${renderFeatureContent(item)}
                 <div class="engine-info-item-text">
-                  <span class="feature-number">${String(index + 1).padStart(2, '0')} / Engine</span>
+                  <span class="feature-number">${String(index + 1).padStart(2, '0')} / ${t("Engine")}</span>
                   <h3>${item.title}</h3>
                   <p>${item.description}</p>
                 </div>
-                <span class="feature-card-action">Explore feature <span aria-hidden="true">↗</span></span>
+                <span class="feature-card-action">${t("Explore feature")} <span aria-hidden="true">↗</span></span>
               </button>
             `,
           )
@@ -825,9 +857,9 @@ function renderFeatureContent(item: FeatureItem): string {
   return `
     <div class="engine-info-item-content feature-media-slot" data-feature-preview>
       ${gifPath ? `<img class="feature-media-gif" src="${gifPath}" alt="" loading="lazy" decoding="async" />` : ''}
-      <span class="feature-media-loader" aria-label="Loading animated feature preview">
+      <span class="feature-media-loader" aria-label="${t("Loading animated feature preview")}">
         <span class="feature-media-spinner" aria-hidden="true"></span>
-        <span>Loading preview</span>
+        <span>${t("Loading preview")}</span>
       </span>
     </div>
   `
@@ -838,8 +870,8 @@ function renderFeatureModal(): string {
     <div class="feature-modal" role="dialog" aria-modal="true" aria-labelledby="feature-modal-title" hidden>
       <div class="feature-modal-backdrop" data-modal-close></div>
       <section class="feature-modal-panel">
-        <button class="feature-modal-close" type="button" aria-label="Close feature details" title="Close" data-modal-close>
-          <span class="feature-modal-close-label">Close</span>
+        <button class="feature-modal-close" type="button" aria-label="${t("Close feature details")}" title="${t("Close")}" data-modal-close>
+          <span class="feature-modal-close-label">${t("Close")}</span>
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
           </svg>
@@ -847,7 +879,7 @@ function renderFeatureModal(): string {
         <div class="feature-modal-layout">
           <div class="feature-modal-visual" id="feature-modal-visual"></div>
           <div class="feature-modal-copy">
-            <p class="eyebrow" id="feature-modal-kicker">Feature</p>
+            <p class="eyebrow" id="feature-modal-kicker">${t("Feature")}</p>
             <h2 id="feature-modal-title"></h2>
             <p id="feature-modal-description"></p>
           </div>
@@ -868,11 +900,11 @@ function renderFooterSocialLinks(): string {
     '<svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M42.2 8.7 35.8 39c-.5 2.1-1.8 2.6-3.6 1.6l-9.9-7.3-4.8 4.6c-.5.5-1 .9-2 .9l.7-10.1L34.6 12c.8-.7-.2-1.1-1.2-.4L10.6 25.9.8 22.8c-2.1-.7-2.2-2.1.4-3.1L39.5 4.9c1.8-.7 3.4.4 2.7 3.8Z"/></svg>'
 
   return `
-    <nav class="footer-social-links" aria-label="Social links">
-      <a class="footer-social-link" href="https://github.com/AdaEngine/AdaEngine" target="_blank" rel="noreferrer" aria-label="Ada on GitHub">${githubIcon}</a>
-      <a class="footer-social-link" href="https://discord.gg/JkEPE7nwDu" target="_blank" rel="noreferrer" aria-label="Ada on Discord">${discordIcon}</a>
-      <a class="footer-social-link" href="https://x.com/ada_engine" target="_blank" rel="noreferrer" aria-label="Ada on Twitter">${twitterIcon}</a>
-      <a class="footer-social-link" href="https://t.me/adaengine" target="_blank" rel="noreferrer" aria-label="Ada on Telegram">${telegramIcon}</a>
+    <nav class="footer-social-links" aria-label="${t("Social links")}">
+      <a class="footer-social-link" href="https://github.com/AdaEngine/AdaEngine" target="_blank" rel="noreferrer" aria-label="${t("Ada on GitHub")}">${githubIcon}</a>
+      <a class="footer-social-link" href="https://discord.gg/JkEPE7nwDu" target="_blank" rel="noreferrer" aria-label="${t("Ada on Discord")}">${discordIcon}</a>
+      <a class="footer-social-link" href="https://x.com/ada_engine" target="_blank" rel="noreferrer" aria-label="${t("Ada on Twitter")}">${twitterIcon}</a>
+      <a class="footer-social-link" href="https://t.me/adaengine" target="_blank" rel="noreferrer" aria-label="${t("Ada on Telegram")}">${telegramIcon}</a>
     </nav>
   `
 }
@@ -885,30 +917,44 @@ function renderFooter(): string {
         <div class="footer-columns">
           <section>
             <h3>Ada</h3>
-            <a href="${hrefFor('/studio')}">Studio</a>
-            <a href="${hrefFor('/download')}">Download</a>
-            <a href="https://github.com/AdaEngine/AdaEngine">Source code<span class="footer-external-mark" aria-hidden="true">↗</span></a>
+            <a href="${hrefFor('/studio')}">${t("Studio")}</a>
+            <a href="${hrefFor('/download')}">${t("Download")}</a>
+            <a href="https://github.com/AdaEngine/AdaEngine">${t("Source code")}<span class="footer-external-mark" aria-hidden="true">↗</span></a>
           </section>
           <section>
-            <h3>Project</h3>
-            ${articles.length ? `<a href="${hrefFor('/blog')}">Blog</a>` : ''}
-            <a href="${hrefFor('/learn')}">Learn</a>
-            <a href="${hrefFor('/community')}">Community</a>
+            <h3>${t("Project")}</h3>
+            ${articles.length ? `<a href="${hrefFor('/blog')}">${t("Blog")}</a>` : ''}
+            <a href="${hrefFor('/learn')}">${t("Learn")}</a>
+            <a href="${hrefFor('/community')}">${t("Community")}</a>
           </section>
           <section>
-            <h3>Foundation</h3>
-            <a href="${hrefFor('/donate')}">Donate</a>
-            <a href="https://github.com/AdaEngine/AdaEngine/blob/main/LICENSE">License<span class="footer-external-mark" aria-hidden="true">↗</span></a>
+            <h3>${t("Foundation")}</h3>
+            <a href="${hrefFor('/donate')}">${t("Donate")}</a>
+            <a href="https://github.com/AdaEngine/AdaEngine/blob/main/LICENSE">${t("License")}<span class="footer-external-mark" aria-hidden="true">↗</span></a>
           </section>
         </div>
         <div class="footer-bottom">
-          <p>© 2021-2026 Vladislav Prusakov and contributors. All rights reserved.</p>
+          <p>${t("© 2021-2026 Vladislav Prusakov and contributors. All rights reserved.")}</p>
           ${renderFooterSocialLinks()}
+          ${renderLanguageSwitcher()}
         </div>
         <div class="footer-blueprint-mark" aria-hidden="true">Ada</div>
       </div>
     </footer>
   `
+}
+
+function renderLanguageSwitcher(): string {
+  return `<div class="footer-language">
+    <label for="site-language" title="${t('Language')}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg>
+    </label>
+    <span class="footer-language-control">
+      <select id="site-language" aria-label="${t('Language')}" data-site-language>
+        ${locales.map(locale => `<option value="${locale}" lang="${locale}"${getLocale() === locale ? ' selected' : ''}>${locale === 'en' ? 'English' : 'Русский'}</option>`).join('')}
+      </select>
+    </span>
+  </div>`
 }
 
 function renderLearnIcon(icon?: LearnCard['icon']): string {
@@ -937,13 +983,13 @@ function renderLearnPage() {
     <main class="page-shell learn-page-shell">
       <section class="container content-restriction learn-page">
         <header class="learn-hero">
-          <p class="page-eyebrow">01 / Learn Ada</p>
+          <p class="page-eyebrow">${t("01 / Learn Ada")}</p>
           <h1>${page.title}</h1>
           <p>${page.lead}</p>
         </header>
         ${learnSections
           .map((section) => {
-            const sectionId = section.title.replace(/\W+/g, '-').toLowerCase()
+            const sectionId = `learn-section-${learnSections.indexOf(section)}`
 
             return `
               <section class="learn-section" aria-labelledby="${sectionId}">
@@ -994,11 +1040,11 @@ function renderDonationPage() {
     <main class="page-shell donation-page-shell">
       <section class="container content-restriction donation-page">
         <header class="donation-hero">
-          <p class="page-eyebrow">01 / Support the project</p>
-          <h1>Support Ada</h1>
-          <p>Ada is an independent open-source project. Your support helps us dedicate more time to development and tooling.</p>
+          <p class="page-eyebrow">${t("01 / Support the project")}</p>
+          <h1>${t("Support Ada")}</h1>
+          <p>${t("Ada is an independent open-source project. Your support helps us dedicate more time to development and tooling.")}</p>
         </header>
-        <div class="donation-options" aria-label="Donation options">
+        <div class="donation-options" aria-label="${t("Donation options")}">
           ${donationOptions
             .map(
               (option) => `
@@ -1016,11 +1062,11 @@ function renderDonationPage() {
             .join('')}
         </div>
         <section class="donation-contribute" aria-labelledby="donation-contribute-title">
-          <h2 id="donation-contribute-title">Code Contributions</h2>
+          <h2 id="donation-contribute-title">${t("Code Contributions")}</h2>
           <p>
-            Can't support financially? Code contributions are equally valuable! Check out our
-            <a href="https://github.com/AdaEngine/AdaEngine/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22" target="_blank" rel="noreferrer">good first issues</a>
-            on GitHub to get started.
+            ${t("Can't support financially? Code contributions are equally valuable! Check out our")}
+            <a href="https://github.com/AdaEngine/AdaEngine/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22" target="_blank" rel="noreferrer">${t("good first issues")}</a>
+            ${t("on GitHub to get started.")}
           </p>
         </section>
       </section>
@@ -1035,11 +1081,11 @@ function renderCommunityPage() {
     <main class="page-shell community-page-shell">
       <section class="container content-restriction community-page">
         <header class="community-hero">
-          <p class="page-eyebrow">01 / Made together</p>
-          <h1>Join the Community</h1>
-          <p>Connect with other developers, share your projects, and contribute to the engine.</p>
+          <p class="page-eyebrow">${t("01 / Made together")}</p>
+          <h1>${t("Join the Community")}</h1>
+          <p>${t("Connect with other developers, share your projects, and contribute to the engine.")}</p>
         </header>
-        <div class="community-link-grid" aria-label="Ada community links">
+        <div class="community-link-grid" aria-label="${t("Ada community links")}">
           ${communityLinks
             .map(
               (link) => `
@@ -1080,8 +1126,8 @@ function renderHomePage() {
           ${renderFeatures()}
           ${renderLatestNews()}
           <section class="home-community" aria-labelledby="home-community-title">
-            <div class="home-section-rail"><span>04 / Made together</span><span>Independent. Open. Community-built.</span></div>
-            <div class="home-community-content"><div><h2 id="home-community-title">Make something<br />of your own.</h2><p>Share your work, ask a question, or help shape what comes next.</p></div><a class="home-community-action" href="${discord.href}">Join the community <span aria-hidden="true">↗</span></a></div>
+            <div class="home-section-rail"><span>${t("04 / Made together")}</span><span>${t("Independent. Open. Community-built.")}</span></div>
+            <div class="home-community-content"><div><h2 id="home-community-title">${t("Make something")}<br />${t("of your own.")}</h2><p>${t("Share your work, ask a question, or help shape what comes next.")}</p></div><a class="home-community-action" href="${discord.href}">${t("Join the community")} <span aria-hidden="true">↗</span></a></div>
           </section>
         </div>
       </main>
@@ -1095,11 +1141,11 @@ function renderArticlePage(slug: string) {
   const article = getArticleBySlug(slug)
 
   if (!article) {
-    renderNotFound('Article not found', 'Check the address or return to the blog.')
+    renderNotFound(t('Article not found'), t('Check the address or return to the blog.'))
     return
   }
 
-  applySeo(createArticleSeo(article))
+  applySeo(createArticleSeo(article, getLocale()))
 
   app.innerHTML = `
     ${renderHeader()}
@@ -1107,19 +1153,20 @@ function renderArticlePage(slug: string) {
       <div class="container article-reading-layout">
         <article class="safe-area-insets article-page">
           <header class="article-hero">
-            <a class="article-back-link" href="${hrefFor('/blog')}">Back to News</a>
+            <a class="article-back-link" href="${hrefFor('/blog')}">${t("Back to News")}</a>
             ${renderBlogTag(article.tags)}
-            <h1>${article.title}</h1>
+            <h1 lang="en">${article.title}</h1>
             <div class="article_info">
               ${renderArticleAuthor(article.author)}
               <span aria-hidden="true">•</span>
               <time datetime="${article.date}">${formatDate(article.date)}</time>
               <span aria-hidden="true">•</span>
-              <span>${article.readingTime} min read</span>
+              <span>${article.readingTime} ${getLocale() === 'ru' ? 'мин чтения' : 'min read'}</span>
             </div>
             <p class="article-item-description">${article.description}</p>
           </header>
-          <div class="article-content">${article.html}</div>
+          ${getLocale() === 'ru' ? `<p class="article-language-note">${t('This article is currently available in English.')}</p>` : ''}
+          <div class="article-content" lang="en">${article.html}</div>
         </article>
         ${renderArticleReaderNavigation(article.toc)}
       </div>
@@ -1131,10 +1178,10 @@ function renderArticlePage(slug: string) {
 
 function renderArticleImageLightbox(): string {
   return `
-    <div class="article-image-lightbox" role="dialog" aria-modal="true" aria-label="Fullscreen article image" hidden data-article-lightbox>
-      <button class="article-image-lightbox-backdrop" type="button" aria-label="Close fullscreen image" data-article-lightbox-close></button>
+    <div class="article-image-lightbox" role="dialog" aria-modal="true" aria-label="${t("Fullscreen article image")}" hidden data-article-lightbox>
+      <button class="article-image-lightbox-backdrop" type="button" aria-label="${t("Close fullscreen image")}" data-article-lightbox-close></button>
       <figure class="article-image-lightbox-frame">
-        <button class="article-image-lightbox-close demo-player-fullscreen" type="button" aria-label="Close fullscreen image" title="Close" data-article-lightbox-close>
+        <button class="article-image-lightbox-close demo-player-fullscreen" type="button" aria-label="${t("Close fullscreen image")}" title="${t("Close")}" data-article-lightbox-close>
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/>
           </svg>
@@ -1147,9 +1194,9 @@ function renderArticleImageLightbox(): string {
 }
 
 function renderArticleAuthor(author: ArticleAuthor): string {
-  const label = `By ${author.name}`
+  const label = `${getLocale() === 'ru' ? 'Автор:' : 'By'} ${author.name}`
   const avatar = author.avatar
-    ? `<img class="article-author-avatar" src="${escapeHtml(authorAvatarAssetFor(author.avatar))}" alt="${escapeHtml(`${author.name} avatar`)}" loading="lazy" />`
+    ? `<img class="article-author-avatar" src="${escapeHtml(authorAvatarAssetFor(author.avatar))}" alt="${escapeHtml(`${t("Avatar")}: ${author.name}`)}" loading="lazy" />`
     : ''
   const content = `
     ${avatar}
@@ -1195,21 +1242,21 @@ function renderArticleReaderNavigation(toc: ArticleHeading[]): string {
 
   const links = renderArticleTocLinks(toc, 'desktop')
   const mobileLinks = renderArticleTocLinks(toc, 'mobile')
-  const firstHeading = toc[0]?.title ?? 'Start'
+  const firstHeading = toc[0]?.title ?? t('Start')
 
   return `
-    <aside class="article-toc" aria-label="On this page">
+    <aside class="article-toc" aria-label="${t("On this page")}">
       <div class="article-toc-panel">
-        <p class="article-toc-title">On this page</p>
+        <p class="article-toc-title">${t("On this page")}</p>
         <div class="article-toc-progress" aria-hidden="true">
           <span data-article-progress-fill></span>
         </div>
-        <p class="article-toc-progress-label"><span data-article-progress-label>0%</span> read</p>
+        <p class="article-toc-progress-label"><span data-article-progress-label>0%</span> ${t("read")}</p>
         <nav class="article-toc-list">${links}</nav>
       </div>
     </aside>
     <div class="article-mobile-reader-nav" data-mobile-reader-nav>
-      <button class="article-mobile-reader-button" type="button" data-mobile-toc-toggle aria-expanded="false" aria-controls="article-mobile-toc-sheet" aria-label="Open article sections">
+      <button class="article-mobile-reader-button" type="button" data-mobile-toc-toggle aria-expanded="false" aria-controls="article-mobile-toc-sheet" aria-label="${t("Open article sections")}">
         <span class="article-mobile-progress" aria-hidden="true">
           <span data-article-progress-fill></span>
         </span>
@@ -1225,8 +1272,8 @@ function renderArticleReaderNavigation(toc: ArticleHeading[]): string {
       </button>
       <div class="article-mobile-toc-sheet" id="article-mobile-toc-sheet" data-mobile-toc-sheet hidden>
         <div class="article-mobile-toc-header">
-          <span>On this page</span>
-          <span><span data-article-progress-label>0%</span> read</span>
+          <span>${t("On this page")}</span>
+          <span><span data-article-progress-label>0%</span> ${t("read")}</span>
         </div>
         <nav class="article-mobile-toc-list">${mobileLinks}</nav>
       </div>
@@ -1234,15 +1281,15 @@ function renderArticleReaderNavigation(toc: ArticleHeading[]): string {
   `
 }
 
-function renderNotFound(title = 'Page not found', description = 'This route does not exist yet.') {
+function renderNotFound(title = t('Page not found'), description = t('This route does not exist yet.')) {
   app.innerHTML = `
     ${renderHeader()}
     <main class="page-shell">
       <section class="container content-restriction safe-area-insets status-page">
-        <p class="page-eyebrow">404 / Page unavailable</p>
+        <p class="page-eyebrow">${t("404 / Page unavailable")}</p>
         <h1>${title}</h1>
         <p>${description}</p>
-        <a class="header-buttons" href="${hrefFor('/')}">Home</a>
+        <a class="header-buttons" href="${hrefFor('/')}">${t("Home")}</a>
       </section>
     </main>
     ${renderFooter()}
@@ -1457,9 +1504,9 @@ function setupDemoCategoryNavigation() {
 
 function renderDownloadCards(release: DownloadRelease): string {
   const platforms: Array<{ id: DesktopPlatform; title: string; description: string }> = [
-    { id: 'macos', title: 'Mac', description: 'The native editor for your Mac. Build with AdaScript and Swift.' },
-    { id: 'windows', title: 'Windows', description: 'Create Ada games on your Windows PC.' },
-    { id: 'linux', title: 'Linux', description: 'Build with the open-source engine on Linux.' },
+    { id: 'macos', title: 'Mac', description: t('The native editor for your Mac. Build with AdaScript and Swift.') },
+    { id: 'windows', title: 'Windows', description: t('Create Ada games on your Windows PC.') },
+    { id: 'linux', title: 'Linux', description: t('Build with the open-source engine on Linux.') },
   ]
   return platforms.map(({ id, title, description }) => {
     const assets = assetsFor(id, release)
@@ -1467,26 +1514,26 @@ function renderDownloadCards(release: DownloadRelease): string {
       <span class="platform-symbol platform-symbol-image" aria-hidden="true" style="--platform-icon: url('${assetFor(`images/downloads/${id}.svg`)}')"></span>
       <h2 id="download-${id}">${title}</h2><p>${description}</p>
       <div class="platform-download-actions">${assets.length
-        ? assets.map(asset => `<a class="header-buttons" href="${escapeHtml(asset.url)}">${assetLabel(asset)}</a>`).join('')
-        : `<span class="download-status">Installer coming soon</span><a class="download-source-link" href="${escapeHtml(release.url)}">Get the source code ↗</a>`
+        ? assets.map(asset => `<a class="header-buttons" href="${escapeHtml(asset.url)}">${t(assetLabel(asset))}</a>`).join('')
+        : `<span class="download-status">${t("Installer coming soon")}</span><a class="download-source-link" href="${escapeHtml(release.url)}">${t("Get the source code ↗")}</a>`
       }</div>
     </article>`
   }).join('') + `<article class="platform-download platform-download-ios" aria-labelledby="download-ios">
     <span class="platform-symbol" aria-hidden="true">▯</span>
-    <h2 id="download-ios">iOS</h2><p>Create and run AdaScript projects on iPad.</p>
-    <div class="platform-download-actions"><a class="app-store-badge" href="${appStoreURL}" aria-label="Download on the App Store"><img src="${assetFor('images/downloads/app-store.svg')}" alt="Download on the App Store" width="120" height="40" /></a></div>
+    <h2 id="download-ios">iOS</h2><p>${t("Create and run AdaScript projects on iPad.")}</p>
+    <div class="platform-download-actions"><a class="app-store-badge" href="${appStoreURL}" aria-label="${t("Download on the App Store")}"><img src="${assetFor('images/downloads/app-store.svg')}" alt="${t("Download on the App Store")}" width="120" height="40" /></a></div>
   </article>`
 }
 
 function renderDownloadPage() {
   app.innerHTML = `${renderHeader()}
     <main class="page-shell download-page-shell"><section class="container content-restriction download-page">
-      <header class="download-hero"><p class="hero-eyebrow">Make something of your own</p>
-        <h1>Download Ada</h1><p>Choose your platform. Start building.</p>
-        <a class="download-release" data-release-link href="${fallbackRelease.url}">Release notes · <span data-download-version>v${fallbackRelease.version}</span> ↗</a>
+      <header class="download-hero"><p class="hero-eyebrow">${t("Make something of your own")}</p>
+        <h1>${t("Download Ada")}</h1><p>${t("Choose your platform. Start building.")}</p>
+        <a class="download-release" data-release-link href="${fallbackRelease.url}">${t("Release notes ·")} <span data-download-version>v${fallbackRelease.version}</span> ↗</a>
       </header>
       <div class="download-grid" data-download-cards>${renderDownloadCards(fallbackRelease)}</div>
-      <p class="download-footnote">Ada is free and open source. Desktop downloads appear here as installers are released.</p>
+      <p class="download-footnote">${t("Ada is free and open source. Desktop downloads appear here as installers are released.")}</p>
     </section></main>${renderFooter()}`
 }
 
@@ -1572,7 +1619,7 @@ function setupHeaderNavigation() {
     header.classList.toggle('menu-opened', isOpen)
     document.body.classList.toggle('menu-opened', isOpen)
     burger.setAttribute('aria-expanded', String(isOpen))
-    burger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu')
+    burger.setAttribute('aria-label', isOpen ? t('Close menu') : t('Open menu'))
 
     if (isOpen) {
       header.classList.remove('menu-closing')
@@ -1603,6 +1650,17 @@ function setupHeaderNavigation() {
 }
 
 function setupInteractions() {
+  document.querySelectorAll<HTMLSelectElement>('[data-site-language]').forEach(select => {
+    select.addEventListener('change', () => {
+      const locale = select.value as Locale
+      if (!locales.includes(locale)) return
+      const url = new URL(window.location.href)
+      url.pathname = createHref(localizedPath(normalizeRoutePath(url.pathname, baseUrl), locale), baseUrl)
+      if (saveLocale(locale)) url.searchParams.delete('lang')
+      else url.searchParams.set('lang', locale)
+      window.location.assign(url.href)
+    })
+  })
   setupHeaderNavigation()
   setupFeatureGifPreviews()
 
@@ -1625,7 +1683,7 @@ function setupInteractions() {
       if (!feature || !modal || !modalTitle || !modalDescription || !modalKicker || !modalVisual) return
       modalTitle.textContent = feature.title
       modalDescription.textContent = featureDetails(feature)
-      modalKicker.textContent = `Feature ${String(Number(card.dataset.featurePosition) || index + 1).padStart(2, '0')}`
+      modalKicker.textContent = `${t("Feature")} ${String(Number(card.dataset.featurePosition) || index + 1).padStart(2, '0')}`
       modal.hidden = false
       document.body.classList.add('modal-opened')
       modalVisual.innerHTML = renderFeatureModalMedia(feature)
@@ -1712,9 +1770,9 @@ function renderFeatureModalMedia(item: FeatureItem): string {
   return `
     <div class="feature-modal-media feature-media-slot" data-feature-preview>
       ${gifPath ? `<img class="feature-media-gif" src="${gifPath}" alt="" decoding="async" />` : ''}
-      <span class="feature-media-loader" aria-label="Loading animated feature preview">
+      <span class="feature-media-loader" aria-label="${t("Loading animated feature preview")}">
         <span class="feature-media-spinner" aria-hidden="true"></span>
-        <span>Loading preview</span>
+        <span>${t("Loading preview")}</span>
       </span>
     </div>
   `
@@ -1867,8 +1925,8 @@ function setupDemoFullscreen() {
   const updateFullscreenState = () => {
     const isFullscreen = isNativeFullscreen() || isViewportFullscreen
     player.classList.toggle('is-fullscreen', isFullscreen)
-    button.setAttribute('aria-label', isFullscreen ? 'Exit demo fullscreen' : 'Open demo fullscreen')
-    button.title = isFullscreen ? 'Exit fullscreen' : 'Open fullscreen'
+    button.setAttribute('aria-label', isFullscreen ? t('Exit demo fullscreen') : t('Open demo fullscreen'))
+    button.title = isFullscreen ? t('Exit fullscreen') : t('Open fullscreen')
   }
 
   button.addEventListener('click', async () => {
@@ -2018,7 +2076,7 @@ function setupShowcaseCarousel() {
 void renderRoute()
   .catch((error) => {
     console.error(error)
-    renderNotFound('Page failed to load', 'Refresh the page or try again in a moment.')
+    renderNotFound(t('Page failed to load'), t('Refresh the page or try again in a moment.'))
   })
   .then(() => {
     try {

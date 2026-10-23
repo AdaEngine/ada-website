@@ -1,6 +1,7 @@
 import type { Article } from './content'
 import type { DemoEntry } from './demos'
 import type { Route, StaticPageName } from './routing'
+import { localizedPath, t, type Locale } from './localization.ts'
 
 export type SeoMetadata = {
   title: string
@@ -14,6 +15,10 @@ export type SeoMetadata = {
 export const siteOrigin = 'https://adaengine.org'
 export const siteName = 'Ada'
 export const defaultSeoImage = `${siteOrigin}/images/social/ada-preview-v2.png`
+
+export function localizeSeo(meta: SeoMetadata, locale: Locale): SeoMetadata {
+  return { ...meta, title: t(meta.title, locale), description: t(meta.description, locale), path: localizedPath(meta.path, locale) }
+}
 
 const staticPageSeo: Record<StaticPageName, SeoMetadata> = {
   learn: {
@@ -135,21 +140,21 @@ export function createRouteSeo(route: Route): SeoMetadata {
   }
 }
 
-export function createArticleSeo(article: Article): SeoMetadata {
+export function createArticleSeo(article: Article, locale: Locale = 'en'): SeoMetadata {
   return {
-    title: `${article.title} - Ada News`,
+    title: `${article.title} - ${t('Ada News', locale)}`,
     description: article.description,
-    path: `/articles/${article.slug}`,
+    path: localizedPath(`/articles/${article.slug}`, locale),
     image: article.image ? absoluteSiteUrl(article.image) : defaultSeoImage,
     type: 'article',
   }
 }
 
-export function createDemoSeo(demo: DemoEntry): SeoMetadata {
+export function createDemoSeo(demo: DemoEntry, locale: Locale = 'en'): SeoMetadata {
   return {
-    title: `${demo.title} - Ada WebAssembly Demo`,
-    description: `${demo.description} View the Swift source and run the WebAssembly build for this Ada demo.`,
-    path: `/demos/${demo.slug}`,
+    title: `${t(demo.title, locale)} - ${t('Ada WebAssembly Demo', locale)}`,
+    description: `${t(demo.description, locale)} ${t('View the Swift source and run the WebAssembly build for this Ada demo.', locale)}`,
+    path: localizedPath(`/demos/${demo.slug}`, locale),
     image: defaultSeoImage,
     type: 'website',
   }

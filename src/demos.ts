@@ -1,3 +1,5 @@
+import { t } from './localization.ts'
+
 export type DemoEntry = {
   product: string
   slug: string
@@ -45,7 +47,9 @@ export async function loadDemosManifest(): Promise<DemosManifest> {
     .then((manifest: DemosManifest) => ({
       ...emptyManifest,
       ...manifest,
-      demos: [...(manifest.demos ?? [])].sort((lhs, rhs) => lhs.tag.localeCompare(rhs.tag) || lhs.title.localeCompare(rhs.title)),
+      demos: [...(manifest.demos ?? [])].map(demo => ({
+        ...demo, title: t(demo.title), description: t(demo.description), tagTitle: t(demo.tagTitle),
+      })).sort((lhs, rhs) => lhs.tag.localeCompare(rhs.tag) || lhs.title.localeCompare(rhs.title)),
     }))
     .catch(() => emptyManifest)
 

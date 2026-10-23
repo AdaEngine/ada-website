@@ -39,8 +39,11 @@ function readArticles() {
 
 function entry(path, options = {}) {
   const loc = `${siteOrigin}${path === '/' ? '/' : path}`
+  const plain = path.replace(/^\/ru(?=\/|$)/, '') || '/'
+  const russian = `/ru${plain === '/' ? '' : plain}`
+  const alternates = [['en', plain], ['ru', russian], ['x-default', plain]].map(([language, href]) => `\n    <xhtml:link rel="alternate" hreflang="${language}" href="${siteOrigin}${href}" />`).join('')
   const lastmod = options.lastmod ? `\n    <lastmod>${options.lastmod}</lastmod>` : ''
-  return `  <url>\n    <loc>${loc}</loc>${lastmod}\n  </url>`
+  return `  <url>\n    <loc>${loc}</loc>${lastmod}${alternates}\n  </url>`
 }
 
 function writeIfChanged(path, content) {
@@ -56,22 +59,19 @@ const manifest = readJson('public/demos/manifest.json', { generatedAt: '', demos
 const demoLastmod = manifest.generatedAt ? manifest.generatedAt.slice(0, 10) : undefined
 const articles = readArticles()
 
-const sitemapEntries = [
-  entry('/'),
-  entry('/download'),
-  entry('/studio'),
-  entry('/learn'),
-  entry('/blog'),
-  entry('/demos'),
-  entry('/community'),
-  entry('/donate'),
-  ...articles.map((article) => entry(`/articles/${article.slug}`, { lastmod: article.date })),
-  ...(manifest.demos ?? []).map((demo) => entry(`/demos/${demo.slug}`, { lastmod: demoLastmod })),
+const paths = [
+  ...['/', '/download', '/studio', '/learn', '/blog', '/demos', '/community', '/donate'].map(path => ({ path })),
+  ...articles.map(article => ({ path: `/articles/${article.slug}`, lastmod: article.date })),
+  ...(manifest.demos ?? []).map(demo => ({ path: `/demos/${demo.slug}`, lastmod: demoLastmod })),
 ]
+const sitemapEntries = paths.flatMap(({ path, lastmod }) => [
+  entry(path, { lastmod }),
+  entry(`/ru${path === '/' ? '' : path}`, { lastmod }),
+])
 
 writeIfChanged(
   'public/sitemap.xml',
-  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapEntries.join('\n')}\n</urlset>\n`,
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${sitemapEntries.join('\n')}\n</urlset>\n`,
 )
 
 writeIfChanged(

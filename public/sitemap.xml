@@ -1,131 +1,463 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://adaengine.org/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/" />
   </url>
   <url>
     <loc>https://adaengine.org/download</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/download" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/download" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/download" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/download</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/download" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/download" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/download" />
   </url>
   <url>
     <loc>https://adaengine.org/studio</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/studio" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/studio" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/studio" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/studio</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/studio" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/studio" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/studio" />
   </url>
   <url>
     <loc>https://adaengine.org/learn</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/learn" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/learn" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/learn" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/learn</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/learn" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/learn" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/learn" />
   </url>
   <url>
     <loc>https://adaengine.org/blog</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/blog" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/blog" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/blog" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/blog</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/blog" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/blog" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/blog" />
   </url>
   <url>
     <loc>https://adaengine.org/demos</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos" />
   </url>
   <url>
     <loc>https://adaengine.org/community</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/community" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/community" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/community" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/community</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/community" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/community" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/community" />
   </url>
   <url>
     <loc>https://adaengine.org/donate</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/donate" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/donate" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/donate" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/donate</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/donate" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/donate" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/donate" />
   </url>
   <url>
     <loc>https://adaengine.org/articles/introducing-adaengine-0-1-0</loc>
     <lastmod>2026-06-01</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/articles/introducing-adaengine-0-1-0" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/articles/introducing-adaengine-0-1-0" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/articles/introducing-adaengine-0-1-0" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/articles/introducing-adaengine-0-1-0</loc>
+    <lastmod>2026-06-01</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/articles/introducing-adaengine-0-1-0" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/articles/introducing-adaengine-0-1-0" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/articles/introducing-adaengine-0-1-0" />
   </url>
   <url>
     <loc>https://adaengine.org/articles/introducing-adaengine-1-0-0</loc>
     <lastmod>2026-10-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/articles/introducing-adaengine-1-0-0" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/articles/introducing-adaengine-1-0-0" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/articles/introducing-adaengine-1-0-0" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/articles/introducing-adaengine-1-0-0</loc>
+    <lastmod>2026-10-11</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/articles/introducing-adaengine-1-0-0" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/articles/introducing-adaengine-1-0-0" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/articles/introducing-adaengine-1-0-0" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/bunnies-stress-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/bunnies-stress-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/bunnies-stress-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/bunnies-stress-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/bunnies-stress-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/bunnies-stress-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/bunnies-stress-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/bunnies-stress-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/custom-material-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/custom-material-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/custom-material-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/custom-material-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/custom-material-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/custom-material-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/custom-material-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/custom-material-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/lighting2-dexample</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/lighting2-dexample" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/lighting2-dexample" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/lighting2-dexample" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/lighting2-dexample</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/lighting2-dexample" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/lighting2-dexample" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/lighting2-dexample" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/many-sprites-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/many-sprites-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/many-sprites-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/many-sprites-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/many-sprites-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/many-sprites-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/many-sprites-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/many-sprites-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/sprite-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/sprite-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/sprite-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/sprite-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/sprite-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/sprite-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/sprite-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/sprite-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/text2d-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/text2d-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/text2d-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/text2d-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/text2d-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/text2d-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/text2d-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/text2d-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/transform-ent-children-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/transform-ent-children-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/transform-ent-children-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/transform-ent-children-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/transform-ent-children-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/transform-ent-children-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/transform-ent-children-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/transform-ent-children-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/transparency-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/transparency-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/transparency-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/transparency-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/transparency-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/transparency-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/transparency-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/transparency-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/wgslexample</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/wgslexample" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/wgslexample" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/wgslexample" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/wgslexample</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/wgslexample" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/wgslexample" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/wgslexample" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/simple-cube-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/simple-cube-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/simple-cube-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/simple-cube-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/simple-cube-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/simple-cube-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/simple-cube-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/simple-cube-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/simple-collide-event-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/simple-collide-event-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/simple-collide-event-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/simple-collide-event-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/simple-collide-event-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/simple-collide-event-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/simple-collide-event-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/simple-collide-event-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/snowman-attacks-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/snowman-attacks-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/snowman-attacks-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/snowman-attacks-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/snowman-attacks-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/snowman-attacks-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/snowman-attacks-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/snowman-attacks-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/gamepad-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/gamepad-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/gamepad-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/gamepad-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/gamepad-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/gamepad-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/gamepad-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/gamepad-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/custom-tile-map-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/custom-tile-map-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/custom-tile-map-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/custom-tile-map-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/custom-tile-map-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/custom-tile-map-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/custom-tile-map-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/custom-tile-map-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/ldtk-tilemap-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/ldtk-tilemap-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/ldtk-tilemap-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/ldtk-tilemap-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/ldtk-tilemap-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/ldtk-tilemap-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/ldtk-tilemap-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/ldtk-tilemap-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/load-scene-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/load-scene-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/load-scene-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/load-scene-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/load-scene-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/load-scene-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/load-scene-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/load-scene-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/scriptable-component-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/scriptable-component-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/scriptable-component-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/scriptable-component-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/scriptable-component-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/scriptable-component-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/scriptable-component-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/scriptable-component-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/animated-text-renderer-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/animated-text-renderer-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/animated-text-renderer-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/animated-text-renderer-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/animated-text-renderer-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/animated-text-renderer-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/animated-text-renderer-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/animated-text-renderer-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/button-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/button-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/button-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/button-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/button-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/button-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/button-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/button-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/kanban-board-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/kanban-board-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/kanban-board-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/kanban-board-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/kanban-board-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/kanban-board-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/kanban-board-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/kanban-board-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/native-view-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/native-view-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/native-view-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/native-view-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/native-view-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/native-view-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/native-view-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/native-view-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/scene-view-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/scene-view-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/scene-view-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/scene-view-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/scene-view-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/scene-view-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/scene-view-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/scene-view-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/text-field-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/text-field-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/text-field-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/text-field-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/text-field-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/text-field-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/text-field-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/text-field-example" />
   </url>
   <url>
     <loc>https://adaengine.org/demos/uitest-scene-example</loc>
     <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/uitest-scene-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/uitest-scene-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/uitest-scene-example" />
+  </url>
+  <url>
+    <loc>https://adaengine.org/ru/demos/uitest-scene-example</loc>
+    <lastmod>2026-05-31</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://adaengine.org/demos/uitest-scene-example" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://adaengine.org/ru/demos/uitest-scene-example" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://adaengine.org/demos/uitest-scene-example" />
   </url>
 </urlset>
