@@ -1,0 +1,67 @@
+.commercial-page { padding-bottom: 64px; }
+.commercial-page::before { display: none; }
+.commercial-page > .container { max-width: 1120px; }
+.pricing-hero { max-width: 840px; margin: 0 auto; padding: 76px 0 48px; text-align: center; }
+.commercial-eyebrow { color: var(--muted); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
+.pricing-hero h1 { margin: 20px 0 24px; font-family: var(--font-body); font-size: clamp(36px, 5.4vw, 70px); font-weight: 650; line-height: 1.08; letter-spacing: -.045em; }
+.pricing-hero h1 span { color: var(--muted); }
+.commercial-lead { max-width: 640px; margin: 0 auto; color: var(--muted); font-size: 18px; line-height: 1.65; }
+.pricing-period { display: inline-block; margin-top: 36px; padding: 9px 20px; border: 1px solid var(--border); border-radius: 30px; color: var(--muted); font-size: 13px; }
+.pricing-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; max-width: 960px; margin: 0 auto; align-items: start; }
+.pricing-card { padding: 32px; border: 1px solid var(--border-subtle); border-radius: 24px; background: var(--surface); }
+.pricing-card-pro { border-color: color-mix(in srgb, var(--fg) 30%, transparent); background: var(--surface-strong); }
+.pricing-card h2 { margin: 0; font-size: 22px; letter-spacing: -.02em; }
+.pricing-card-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.pricing-badge { border: 1px solid var(--border); border-radius: 20px; padding: 3px 9px; font-size: 11px; color: var(--muted); }
+.pricing-description { min-height: 52px; margin: 12px 0 30px; color: var(--muted); font-size: 15px; line-height: 1.6; }
+.pricing-card .pricing-price { margin: 0; color: var(--fg); font-size: 52px; line-height: 1.2; font-weight: 650; letter-spacing: -.04em; }
+.pricing-price span { color: var(--muted); font-size: 15px; font-weight: 400; letter-spacing: 0; }
+.pricing-caption { margin: 10px 0 26px; color: var(--muted); font-size: 13px; }
+.pricing-credit { display: flex; align-items: center; gap: 16px; padding: 15px 18px; margin-bottom: 20px; border: 1px solid var(--border-subtle); border-radius: 14px; background: color-mix(in srgb, var(--fg) 3%, transparent); }
+.pricing-credit strong { font-size: 26px; letter-spacing: -.03em; }
+.pricing-credit span { color: var(--fg); font-size: 13px; line-height: 1.5; }
+.pricing-credit small { display: block; color: var(--muted); font-size: 11px; }
+.pricing-action { display: flex; justify-content: center; align-items: center; min-height: 48px; padding: 12px 18px; border: 1px solid var(--border); border-radius: 28px; background: var(--surface-hover); font-size: 14px; font-weight: 600; text-align: center; }
+.pricing-action-primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.pricing-action:hover { filter: brightness(.86); }
+.pricing-action:focus-visible, .commercial-page a:focus-visible, .pricing-faq summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+.pricing-availability { margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.pricing-features { display: grid; gap: 16px; margin: 28px 0 0; padding: 26px 0 0; border-top: 1px solid var(--border-subtle); list-style: none; color: var(--muted); font-size: 14px; }
+.pricing-features li { display: grid; grid-template-columns: 16px 1fr; gap: 12px; }
+.pricing-features li > span { color: var(--fg); }
+.pricing-included { display: flex; align-items: center; gap: 24px; max-width: 960px; margin: 44px auto 0; padding: 26px 30px; border: 1px solid var(--border-subtle); border-radius: 18px; }
+.pricing-included > span { font-size: 32px; color: var(--muted); }
+.pricing-included h2 { margin: 0 0 6px; font-size: 17px; }
+.pricing-included p { max-width: 560px; margin: 0; font-size: 13px; color: var(--muted); }
+.pricing-included > a { margin-left: auto; flex-shrink: 0; font-size: 13px; }
+.pricing-faq { display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; max-width: 960px; margin: 90px auto 60px; }
+.pricing-faq > h2 { margin: 0; font-size: 28px; line-height: 1.25; letter-spacing: -.02em; }
+.pricing-faq details { border-bottom: 1px solid var(--border-subtle); }
+.pricing-faq summary { padding: 20px 4px; cursor: pointer; font-size: 15px; }
+.pricing-faq details:first-child summary { padding-top: 0; }
+.pricing-faq details p { margin: 0 0 22px; padding: 0 4px; color: var(--muted); font-size: 14px; }
+.commercial-contact { max-width: 960px; margin: 38px auto 0; padding-top: 26px; border-top: 1px solid var(--border-subtle); color: var(--muted); font-size: 13px; }
+.commercial-contact p { margin: 0 0 18px; }
+.commercial-contact a:hover, .commercial-legal-links a:hover, .public-legal-document a { color: var(--fg); text-decoration: underline !important; text-underline-offset: 3px; }
+.commercial-legal-links { display: flex; flex-wrap: wrap; gap: 12px 24px; font-size: 13px; color: var(--muted); }
+.legal-page > .container { max-width: 860px; }
+.legal-hero { padding: 66px 0 26px; }
+.legal-hero h1 { font-size: clamp(30px, 4vw, 48px); line-height: 1.15; letter-spacing: -.035em; margin: 24px 0; }
+.legal-hero .commercial-lead { margin-left: 0; font-size: 15px; }
+.public-legal-document { margin-top: 44px; }
+.public-legal-document section { margin: 0 0 32px; }
+.public-legal-document h2 { font-size: 19px; line-height: 1.4; margin-bottom: 12px; }
+.public-legal-document p { color: var(--muted); font-size: 15px; line-height: 1.85; overflow-wrap: anywhere; }
+@media (max-width: 760px) {
+  .pricing-hero { padding: 44px 0 32px; }
+  .commercial-lead { font-size: 16px; }
+  .pricing-grid, .pricing-faq { grid-template-columns: 1fr; }
+  .pricing-card { padding: 26px; }
+  .pricing-description { min-height: 0; }
+  .pricing-included { align-items: flex-start; flex-wrap: wrap; gap: 16px; padding: 24px; }
+  .pricing-included > span { display: none; }
+  .pricing-included > a { margin-left: 0; }
+  .pricing-faq { gap: 28px; margin-top: 56px; }
+  .pricing-faq details:first-child summary { padding-top: 16px; }
+  .legal-hero { padding-top: 40px; }
+}

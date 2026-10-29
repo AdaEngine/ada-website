@@ -4,6 +4,8 @@ import './style.css'
 import './home.css'
 import { renderStudioContent } from './studio'
 import './theme.css'
+import './commercial.css'
+import { renderPricingContent, renderPublicLegalContent } from './commercial'
 import { appStoreURL, assetsFor, assetLabel, fallbackRelease, loadDownloadRelease, type DownloadRelease, type DesktopPlatform } from './downloads'
 import { languageClass, renderHighlightedCodeLines } from './codeHighlight'
 import { articles, getArticleBySlug, type ArticleAuthor, type ArticleHeading } from './content'
@@ -495,11 +497,12 @@ async function setupGitHubStars() {
 function renderHeader(): string {
   const currentRoute = resolveRoute(window.location.pathname, import.meta.env.BASE_URL)
   const isStoreView = /^\/store(\/|$)/.test(withoutLocale(entryPath)) || (/^store(?:-test)?\./.test(window.location.hostname) && withoutLocale(entryPath) === '/')
-  const isCloudView = /^\/(cloud|games|legal)(\/|$)/.test(withoutLocale(entryPath)) || (/^cloud(?:-test)?\./.test(window.location.hostname) && withoutLocale(entryPath) === '/')
+  const isCloudView = /^\/(cloud|games)(\/|$)/.test(withoutLocale(entryPath)) || (/^cloud(?:-test)?\./.test(window.location.hostname) && withoutLocale(entryPath) === '/')
   const activePage = isStoreView ? 'store' : isCloudView ? 'cloud' : currentRoute.name === 'static-page' ? currentRoute.page : currentRoute.name === 'demo' ? 'demos' : currentRoute.name
   const navItems = [
     { label: t('Home'), href: hrefFor('/'), active: activePage === 'home' },
     { label: t('Studio'), href: hrefFor('/studio'), active: activePage === 'studio' },
+    { label: t('Pricing'), href: hrefFor('/pricing'), active: activePage === 'pricing' },
     ...(articles.length ? [{ label: t('News'), href: hrefFor('/blog'), active: activePage === 'blog' }] : []),
     { label: t('Demos'), href: hrefFor('/demos'), active: activePage === 'demos' },
     { label: t('Learn'), href: hrefFor('/learn'), active: activePage === 'learn' },
@@ -924,6 +927,7 @@ function renderFooter(): string {
             <h3>Ada</h3>
             <a href="${hrefFor('/studio')}">${t("Studio")}</a>
             <a href="${hrefFor('/download')}">${t("Download")}</a>
+            <a href="${hrefFor('/pricing')}">${t("Pricing")}</a>
             <a href="https://github.com/AdaEngine/AdaEngine">${t("Source code")}<span class="footer-external-mark" aria-hidden="true">↗</span></a>
           </section>
           <section>
@@ -933,9 +937,12 @@ function renderFooter(): string {
             <a href="${hrefFor('/community')}">${t("Community")}</a>
           </section>
           <section>
-            <h3>${t("Foundation")}</h3>
+            <h3>${t("Information")}</h3>
             <a href="${hrefFor('/donate')}">${t("Donate")}</a>
             <a href="https://github.com/AdaEngine/AdaEngine/blob/main/LICENSE">${t("License")}<span class="footer-external-mark" aria-hidden="true">↗</span></a>
+            <a href="${hrefFor('/legal/offer')}">${t("Public offer")}</a>
+            <a href="${hrefFor('/legal/privacy')}">${t("Privacy Policy")}</a>
+            <a href="${hrefFor('/legal/details')}">${t("Business details")}</a>
           </section>
         </div>
         <div class="footer-bottom">
@@ -1542,17 +1549,22 @@ async function renderRoute() {
   if (language !== localeFromPath(entryPath)) return
   app.classList.remove('store-app')
   const path = withoutLocale(entryPath)
+  const route = resolveRoute(window.location.pathname, import.meta.env.BASE_URL)
+  if (route.name === 'pricing' || route.name === 'legal') {
+    applySeo(createRouteSeo(route))
+    app.innerHTML = `${renderHeader()}${route.name === 'pricing' ? renderPricingContent(hrefFor, getLocale()) : renderPublicLegalContent(route.page, hrefFor, getLocale())}${renderFooter()}`
+    return
+  }
   if ((/^\/store(\/|$)/.test(path) || (window.location.hostname.startsWith('store.') || window.location.hostname.startsWith('store-test.')) && path === '/')) {
     const { renderStore } = await import('./store')
     await renderStore(app, renderHeader, setupHeaderNavigation, renderFooter)
     return
   }
-  if (/^\/(cloud|games|legal)(\/|$)/.test(path) || (/^cloud(?:-test)?\./.test(window.location.hostname) && path === '/')) {
+  if (/^\/(cloud|games)(\/|$)/.test(path) || (/^cloud(?:-test)?\./.test(window.location.hostname) && path === '/')) {
     const { renderCloud } = await import('./cloud')
     await renderCloud(app, renderHeader, setupHeaderNavigation, undefined, renderFooter)
     return
   }
-  const route = resolveRoute(window.location.pathname, import.meta.env.BASE_URL)
   applySeo(createRouteSeo(route))
 
   if (route.name === 'studio') {

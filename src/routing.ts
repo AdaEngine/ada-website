@@ -1,11 +1,15 @@
 import { withoutLocale } from './localization.ts'
 
 export type StaticPageName = 'learn' | 'community' | 'donate'
+export type LegalPageName = 'offer' | 'details' | 'terms' | 'privacy' | 'gdpr'
+export const legalPages: LegalPageName[] = ['offer', 'details', 'terms', 'privacy', 'gdpr']
 
 export type Route =
   | { name: 'home' }
   | { name: 'download' }
   | { name: 'studio' }
+  | { name: 'pricing' }
+  | { name: 'legal'; page: LegalPageName }
   | { name: 'blog' }
   | { name: 'demos' }
   | { name: 'demo'; slug: string }
@@ -67,6 +71,10 @@ export function resolveRoute(pathname: string, baseUrl: string): Route {
   if (path === '/studio') {
     return { name: 'studio' }
   }
+
+  if (path === '/pricing') return { name: 'pricing' }
+  const legalPage = legalPages.find(page => path === `/legal/${page}`)
+  if (legalPage) return { name: 'legal', page: legalPage }
 
   if (path === '/blog') {
     return { name: 'blog' }

@@ -2,6 +2,7 @@ import type { Article } from './content'
 import type { DemoEntry } from './demos'
 import type { Route, StaticPageName } from './routing'
 import { localizedPath, t, type Locale } from './localization.ts'
+import { draftLegal, legalDocument } from './cloudLegal.ts'
 
 export type SeoMetadata = {
   title: string
@@ -57,6 +58,13 @@ export function absoluteSiteUrl(path: string): string {
 }
 
 export function createRouteSeo(route: Route): SeoMetadata {
+  if (route.name === 'pricing') {
+    return { title: 'Ada Cloud Pricing — Free and Pro', description: 'Ada Engine is free and open source. Cloud Pro costs 500 RUB per month and includes publishing and 500 monthly AI credits.', path: '/pricing', image: defaultSeoImage, type: 'website' }
+  }
+  if (route.name === 'legal') {
+    const document = legalDocument(route.page, draftLegal)
+    return { title: `${document.title} — Ada`, description: document.sections[0].text, path: `/legal/${route.page}`, image: defaultSeoImage, type: 'website' }
+  }
   if (route.name === 'home') {
     return {
       title: 'Ada - Open-Source Swift Game Engine',

@@ -65,7 +65,7 @@ test('locale priority is URL, saved choice, browser languages, then English', ()
 })
 
 test('prefix handling respects route boundaries, trailing slashes and preview base paths', () => {
-  for (const path of ['/', '/download', '/studio', '/blog', '/learn', '/demos/sprite-example', '/articles/introducing-adaengine-1-0-0', '/community', '/donate']) {
+  for (const path of ['/', '/download', '/studio', '/pricing', '/legal/offer', '/legal/details', '/legal/privacy', '/legal/terms', '/legal/gdpr', '/blog', '/learn', '/demos/sprite-example', '/articles/introducing-adaengine-1-0-0', '/community', '/donate']) {
     const ru = localizedPath(path, 'ru')
     assert.deepEqual(resolveRoute(ru, '/'), resolveRoute(path, '/'))
     assert.deepEqual(resolveRoute(hrefFor(ru, '/preview/'), '/preview/'), resolveRoute(path, '/'))
@@ -242,3 +242,43 @@ test('locale redirects do not exchange the OAuth code in the departing document'
   assert.equal(doc.querySelector('.cloud-signin'), null)
   assert.equal(requests.some(url => url.startsWith('/v1/')), false)
 }, { services: true, languages: ['ru-RU'] }))
+
+// Public review pages must remain readable when Cloud is down or the visitor has no account.
+test('Russian pricing displays the agreed RUB price and legal links without calling Cloud', () => page('/ru/pricing', (doc, _w, redirects, _navigations, requests) => {
+  assert.deepEqual(redirects, [])
+  assert.match(doc.querySelector('h1').textContent, /Создавайте бесплатно/)
+  assert.match(doc.querySelector('.pricing-card-pro .pricing-price').textContent, /500 ₽.*месяц/)
+  assert.match(doc.querySelector('.pricing-availability').textContent, /Онлайн-покупка пока недоступна/)
+  assert.equal(doc.querySelector('.pricing-action-primary').getAttribute('href'), 'mailto:support@adaengine.org')
+  for (const path of ['offer', 'privacy', 'details']) {
+    assert(doc.querySelector(`.footer a[href="/ru/legal/${path}"]`))
+  }
+  assert(!requests.some(url => /\/v1\//.test(url)))
+}))
+
+test('English pricing and language switching preserve the pricing route', () => page('/pricing', (doc, w, _redirects, navigations) => {
+  assert.match(doc.querySelector('h1').textContent, /Create for free/)
+  assert.match(doc.querySelector('.pricing-price').textContent, /0 ₽/)
+  const picker = doc.querySelector('[data-site-language]')
+  picker.value = 'ru'
+  picker.dispatchEvent(new w.Event('change', { bubbles: true }))
+  assert.equal(navigations[0], 'https://adaengine.org/ru/pricing')
+}))
+
+for (const [path, expected] of [
+  ['offer', /Публичная оферта Ada Cloud/], ['details', /Реквизиты и контакты/],
+  ['privacy', /Политика обработки персональных данных/], ['terms', /Условия использования Ada Cloud/],
+]) {
+  test(`public ${path} is readable offline without sign-in`, () => page(`/ru/legal/${path}`, (doc, _w, redirects, _navigations, requests) => {
+    assert.deepEqual(redirects, [])
+    assert.match(doc.querySelector('h1').textContent, expected)
+    assert.match(doc.querySelector('.public-legal-document').textContent, /Прусаков Владислав Александрович/)
+    assert(doc.querySelector('a[href="mailto:support@adaengine.org"]'))
+    assert(!requests.some(url => /\/v1\//.test(url)))
+    if (path === 'offer') {
+      assert.match(doc.querySelector('.public-legal-document').textContent, /500 рублей за месяц/)
+      assert.match(doc.querySelector('.public-legal-document').textContent, /Акцепт оферты/)
+      assert.match(doc.querySelector('.public-legal-document').textContent, /500 ИИ-кредитов/)
+    }
+  }))
+}

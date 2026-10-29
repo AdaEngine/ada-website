@@ -17,7 +17,8 @@ const server = await createServer({
 try {
   const { articles } = await server.ssrLoadModule('/src/content.ts')
   const { createArticleSeo, createDemoSeo, createRouteSeo, localizeSeo, absoluteSiteUrl } = await server.ssrLoadModule('/src/seo.ts')
-  const { resolveRoute } = await server.ssrLoadModule('/src/routing.ts')
+  const { resolveRoute, legalPages } = await server.ssrLoadModule('/src/routing.ts')
+  const { renderPricingContent, renderPublicLegalContent } = await server.ssrLoadModule('/src/commercial.ts')
   const { locales, localizedPath, t } = await server.ssrLoadModule('/src/localization.ts')
   const manifest = JSON.parse(readFileSync(join(output, 'demos/manifest.json'), 'utf8'))
   const basePath = (process.env.VITE_BASE_PATH ?? '/').replace(/\/$/, '')
@@ -43,8 +44,11 @@ try {
   }
 
   for (const locale of locales) {
-    for (const path of ['/', '/download', '/studio', '/learn', '/community', '/donate', '/blog', '/demos']) {
-      writePage(localizeSeo(createRouteSeo(resolveRoute(path, '/')), locale), locale)
+    for (const path of ['/', '/download', '/studio', '/learn', '/community', '/donate', '/blog', '/demos', '/pricing', ...legalPages.map(page => `/legal/${page}`)]) {
+      const route = resolveRoute(path, '/')
+      const href = path => `${basePath}${localizedPath(path, locale)}`
+      const body = route.name === 'pricing' ? renderPricingContent(href, locale) : route.name === 'legal' ? renderPublicLegalContent(route.page, href, locale) : ''
+      writePage(localizeSeo(createRouteSeo(route), locale), locale, body)
     }
     for (const demo of manifest.demos) {
       if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(demo.slug)) throw new Error(`Invalid demo slug: ${demo.slug}`)
