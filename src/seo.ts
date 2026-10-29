@@ -3,6 +3,7 @@ import type { DemoEntry } from './demos'
 import type { Route, StaticPageName } from './routing'
 import { localizedPath, t, type Locale } from './localization.ts'
 import { draftLegal, legalDocument } from './cloudLegal.ts'
+import { cloudPaidPlans } from './cloudPlans.ts'
 
 export type SeoMetadata = {
   title: string
@@ -59,7 +60,7 @@ export function absoluteSiteUrl(path: string): string {
 
 export function createRouteSeo(route: Route): SeoMetadata {
   if (route.name === 'pricing') {
-    return { title: 'Ada Cloud Pricing — Free and Pro', description: 'Ada Engine is free and open source. Cloud Pro costs 500 RUB per month and includes publishing and 500 monthly AI credits.', path: '/pricing', image: defaultSeoImage, type: 'website' }
+    return { title: 'Ada Cloud Pricing — Free, Lite, Pro and Max', description: `Ada Engine is free and open source. Cloud plans: ${cloudPaidPlans.map(plan => `${plan.name} ${plan.priceRUB} RUB/month`).join(', ')}. Publishing is included in every paid plan.`, path: '/pricing', image: defaultSeoImage, type: 'website' }
   }
   if (route.name === 'legal') {
     const document = legalDocument(route.page, draftLegal)

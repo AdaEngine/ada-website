@@ -244,10 +244,19 @@ test('locale redirects do not exchange the OAuth code in the departing document'
 }, { services: true, languages: ['ru-RU'] }))
 
 // Public review pages must remain readable when Cloud is down or the visitor has no account.
-test('Russian pricing displays the agreed RUB price and legal links without calling Cloud', () => page('/ru/pricing', (doc, _w, redirects, _navigations, requests) => {
+test('Russian pricing displays all agreed prices, credits and legal links without calling Cloud', () => page('/ru/pricing', (doc, _w, redirects, _navigations, requests) => {
   assert.deepEqual(redirects, [])
   assert.match(doc.querySelector('h1').textContent, /Создавайте бесплатно/)
   assert.match(doc.querySelector('.pricing-card-pro .pricing-price').textContent, /500 ₽.*месяц/)
+  assert.equal(doc.querySelectorAll('.pricing-card').length, 4)
+  for (const [plan, amount] of [['lite', '250'], ['pro', '500'], ['max', '1000']]) {
+    const card = doc.querySelector(`[data-plan="${plan}"]`)
+    assert.equal(card.querySelector('.pricing-price').textContent.replace(/\s/g, ''), `${amount}₽/месяц`)
+    assert.equal(card.querySelector('.pricing-credit strong').textContent.replace(/\s/g, ''), amount)
+    assert.equal(card.querySelector('.pricing-action').getAttribute('href'), 'mailto:support@adaengine.org')
+  }
+  assert.match(doc.querySelector('.pricing-publishing').textContent, /всех платных тарифах/)
+  assert.match(doc.querySelector('.pricing-publishing').textContent, /10 ГБ/)
   assert.match(doc.querySelector('.pricing-availability').textContent, /Онлайн-покупка пока недоступна/)
   assert.equal(doc.querySelector('.pricing-action-primary').getAttribute('href'), 'mailto:support@adaengine.org')
   for (const path of ['offer', 'privacy', 'details']) {
@@ -279,6 +288,8 @@ for (const [path, expected] of [
       assert.match(doc.querySelector('.public-legal-document').textContent, /500 рублей за месяц/)
       assert.match(doc.querySelector('.public-legal-document').textContent, /Акцепт оферты/)
       assert.match(doc.querySelector('.public-legal-document').textContent, /500 ИИ-кредитов/)
+      assert.match(doc.querySelector('.public-legal-document').textContent, /Cloud Lite — 250 рублей за месяц, 250 ИИ-кредитов/)
+      assert.match(doc.querySelector('.public-legal-document').textContent, /Cloud Max — 1\s000 рублей за месяц, 1\s000 ИИ-кредитов/)
     }
   }))
 }

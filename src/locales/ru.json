@@ -694,5 +694,20 @@
   "Questions about billing or your account?": "Вопросы об оплате или аккаунте?",
   "Ada Cloud Pricing — Free and Pro": "Тарифы Ada Cloud — Free и Pro",
   "Ada Engine is free and open source. Cloud Pro costs 500 RUB per month and includes publishing and 500 monthly AI credits.": "Ada Engine бесплатный и имеет открытый исходный код. Cloud Pro за 500 ₽ в месяц включает публикацию сборок и 500 ИИ-кредитов ежемесячно.",
-  "Information": "Информация"
+  "Information": "Информация",
+  "A little Cloud AI for your first ideas.": "Немного облачного ИИ для первых идей.",
+  "More Cloud AI for a busier creative workflow.": "Больше облачного ИИ для активной работы над игрой.",
+  "Ask about Lite": "Узнать о Lite",
+  "Ask about Max": "Узнать о Max",
+  "The engine is free and open source. Choose a Cloud plan to share playable builds and use Cloud AI in Ada Studio.": "Движок бесплатный, с открытым исходным кодом. Выберите тариф Cloud, чтобы делиться игровыми сборками и использовать облачный ИИ в Ada Studio.",
+  "Ada Engine is free and open source. Lite, Pro and Max are subscriptions to Ada Cloud services with different monthly AI credit allowances. Publishing limits are the same across all paid plans. Your games and assets remain yours.": "Ada Engine бесплатный и имеет открытый исходный код. Lite, Pro и Max — подписки на сервисы Ada Cloud с разными месячными лимитами ИИ-кредитов. Лимиты публикаций одинаковы у всех платных тарифов. Права на ваши игры и ассеты сохраняются за вами.",
+  "Prices are per month, with no trial period. Automatic renewal requires your consent. The total, billing period and next charge date are shown before payment.": "Цены указаны за месяц, без пробного периода. Для автоматического продления требуется ваше согласие. Итоговая сумма, период и дата следующего списания показываются до оплаты.",
+  "You can turn off renewal and keep your paid plan until the end of the paid period. For subscriptions purchased in the App Store, manage renewal through Apple. For web subscriptions, contact support@adaengine.org.": "Можно отключить продление и сохранить доступ по тарифу до конца оплаченного периода. Подпиской из App Store управляйте через Apple. По вопросам веб-подписки обращайтесь на support@adaengine.org.",
+  "You may request a full refund of your first paid Cloud subscription within seven days if you have not published builds. This extra guarantee does not limit your statutory rights. Contact support@adaengine.org with your account and purchase ID; never send card details.": "Можно запросить полный возврат первой платной подписки Cloud в течение семи дней, если вы не публиковали сборки. Эта дополнительная гарантия не ограничивает ваши права по закону. Напишите на support@adaengine.org, указав аккаунт и идентификатор покупки; не отправляйте данные карты.",
+  "Web build publishing with the limits below": "Публикация веб-сборок с указанными ниже лимитами",
+  "Lite · Pro · Max": "Lite · Pro · Max",
+  "Publishing included in every paid plan": "Публикации во всех платных тарифах",
+  "Choose your AI allowance. The same publishing limits apply to Lite, Pro and Max.": "Выберите свой лимит ИИ-кредитов. Для Lite, Pro и Max действуют одинаковые лимиты публикаций.",
+  "Ada Cloud Pricing — Free, Lite, Pro and Max": "Тарифы Ada Cloud — Free, Lite, Pro и Max",
+  "Ada Engine is free and open source. Cloud plans: Cloud Lite 250 RUB/month, Cloud Pro 500 RUB/month, Cloud Max 1000 RUB/month. Publishing is included in every paid plan.": "Ada Engine бесплатный и имеет открытый исходный код. Тарифы Cloud: Lite — 250 ₽/месяц, Pro — 500 ₽/месяц, Max — 1 000 ₽/месяц. Публикация сборок включена во все платные тарифы."
 }
